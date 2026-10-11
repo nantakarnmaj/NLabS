@@ -100,3 +100,34 @@ def apply_patient_effects(current_state: dict, effect_spec: dict | None) -> tupl
                 events.append(f"{var.replace('_', ' ').title()} changed from {old_val} to {val}")
 
     return new_state, events
+
+
+def compute_step_patient_state(scenario, activities, viewing_activity) -> dict:
+    """Compute the clinical patient state corresponding to the activity being viewed.
+
+    Before suctioning & aftercare (Steps 1..7):
+      Patient displays respiratory distress/obstruction (coarse rhonchi, copious secretions, SpO2 91-95%).
+    After suctioning & aftercare (Steps 8..10):
+      Patient displays restored airway patency (clear breath sounds, minimal secretions, SpO2 97%, HR 78, RR 18).
+    """
+    state = copy.deepcopy(scenario.initial_state_json or {}) if scenario else {}
+    if not activities or not viewing_activity:
+        return normalize_state(state)
+
+    target_order = viewing_activity.display_order
+    sorted_activities = sorted(activities, key=lambda a: a.display_order)
+
+    for a in sorted_activities:
+        if a.display_order < target_order:
+            effect = None
+            for fb in a.feedback_rules:
+                if fb.trigger_type == "on_success" and fb.patient_effect_json:
+                    effect = fb.patient_effect_json
+                    break
+                elif fb.trigger_key and fb.feedback_type == "positive" and fb.patient_effect_json:
+                    effect = fb.patient_effect_json
+                    break
+            if effect:
+                state, _ = apply_patient_effects(state, effect)
+
+    return normalize_state(state)

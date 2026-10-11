@@ -59,11 +59,12 @@
       </div>
 
       <!-- Distress State Indicator -->
+      {% set ps = patient_state or run.patient_state_json %}
       <div class="flex items-center gap-2 text-xs sm:text-sm">
         <span class="text-[#64748B] font-medium">สถานะผู้ป่วย:</span>
-        <span id="monitor-distress" class="px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 border border-amber-300 text-amber-800 flex items-center gap-1.5 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-          {% if run.patient_state_json.distress >= 3 %}วิกฤต/หายใจลำบากมาก (Severe Distress){% elif run.patient_state_json.distress > 0 %}หายใจลำบากปานกลาง (Moderate Distress){% else %}คงที่ / สงบ (Stable / Calm){% endif %}
+        <span id="monitor-distress" class="px-3 py-1 rounded-full text-xs sm:text-sm font-bold {% if ps.distress >= 3 %}bg-red-50 border border-red-300 text-red-800{% elif ps.distress > 0 %}bg-amber-50 border border-amber-300 text-amber-800{% else %}bg-emerald-50 border border-emerald-300 text-emerald-800{% endif %} flex items-center gap-1.5 shadow-2xs">
+          <span class="w-2 h-2 rounded-full {% if ps.distress >= 3 %}bg-red-500{% elif ps.distress > 0 %}bg-amber-500{% else %}bg-emerald-500{% endif %} animate-pulse"></span>
+          {% if ps.distress >= 3 %}วิกฤต/หายใจลำบากมาก (Severe Distress){% elif ps.distress > 0 %}หายใจลำบากปานกลาง (Moderate Distress){% else %}คงที่ / สงบ (Stable / Calm){% endif %}
         </span>
       </div>
     </div>
@@ -73,8 +74,8 @@
       <!-- SpO2 -->
       <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
         <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">SpO₂</div>
-        <div id="monitor-spo2" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if run.patient_state_json.spo2 < 90 %}text-red-400{% elif run.patient_state_json.spo2 < 94 %}text-amber-400{% else %}text-emerald-400{% endif %}">
-          {{ run.patient_state_json.spo2 }}%
+        <div id="monitor-spo2" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if ps.spo2 < 90 %}text-red-400{% elif ps.spo2 < 94 %}text-amber-400{% else %}text-emerald-400{% endif %}">
+          {{ ps.spo2 }}%
         </div>
         <div class="text-xs text-slate-400 font-mono">เป้าหมาย ≥ 94%</div>
       </div>
@@ -82,8 +83,8 @@
       <!-- Heart Rate -->
       <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
         <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">ชีพจร (Heart Rate)</div>
-        <div id="monitor-hr" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if run.patient_state_json.hr < 50 or run.patient_state_json.hr > 120 %}text-red-400{% else %}text-cyan-400{% endif %}">
-          {{ run.patient_state_json.hr }} bpm
+        <div id="monitor-hr" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if ps.hr < 50 or ps.hr > 120 %}text-red-400{% elif ps.hr > 90 %}text-amber-400{% else %}text-cyan-400{% endif %}">
+          {{ ps.hr }} bpm
         </div>
         <div class="text-xs text-slate-400 font-mono">ปกติ 60–100 bpm</div>
       </div>
@@ -91,8 +92,8 @@
       <!-- Respiration Rate -->
       <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
         <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">การหายใจ (Resp Rate)</div>
-        <div id="monitor-rr" class="text-2xl sm:text-3xl font-black font-mono my-0.5 text-cyan-300">
-          {{ run.patient_state_json.rr }} /min
+        <div id="monitor-rr" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if ps.rr > 24 %}text-red-400{% elif ps.rr > 20 %}text-amber-400{% else %}text-cyan-300{% endif %}">
+          {{ ps.rr }} /min
         </div>
         <div class="text-xs text-slate-400 font-mono">ปกติ 12–20 /min</div>
       </div>
@@ -101,7 +102,7 @@
       <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner text-left flex flex-col justify-between">
         <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">ทางเดินหายใจ / เสมหะ</div>
         <div id="monitor-breath-sound" class="text-sm font-bold text-slate-100 mt-0.5 truncate">
-          {% set bs = run.patient_state_json.breath_sound %}
+          {% set bs = ps.breath_sound %}
           {% if bs == 'coarse_rhonchi' %}เสมหะเดือด (Coarse Rhonchi)
           {% elif bs == 'expiratory_wheezing' %}เสียงหวีด (Expiratory Wheezes)
           {% elif bs == 'bilateral_wheezes_and_rhonchi' %}เสียงหวีด & เสมหะ (Wheezes & Rhonchi)
@@ -112,7 +113,7 @@
         </div>
         <div id="monitor-secretions" class="text-xs text-cyan-300 mt-0.5 truncate">
           เสมหะ:
-          {% set sec = run.patient_state_json.secretions %}
+          {% set sec = ps.secretions %}
           {% if sec in ['copious', 'copious_thick'] %}มาก/เหนียว (Copious)
           {% elif sec == 'moderate' %}ปานกลาง (Moderate)
           {% elif sec in ['minimal', 'minimal/clear'] %}เล็กน้อย (Minimal)

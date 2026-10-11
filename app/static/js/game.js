@@ -76,6 +76,8 @@
       animateValueChange(monitorHr, vitals.hr + ' bpm');
       if (vitals.hr < 50 || vitals.hr > 120) {
         monitorHr.className = 'text-2xl sm:text-3xl font-black font-mono text-red-400';
+      } else if (vitals.hr > 90) {
+        monitorHr.className = 'text-2xl sm:text-3xl font-black font-mono text-amber-400';
       } else {
         monitorHr.className = 'text-2xl sm:text-3xl font-black font-mono text-cyan-400';
       }
@@ -83,12 +85,26 @@
 
     if (monitorRr && vitals.rr !== undefined) {
       animateValueChange(monitorRr, vitals.rr + ' /min');
+      if (vitals.rr > 24) {
+        monitorRr.className = 'text-2xl sm:text-3xl font-black font-mono text-red-400';
+      } else if (vitals.rr > 20) {
+        monitorRr.className = 'text-2xl sm:text-3xl font-black font-mono text-amber-400';
+      } else {
+        monitorRr.className = 'text-2xl sm:text-3xl font-black font-mono text-cyan-300';
+      }
     }
 
     if (monitorDistress && vitals.distress !== undefined) {
-      const labels = ['สงบ/ปกติ', 'เล็กน้อย', 'ปานกลาง', 'รุนแรง', 'วิกฤต', 'รุนแรงมาก'];
-      const text = labels[vitals.distress] || 'ปานกลาง';
-      monitorDistress.textContent = text;
+      if (vitals.distress >= 3) {
+        monitorDistress.className = 'px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-red-50 border border-red-300 text-red-800 flex items-center gap-1.5 shadow-2xs';
+        monitorDistress.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>วิกฤต/หายใจลำบากมาก (Severe Distress)';
+      } else if (vitals.distress > 0) {
+        monitorDistress.className = 'px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 border border-amber-300 text-amber-800 flex items-center gap-1.5 shadow-2xs';
+        monitorDistress.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>หายใจลำบากปานกลาง (Moderate Distress)';
+      } else {
+        monitorDistress.className = 'px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 border border-emerald-300 text-emerald-800 flex items-center gap-1.5 shadow-2xs';
+        monitorDistress.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>คงที่ / สงบ (Stable / Calm)';
+      }
     }
 
     if (monitorBreathSound && vitals.breath_sound !== undefined) {

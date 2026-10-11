@@ -288,7 +288,7 @@ def seed_suction_mission() -> dict[str, int]:
                     "title": "การช่วยฟื้นตัวฉุกเฉินช่วยชีวิตสำเร็จ (Immediate Life-Saving Recovery)",
                     "message": "การหยุดดูดเสมหะทันทีและให้ออกซิเจน 100% ช่วยบรรเทาปฏิกิริยา Vagal reflex ชีพจรของคุณสมชายกลับมาเต้น 82 ครั้ง/นาที และ SpO2 เพิ่มขึ้นเป็น 95%",
                     "clinical_rationale": "การกระตุ้น Vagus nerve และภาวะขาดออกซิเจนรุนแรงต้องหยุดสิ่งกระตุ้นทันทีและให้ออกซิเจน 100%",
-                    "patient_effect_json": {"spo2_delta": +11, "hr_delta": +34, "distress_delta": -1},
+                    "patient_effect_json": {"spo2_set": 95, "hr_set": 82, "distress_delta": -1},
                 },
                 {
                     "trigger_key": "continue_faster",

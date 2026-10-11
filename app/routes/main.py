@@ -222,6 +222,12 @@ def mission_view(slug: str):
         if not current_activity and activities:
             current_activity = activities[0]
 
+        # Compute the clinical patient state appropriate for the step currently being viewed
+        # Before suctioning & aftercare (Steps 1..7): Displays respiratory distress / critical condition.
+        # After suctioning & aftercare (Steps 8..10): Displays normalized / cleared airway vitals.
+        from app.services.patient_engine import compute_step_patient_state
+        patient_state = compute_step_patient_state(scenario, activities, current_activity)
+
         # Ensure patient telemetry reflects cleared airway if student has reached outcome or debrief
         if active_activity and active_activity.activity_type in ("outcome", "debrief"):
             if run.patient_state_json and run.patient_state_json.get("breath_sound") != "clear":
@@ -251,6 +257,7 @@ def mission_view(slug: str):
                 is_review_mode=is_review_mode,
                 activities=activities,
                 total_activities=total_activities,
+                patient_state=patient_state,
                 badge=badge,
                 session=session,
             )
