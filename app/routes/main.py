@@ -202,6 +202,19 @@ def mission_view(slug: str):
         total_activities = len(scenario.activities)
         current_activity = db.session.get(Activity, run.current_activity_id) if run.current_activity_id else None
 
+        # Ensure patient telemetry reflects cleared airway if student has reached outcome or debrief
+        if current_activity and current_activity.activity_type in ("outcome", "debrief"):
+            if run.patient_state_json and run.patient_state_json.get("breath_sound") != "clear":
+                st = dict(run.patient_state_json)
+                st["breath_sound"] = "clear"
+                st["secretions"] = "minimal"
+                st["spo2"] = 97
+                st["hr"] = 78
+                st["rr"] = 18
+                st["distress"] = 0
+                run.patient_state_json = st
+                db.session.commit()
+
         badge = db.session.execute(
             select(Badge).where(Badge.mission_id == mission.id)
         ).scalar_one_or_none()

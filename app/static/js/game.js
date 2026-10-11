@@ -12,6 +12,8 @@
   const monitorHr = document.getElementById('monitor-hr');
   const monitorRr = document.getElementById('monitor-rr');
   const monitorDistress = document.getElementById('monitor-distress');
+  const monitorBreathSound = document.getElementById('monitor-breath-sound');
+  const monitorSecretions = document.getElementById('monitor-secretions');
   const feedbackModal = document.getElementById('feedback-modal');
   const feedbackBanner = document.getElementById('feedback-banner');
   const feedbackIconBox = document.getElementById('feedback-icon-box');
@@ -86,6 +88,32 @@
       const labels = ['สงบ/ปกติ', 'เล็กน้อย', 'ปานกลาง', 'รุนแรง', 'วิกฤต', 'รุนแรงมาก'];
       const text = labels[vitals.distress] || 'ปานกลาง';
       monitorDistress.textContent = text;
+    }
+
+    if (monitorBreathSound && vitals.breath_sound !== undefined) {
+      const bsMap = {
+        'coarse_rhonchi': 'เสมหะเดือด (Coarse Rhonchi)',
+        'expiratory_wheezing': 'เสียงหวีด (Expiratory Wheezes)',
+        'bilateral_wheezes_and_rhonchi': 'เสียงหวีด & เสมหะ (Wheezes & Rhonchi)',
+        'bilateral_basal_crackles': 'เสียงกรอบแกรบ (Basal Crackles)',
+        'clear': 'เสียงปอดโปร่งดี (Clear)',
+        'clear_bilateral': 'เสียงปอดโปร่งดี (Clear)',
+      };
+      const text = bsMap[vitals.breath_sound] || (typeof vitals.breath_sound === 'string' && vitals.breath_sound.includes('clear') ? 'เสียงปอดโปร่งดี (Clear)' : vitals.breath_sound);
+      monitorBreathSound.textContent = text;
+    }
+
+    if (monitorSecretions && vitals.secretions !== undefined) {
+      const secMap = {
+        'copious': 'เสมหะ: มาก/เหนียว (Copious)',
+        'copious_thick': 'เสมหะ: มาก/เหนียว (Copious)',
+        'moderate': 'เสมหะ: ปานกลาง (Moderate)',
+        'minimal': 'เสมหะ: เล็กน้อย (Minimal)',
+        'minimal/clear': 'เสมหะ: เล็กน้อย (Minimal)',
+        'none': 'เสมหะ: ไม่มี (None)',
+        'clear': 'เสมหะ: ไม่มี (None)',
+      };
+      monitorSecretions.textContent = secMap[vitals.secretions] || ('เสมหะ: ' + vitals.secretions);
     }
   }
 

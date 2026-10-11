@@ -319,7 +319,14 @@ def seed_suction_mission() -> dict[str, int]:
                     "title": "การดูแลหลังหัตถการครอบคลุมสมบูรณ์ (Comprehensive Post-Procedure Care)",
                     "message": "การฟังปอดซ้ำ การปรับออกซิเจนคืนค่าเดิม และการบันทึกข้อมูลอย่างครบถ้วนช่วยให้การดูแลผู้ป่วยต่อเนื่องและปลอดภัย",
                     "clinical_rationale": "การปรับ FiO2 กลับสู่ค่าเดิมป้องกันภาวะเป็นพิษจากออกซิเจน (Oxygen Toxicity) ขณะที่ยืนยันว่าทางเดินหายใจโล่งขึ้น",
-                    "patient_effect_json": {"secretions_set": "minimal", "distress_set": 0},
+                    "patient_effect_json": {
+                        "breath_sound_set": "clear",
+                        "secretions_set": "minimal",
+                        "distress_set": 0,
+                        "spo2_set": 97,
+                        "hr_set": 78,
+                        "rr_set": 18,
+                    },
                 },
                 {
                     "trigger_type": "on_selection",
