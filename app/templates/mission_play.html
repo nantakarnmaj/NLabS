@@ -33,7 +33,7 @@
         <!-- Patient Portrait Thumbnail -->
         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-slate-100 border border-[#DCEAF7] shrink-0 shadow-2xs">
           {% if mission.room_number == '501' or 'สมชาย' in scenario.patient_name %}
-          <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=6" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
+          <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=7" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
           {% elif mission.room_number == '502' or 'อนงค์' in scenario.patient_name %}
           <img src="{{ url_for('static', filename='images/patients/patient_anong.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
           {% elif mission.room_number == '503' or 'มะลิ' in scenario.patient_name %}
@@ -41,7 +41,7 @@
           {% elif mission.room_number == '504' or 'ประเสริฐ' in scenario.patient_name %}
           <img src="{{ url_for('static', filename='images/patients/patient_prasert.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
           {% else %}
-          <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=6" alt="Patient" class="w-full h-full object-cover">
+          <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=7" alt="Patient" class="w-full h-full object-cover">
           {% endif %}
         </div>
 
@@ -338,7 +338,7 @@
             {% if scenario.patient_name and 'อนงค์' in scenario.patient_name %}
             <img src="{{ url_for('static', filename='images/patients/patient_anong.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
             {% elif scenario.patient_name and 'สมชาย' in scenario.patient_name %}
-            <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=6" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
+            <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=7" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
             {% elif scenario.patient_name and 'มะลิ' in scenario.patient_name %}
             <img src="{{ url_for('static', filename='images/patients/patient_mali.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
             {% elif scenario.patient_name and 'ประเสริฐ' in scenario.patient_name %}
