@@ -278,26 +278,8 @@
             </div>
           </div>
 
-          <!-- Right Status Indicator & Thumbnail -->
-          <div class="flex items-center space-x-3 shrink-0">
-            {% if 'cannula' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/nasal_cannula.jpg') }}" alt="Nasal Cannula" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'simple_mask' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/simple_mask.jpg') }}" alt="Simple Mask" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'nrb' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/nrb_mask.jpg') }}" alt="NRB Mask" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'venturi' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/venturi_mask.jpg') }}" alt="Venturi Mask" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'catheter' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/suction_catheter.jpg') }}" alt="Suction Catheter" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'vacuum' in option.option_key or 'suction' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/suction_machine.jpg') }}" alt="Suction Unit" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'neb' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/jet_nebulizer.png') }}" alt="Nebulizer" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% elif 'oximeter' in option.option_key or 'spo2' in option.option_key %}
-            <img src="{{ url_for('static', filename='images/equipment/pulse_oximeter.jpg') }}" alt="Pulse Oximeter" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
-            {% endif %}
-
+          <!-- Right Status Indicator Checkbox -->
+          <div class="flex items-center shrink-0">
             <!-- Right Circular Checkbox Indicator -->
             <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center bg-white checkmark-box transition" aria-hidden="true">
               <svg class="w-3.5 h-3.5 text-white hidden checkmark-icon" fill="currentColor" viewBox="0 0 20 20">
