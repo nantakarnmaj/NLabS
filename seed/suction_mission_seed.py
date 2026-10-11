@@ -141,20 +141,24 @@ def seed_suction_mission() -> dict[str, int]:
             "title": "เตรียมอุปกรณ์ปลอดเชื้อและการตั้งค่าแรงดันดูด (Gear Up)",
             "instruction": "เลือกรายการอุปกรณ์ปลอดเชื้อ อุปกรณ์ป้องกันส่วนบุคคล (PPE) และการตั้งค่าแรงดันดูดสุญญากาศที่ปลอดภัยสำหรับผู้ใหญ่",
             "options": [
-                {"option_key": "sterile_catheter", "label": "สายดูดเสมหะปลอดเชื้อ (ขนาด 12 Fr — เส้นผ่านศูนย์กลางภายนอกไม่เกินครึ่งหนึ่งของเส้นผ่านศูนย์กลางภายในท่อเจาะคอ)", "is_correct": True, "display_order": 1},
-                {"option_key": "sterile_gloves", "label": "ถุงมือปลอดเชื้อ (Sterile gloves) สำหรับเทคนิคการดูดเสมหะระบบเปิด", "is_correct": True, "display_order": 2},
-                {"option_key": "vacuum_100_120", "label": "ปรับแรงดันเครื่องดูดเสมหะที่ 100–120 mmHg สำหรับผู้ใหญ่", "is_correct": True, "display_order": 3},
-                {"option_key": "sterile_saline", "label": "ภาชนะใส่น้ำสะอาด (น้ำเปล่า) สำหรับล้างสายดูดเสมหะ", "is_correct": True, "display_order": 4},
-                {"option_key": "face_shield", "label": "อุปกรณ์ป้องกันส่วนบุคคล (PPE): หน้ากากพร้อมกระบังหน้า (Face shield) หรือแว่นป้องกัน", "is_correct": True, "display_order": 5},
-                {"option_key": "clean_gloves_only", "label": "ถุงมือสะอาดธรรมดาที่ไม่ปลอดเชื้อสำหรับการดูดเสมหะระบบเปิด", "is_correct": False, "display_order": 6},
-                {"option_key": "vacuum_200", "label": "ตั้งแรงดันเครื่องดูดเสมหะสูงถึง 200 mmHg", "is_correct": False, "display_order": 7},
+                {
+                    "option_key": "suction_set",
+                    "label": "ชุดดูดเสมหะปลอดเชื้อ (Set suction) ประกอบด้วย สายดูดเสมหะปลอดเชื้อ (ขนาด 12 Fr — เส้นผ่านศูนย์กลางภายนอกไม่เกินครึ่งหนึ่งของเส้นผ่านศูนย์กลางภายในท่อเจาะคอ) และถุงมือปลอดเชื้อ (Sterile gloves) 1 ข้าง",
+                    "is_correct": True,
+                    "display_order": 1,
+                },
+                {"option_key": "vacuum_100_120", "label": "ปรับแรงดันเครื่องดูดเสมหะที่ 100–120 mmHg สำหรับผู้ใหญ่", "is_correct": True, "display_order": 2},
+                {"option_key": "sterile_saline", "label": "ภาชนะใส่น้ำสะอาด (น้ำเปล่า) สำหรับล้างสายดูดเสมหะ", "is_correct": True, "display_order": 3},
+                {"option_key": "face_shield", "label": "อุปกรณ์ป้องกันส่วนบุคคล (PPE): หน้ากากพร้อมกระบังหน้า (Face shield) หรือแว่นป้องกัน", "is_correct": True, "display_order": 4},
+                {"option_key": "clean_gloves_only", "label": "ถุงมือสะอาดธรรมดาที่ไม่ปลอดเชื้อสำหรับการดูดเสมหะระบบเปิด", "is_correct": False, "display_order": 5},
+                {"option_key": "vacuum_200", "label": "ตั้งแรงดันเครื่องดูดเสมหะสูงถึง 200 mmHg", "is_correct": False, "display_order": 6},
             ],
             "feedback": [
                 {
                     "trigger_type": "on_success",
                     "title": "ตรวจสอบอุปกรณ์และความปลอดภัยเรียบร้อย (Equipment & Safety Verified)",
-                    "message": "อุปกรณ์ปลอดเชื้อ อุปกรณ์ PPE และแรงดันสุญญากาศที่ปลอดภัย (100–120 mmHg) พร้อมใช้งานแล้ว",
-                    "clinical_rationale": "การเลือกขนาดสายดูดเสมหะที่เหมาะสม (≤ 1/2 ของขนาดท่อเจาะคอ) ป้องกันการอุดตันทางเดินหายใจอย่างสมบูรณ์ขณะดูดเสมหะ",
+                    "message": "ชุดดูดเสมหะปลอดเชื้อ (Set suction) อุปกรณ์ PPE และแรงดันสุญญากาศที่ปลอดภัย (100–120 mmHg) พร้อมใช้งานแล้ว",
+                    "clinical_rationale": "การเลือก Set suction ที่มีขนาดสายเหมาะสม (≤ 1/2 ของขนาดท่อเจาะคอ) ป้องกันการอุดตันทางเดินหายใจ และมีถุงมือปลอดเชื้อ 1 ข้างสำหรับมือข้างที่ถนัดเพื่อรักษาเทคนิคปลอดเชื้ออย่างเคร่งครัด",
                 },
                 {
                     "trigger_type": "on_selection",
@@ -409,6 +413,11 @@ def seed_suction_mission() -> dict[str, int]:
             activity.activity_type = act_data["activity_type"]
 
         # Seed Options
+        configured_keys = {opt["option_key"] for opt in act_data.get("options", [])}
+        for existing_opt in list(activity.options):
+            if existing_opt.option_key not in configured_keys:
+                db.session.delete(existing_opt)
+
         for opt_data in act_data.get("options", []):
             existing_opt = db.session.execute(
                 select(ActivityOption).where(

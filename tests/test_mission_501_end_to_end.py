@@ -62,7 +62,7 @@ def test_room_501_full_playthrough_and_badge_award(client, app):
 
     res3 = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",
-        json={"payload": {"selected_keys": ["sterile_catheter", "sterile_gloves", "vacuum_100_120", "sterile_saline", "face_shield"]}},
+        json={"payload": {"selected_keys": ["suction_set", "vacuum_100_120", "sterile_saline", "face_shield"]}},
     )
     assert res3.status_code == 200
     assert res3.json["success"] is True

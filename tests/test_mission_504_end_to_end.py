@@ -22,7 +22,7 @@ def _complete_room_501(client, app, run_id: int):
     steps_payloads = [
         {"acknowledged": True},
         {"selected_keys": ["audible_gurgling", "rhonchi", "desaturation"]},
-        {"selected_keys": ["sterile_catheter", "sterile_gloves", "vacuum_100_120", "sterile_saline", "face_shield"]},
+        {"selected_keys": ["suction_set", "vacuum_100_120", "sterile_saline", "face_shield"]},
         {"selected_keys": ["pre_oxygenate", "semi_fowler", "monitor_vitals"]},
         {"ordered_keys": ["step_preox", "step_don_sterile", "step_insert_no_suction", "step_suction_withdraw", "step_post_oxygenate"]},
         {"chosen_key": "only_on_withdraw"},
