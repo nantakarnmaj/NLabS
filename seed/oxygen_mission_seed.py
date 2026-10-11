@@ -110,12 +110,12 @@ def seed_oxygen_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 2,
             "options": [
-                {"option_key": "spo2_88", "label": "SpO₂ 88% ในอากาศห้อง (ภาวะพร่องออกซิเจนต่ำกว่าเป้าหมาย ≥ 94%)", "is_correct": True},
-                {"option_key": "tachypnea_rr28", "label": "หายใจเร็วผิดปกติ (Tachypnea อัตราการหายใจ 28 ครั้ง/นาที)", "is_correct": True},
-                {"option_key": "tachycardia_hr104", "label": "หัวใจเต้นเร็ว (Tachycardia ชีพจร 104 ครั้ง/นาที กลไกชดเชยของร่างกาย)", "is_correct": True},
-                {"option_key": "dyspnea_anxiety", "label": "รู้สึกเหนื่อย หายใจไม่อิ่ม ร่วมกับวิตกกังวลกระสับกระส่าย", "is_correct": True},
-                {"option_key": "nausea_postop", "label": "คลื่นไส้เล็กน้อยหลังผ่าตัดโดยไม่มีการอาเจียน", "is_correct": False},
-                {"option_key": "normal_urine", "label": "ปัสสาวะออกปกติ (45 มล./ชม.)", "is_correct": False},
+                {"option_key": "spo2_88", "label": "Room Air SpO₂ 88%", "is_correct": True},
+                {"option_key": "tachypnea_rr28", "label": "อัตราการหายใจ 28 ครั้ง/นาที", "is_correct": True},
+                {"option_key": "tachycardia_hr104", "label": "ชีพจร 104 ครั้ง/นาที", "is_correct": True},
+                {"option_key": "dyspnea_anxiety", "label": "รู้สึกเหนื่อย หายใจไม่อิ่ม วิตกกังวลกระสับกระส่าย", "is_correct": True},
+                {"option_key": "nausea_postop", "label": "คลื่นไส้เล็กน้อยหลังผ่าตัด", "is_correct": False},
+                {"option_key": "normal_urine", "label": "ปัสสาวะออก 45 มล./ชม.", "is_correct": False},
             ],
             "feedback_rules": [
                 {
