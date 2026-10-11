@@ -350,6 +350,38 @@
       });
     }
 
+    // Scramble the cards initially so the activity doesn't start already in solved order
+    const initialItems = Array.from(sequenceList.querySelectorAll('li[data-step-key]'));
+    if (initialItems.length > 1) {
+      const seed = parseInt(runId || '42', 10) * 101 + parseInt(activityId || '5', 10);
+      let s = seed;
+      function pseudoRandom() {
+        s = (s * 9301 + 49297) % 233280;
+        return s / 233280;
+      }
+      const shuffled = [...initialItems];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(pseudoRandom() * (i + 1));
+        const temp = shuffled[i];
+        shuffled[i] = shuffled[j];
+        shuffled[j] = temp;
+      }
+      let same = true;
+      for (let i = 0; i < initialItems.length; i++) {
+        if (initialItems[i] !== shuffled[i]) {
+          same = false;
+          break;
+        }
+      }
+      if (same && shuffled.length > 1) {
+        const first = shuffled[0];
+        shuffled[0] = shuffled[1];
+        shuffled[1] = first;
+      }
+      shuffled.forEach((el) => sequenceList.appendChild(el));
+      updateStepBadges();
+    }
+
     // 1. Initialize SortableJS for drag-and-drop
     if (window.Sortable) {
       new window.Sortable(sequenceList, {
