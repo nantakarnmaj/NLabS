@@ -337,6 +337,20 @@ def submit_activity(
                 ).scalar_one_or_none()
 
                 if badge:
+                    badge_file_map = {
+                        "oxygen": "oxygen-guardian.svg",
+                        "airway": "airway-explorer.svg",
+                        "nebulizer": "nebulizer-navigator.svg",
+                        "rescue": "respiratory-ready.svg",
+                    }
+                    badge_img_name = badge_file_map.get(badge.icon, "airway-explorer.svg")
+                    badge_info = {
+                        "name": badge.name,
+                        "description": badge.description,
+                        "icon": badge.icon,
+                        "image_url": f"/static/images/badges/{badge_img_name}",
+                    }
+
                     existing_session_badge = db.session.execute(
                         select(SessionBadge).where(
                             SessionBadge.session_id == run.session_id,
@@ -352,11 +366,7 @@ def submit_activity(
                             awarded_at=now,
                         )
                         db.session.add(awarded_badge)
-                        badge_awarded = {
-                            "name": badge.name,
-                            "description": badge.description,
-                            "icon": badge.icon,
-                        }
+                    badge_awarded = badge_info
 
         db.session.commit()
 

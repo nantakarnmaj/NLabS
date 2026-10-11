@@ -295,21 +295,51 @@
     }
 
     if (result.success) {
-      if (feedbackBanner) {
-        feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400';
-      }
-      if (feedbackIconBox) {
-        feedbackIconBox.innerHTML = `
-          <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-8 ring-emerald-100 animate-bounce">
-            <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-        `;
-      }
-      if (feedbackStatusBadge) {
-        feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs';
-        feedbackStatusBadge.innerHTML = '<span>🎉</span><span>ถูกต้องยอดเยี่ยม! (EXCELLENT!)</span>';
+      const hasBadge = !!(
+        result.badge_awarded ||
+        (result.is_mission_completed && gameContainer.dataset.badgeImg) ||
+        (gameContainer.dataset.badgeImg && (result.title?.includes('เหรียญ') || result.message?.includes('เหรียญ')))
+      );
+      const badgeImgUrl = result.badge_awarded?.image_url || gameContainer.dataset.badgeImg;
+      const badgeName = result.badge_awarded?.name || gameContainer.dataset.badgeName || 'เหรียญรางวัลเกียรติยศ';
+
+      if (hasBadge && badgeImgUrl) {
+        if (feedbackBanner) {
+          feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-amber-400 via-yellow-400 to-sky-400';
+        }
+        if (feedbackIconBox) {
+          feedbackIconBox.innerHTML = `
+            <div class="relative flex flex-col items-center justify-center my-1">
+              <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-tr from-amber-50 to-sky-50 border-2 border-amber-300 p-2.5 flex items-center justify-center shadow-xl shadow-amber-500/20 ring-4 ring-amber-100 animate-bounce">
+                <img src="${badgeImgUrl}" alt="${badgeName}" class="w-full h-full object-contain filter drop-shadow-md">
+              </div>
+              <div class="absolute -bottom-2 px-3 py-0.5 rounded-full bg-amber-500 text-white text-2xs font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
+                <span>★</span><span>BADGE UNLOCKED</span><span>★</span>
+              </div>
+            </div>
+          `;
+        }
+        if (feedbackStatusBadge) {
+          feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs mt-2';
+          feedbackStatusBadge.innerHTML = '<span>🏆</span><span>ยินดีด้วย! คุณได้รับเหรียญรางวัล (BADGE AWARDED!)</span>';
+        }
+      } else {
+        if (feedbackBanner) {
+          feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400';
+        }
+        if (feedbackIconBox) {
+          feedbackIconBox.innerHTML = `
+            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-8 ring-emerald-100 animate-bounce">
+              <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          `;
+        }
+        if (feedbackStatusBadge) {
+          feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs';
+          feedbackStatusBadge.innerHTML = '<span>🎉</span><span>ถูกต้องยอดเยี่ยม! (EXCELLENT!)</span>';
+        }
       }
 
       if (feedbackActionBtn) {
