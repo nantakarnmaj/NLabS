@@ -308,7 +308,7 @@ def seed_suction_mission() -> dict[str, int]:
             "instruction": "เลือกการพยาบาลที่จำเป็นทั้งหมดหลังเสร็จสิ้นการดูดเสมหะและผู้ป่วยมีสัญญาณชีพคงที่แล้ว",
             "options": [
                 {"option_key": "re_auscultate", "label": "ฟังเสียงหายใจที่ปอดทั้งสองข้างซ้ำเพื่อประเมินประสิทธิผลของการกำจัดเสมหะ", "is_correct": True, "display_order": 1},
-                {"option_key": "flush_tubing", "label": "ดูดน้ำเกลือปลอดเชื้อล้างสายท่อยางดูดเสมหะจนสะอาด", "is_correct": True, "display_order": 2},
+                {"option_key": "flush_tubing", "label": "ดูดน้ำล้างสายท่อยางดูดเสมหะให้สะอาด", "is_correct": True, "display_order": 2},
                 {"option_key": "restore_fio2", "label": "ปรับอัตราการไหลของออกซิเจนผ่าน Oxygen collar กลับสู่ค่าเดิมตามแผนการรักษาเมื่อสัญญาณชีพคงที่", "is_correct": True, "display_order": 3},
                 {"option_key": "document_care", "label": "บันทึกทางการพยาบาล: สี ลักษณะ ปริมาณเสมหะ และการตอบสนองของผู้ป่วย", "is_correct": True, "display_order": 4},
                 {"option_key": "leave_100_percent", "label": "เปิดออกซิเจน 100% FiO2 ค้างไว้ตลอดไป", "is_correct": False, "display_order": 5},
