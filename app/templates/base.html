@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-[#F5FAFF] text-[#14213D]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}BreathQuest — การผจญภัยทบทวนทักษะคลินิกระบบหายใจ{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-full flex flex-col font-sans antialiased selection:bg-[#1296DB] selection:text-white bg-[#F5FAFF] text-[#14213D] bg-airflow">
+  <!-- Accessibility: Skip link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#1296DB] focus:text-white focus:rounded-md focus:shadow-xl focus:ring-2 focus:ring-sky-400">
+    ข้ามไปยังเนื้อหาหลัก
+  </a>
+
+  <!-- Compact Modern Header (UI v2) -->
+  <header class="bg-white/95 border-b border-[#DCEAF7] sticky top-0 z-40 backdrop-blur-md shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4">
+      <!-- Left: Logo & Clinical Tag -->
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="{{ url_for('main.home') }}" class="flex items-center group focus-visible:outline-none" aria-label="BreathQuest หน้าแรก">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="BreathQuest" class="h-8 sm:h-9 w-auto object-contain transition-transform group-hover:scale-105">
+        </a>
+      </div>
+
+      <!-- Center: Distinct Colored Navigation Tabs (Desktop) -->
+      <nav class="hidden md:flex items-center gap-1.5 bg-[#F5FAFF] border border-[#DCEAF7] rounded-full p-1 shadow-inner text-xs sm:text-sm font-semibold" aria-label="Main Navigation">
+        <!-- 1. หน้าแรก (Sky Blue Theme) -->
+        <a
+          href="{{ url_for('main.home') }}"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition {% if request.path == '/' %}bg-[#1296DB] text-white shadow-xs font-bold border border-[#1296DB]{% else %}bg-sky-50 text-sky-700 border border-sky-200/80 hover:bg-sky-100 hover:text-sky-900{% endif %}"
+        >
+          <span>🏠</span>
+          <span>หน้าแรก</span>
+        </a>
+
+        <!-- 2. แผนผังผู้ป่วย (Emerald Green Theme) -->
+        <a
+          href="{{ url_for('main.ward') }}"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition {% if request.path.startswith('/ward') %}bg-emerald-600 text-white shadow-xs font-bold border border-emerald-600{% else %}bg-emerald-50 text-emerald-800 border border-emerald-200/80 hover:bg-emerald-100 hover:text-emerald-950{% endif %}"
+        >
+          <span>🗺️</span>
+          <span>แผนผังผู้ป่วย</span>
+          <span class="sr-only">แผนผังหอผู้ป่วย</span>
+        </a>
+
+        <!-- 3. ความก้าวหน้า (Indigo / Violet Theme) -->
+        <a
+          href="{{ url_for('main.ward') }}#progress-flow"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition bg-indigo-50 text-indigo-800 border border-indigo-200/80 hover:bg-indigo-100 hover:text-indigo-950"
+        >
+          <span>📊</span>
+          <span>ความก้าวหน้า</span>
+        </a>
+
+        <!-- 4. ความรู้เพิ่มเติม (Amber / Warm Gold Theme) -->
+        <a
+          href="{{ url_for('main.mission_view', slug='501') }}?preview=1"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition {% if request.args.get('preview') == '1' %}bg-amber-500 text-white shadow-xs font-bold border border-amber-500{% else %}bg-amber-50 text-amber-900 border border-amber-200/80 hover:bg-amber-100 hover:text-amber-950{% endif %}"
+        >
+          <span>📖</span>
+          <span>ความรู้เพิ่มเติม</span>
+        </a>
+      </nav>
+
+      <!-- Right: User Identity / Learner Status Pill -->
+      <div class="flex items-center gap-2">
+        {% if current_user %}
+        <!-- Authenticated Institutional User -->
+        <div class="flex items-center bg-white border border-[#DCEAF7] rounded-full pl-1.5 pr-3 py-1 shadow-xs hover:border-[#1296DB] transition">
+          <div class="w-7 h-7 rounded-full overflow-hidden border border-sky-200 bg-sky-50 shrink-0 mr-2 flex items-center justify-center">
+            <img src="{{ url_for('static', filename='images/nurse_mascot.png') }}" alt="User Avatar" class="w-full h-full object-cover object-top">
+          </div>
+          <div class="text-left leading-tight mr-2 hidden sm:block">
+            <div class="text-[9px] text-[#64748B] font-medium">ยินดีต้อนรับ</div>
+            <div class="text-xs font-bold text-[#14213D] truncate max-w-[120px]">{{ current_user.name or 'ผู้ใช้งาน' }}</div>
+          </div>
+          <a
+            href="{{ url_for('auth.logout') }}"
+            class="text-[11px] font-semibold text-[#64748B] hover:text-red-600 pl-1.5 border-l border-[#DCEAF7] ml-1 transition"
+            title="ออกจากระบบ"
+          >
+            ออก
+          </a>
+        </div>
+        {% elif session and not session.is_expired %}
+        <!-- Anonymous Learner Session (Identified Context: Do NOT show Login button) -->
+        <div class="flex items-center bg-white border border-[#DCEAF7] rounded-full pl-1.5 pr-3 py-1 shadow-xs">
+          <div class="w-7 h-7 rounded-full overflow-hidden border border-sky-200 bg-sky-50 shrink-0 mr-2 flex items-center justify-center">
+            <img src="{{ url_for('static', filename='images/nurse_mascot.png') }}" alt="Student Avatar" class="w-full h-full object-cover object-top">
+          </div>
+          <div class="text-left leading-tight mr-1 hidden sm:block">
+            <div class="text-[9px] text-[#64748B] font-medium">เซสชันผู้เรียน</div>
+            <div class="text-xs font-bold text-[#14213D] flex items-center gap-1">
+              <span>นักศึกษาพยาบาล</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="เซสชันกำลังทำงาน"></span>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <!-- Unauthenticated Guest -->
+        <a
+          href="{{ url_for('auth.login') }}"
+          class="inline-flex items-center gap-1.5 bg-[#1296DB] hover:bg-[#0f80bc] text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-xs transition touch-target"
+        >
+          <span>เข้าสู่ระบบ (Login)</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        </a>
+        {% endif %}
+
+        <!-- Mobile Navigation Dropdown/Pill Link -->
+        <div class="flex md:hidden items-center ml-1">
+          <a
+            href="{{ url_for('main.ward') }}"
+            class="p-2 rounded-xl bg-sky-50 text-[#1296DB] border border-[#DCEAF7] text-xs font-bold flex items-center gap-1"
+            title="แผนผังผู้ป่วย"
+          >
+            <span>🗺️</span>
+            <span class="text-[11px]">วอร์ด</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content landmark -->
+  <main id="main-content" class="flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Compact Clean Footer -->
+  <footer class="bg-white border-t border-[#DCEAF7] text-[#64748B] text-xs py-6 mt-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+        <div class="flex items-center space-x-2">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="BreathQuest" class="h-6 w-auto object-contain opacity-90">
+          <span class="text-slate-300">•</span>
+          <span class="text-[#14213D] font-semibold">Clinical Learning Adventure</span>
+        </div>
+        <div class="text-center md:text-right text-[#64748B] text-[11px]">
+          เกมทบทวนทักษะการพยาบาลระบบหายใจสำหรับนักศึกษาพยาบาลชั้นปีที่ 2
+        </div>
+      </div>
+      <div class="border-t border-[#DCEAF7] pt-3 text-[11px] text-[#64748B] leading-relaxed">
+        <p>
+          <strong class="text-[#14213D]">ข้อชี้แจงการจำลองสถานการณ์เพื่อการเรียนรู้ (Formative Simulation):</strong>
+          สื่อการเรียนรู้นี้ใช้สถานการณ์ผู้ป่วยจำลองเพื่อทบทวนความรู้และหลักความปลอดภัย ไม่มีการเก็บข้อมูลผู้ป่วยจริง ไม่มีการตัดเกรด จัดอันดับ หรือตัดสินผ่าน/ไม่ผ่าน ในการดูแลผู้ป่วยจริงโปรดปฏิบัติตามแนวทางและคู่มือปฏิบัติการพยาบาลที่สถาบันกำหนดอย่างเคร่งครัด
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

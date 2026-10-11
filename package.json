@@ -1,0 +1,16 @@
+{
+  "name": "breathquest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BreathQuest — Formative clinical skills adventure for nursing students",
+  "scripts": {
+    "build:css": "tailwindcss -i ./app/assets/css/input.css -o ./app/static/css/app.css --minify",
+    "watch:css": "tailwindcss -i ./app/assets/css/input.css -o ./app/static/css/app.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "sortablejs": "^1.15.6"
+  }
+}

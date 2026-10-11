@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mission.title }} — Room {{ mission.room_number }} | BreathQuest{% endblock %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='js/sortable.min.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/game.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-5 sm:space-y-6">
+  
+  <!-- 1. MISSION BREADCRUMB & HEADER (Section E) -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#64748B]">
+    <nav class="flex items-center space-x-2" aria-label="Breadcrumb">
+      <a href="{{ url_for('main.ward') }}" class="hover:text-[#1296DB] transition font-medium">หอผู้ป่วยระบบหายใจ (Respiratory Ward)</a>
+      <span class="text-slate-300">/</span>
+      <span class="text-[#14213D] font-bold">ห้อง {{ mission.room_number }} (Room {{ mission.room_number }})</span>
+    </nav>
+    <div class="flex items-center space-x-2 font-mono">
+      <span class="px-2.5 py-0.5 rounded-full bg-white text-[#1296DB] border border-[#DCEAF7] shadow-2xs font-semibold">
+        รอบที่ #{{ run.id }}
+      </span>
+    </div>
+  </div>
+
+  <!-- 2. PATIENT SNAPSHOT / MONITOR (Section F: Reduced dark footprint, clinical cockpit) -->
+  <section class="bg-white rounded-[22px] border border-[#DCEAF7] p-4 sm:p-5 shadow-xs space-y-4" aria-label="Bedside Patient Snapshot & Telemetry">
+    
+    <!-- Header Strip: Clinical Emergency Tag & Demographics -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCEAF7] pb-3.5">
+      <div class="flex items-center gap-3">
+        <!-- Patient Portrait Thumbnail -->
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-slate-100 border border-[#DCEAF7] shrink-0 shadow-2xs">
+          {% if mission.room_number == '501' or 'สมชาย' in scenario.patient_name %}
+          <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
+          {% elif mission.room_number == '502' or 'อนงค์' in scenario.patient_name %}
+          <img src="{{ url_for('static', filename='images/patients/patient_anong.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
+          {% elif mission.room_number == '503' or 'มะลิ' in scenario.patient_name %}
+          <img src="{{ url_for('static', filename='images/patients/patient_mali.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
+          {% elif mission.room_number == '504' or 'ประเสริฐ' in scenario.patient_name %}
+          <img src="{{ url_for('static', filename='images/patients/patient_prasert.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover object-top">
+          {% else %}
+          <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}" alt="Patient" class="w-full h-full object-cover">
+          {% endif %}
+        </div>
+
+        <div class="space-y-0.5">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-black font-mono tracking-wider text-[#1296DB] uppercase bg-sky-50 px-2 py-0.5 rounded-md border border-sky-100">
+              ROOM {{ mission.room_number }} • {% if mission.room_number == '501' %}AIRWAY EMERGENCY{% elif mission.room_number == '502' %}OXYGEN TITRATION{% elif mission.room_number == '503' %}ACUTE BRONCHOSPASM{% else %}RESPIRATORY RESCUE{% endif %}
+            </span>
+          </div>
+          <h2 class="text-base sm:text-lg font-black text-[#14213D] leading-tight flex items-center gap-2">
+            <span>{{ scenario.patient_name }}</span>
+            <span class="text-xs sm:text-sm font-normal text-slate-600">({{ scenario.patient_age }} ปี • {% if mission.room_number == '501' %}ท่อช่วยหายใจ ETT เบอร์ 7.5{% elif mission.room_number == '502' %}การบำบัดด้วยออกซิเจน (Oxygen Therapy & Titration){% elif mission.room_number == '503' %}หลอดลมหดเกร็งเฉียบพลัน (Acute Bronchospasm){% elif mission.room_number == '504' %}หายใจลำบากวิกฤต & ขาดออกซิเจน (Acute Respiratory Distress & Hypoxemia){% else %}ภาวะวิกฤตทางเดินหายใจ{% endif %})</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- Distress State Indicator -->
+      <div class="flex items-center gap-2 text-xs sm:text-sm">
+        <span class="text-[#64748B] font-medium">สถานะผู้ป่วย:</span>
+        <span id="monitor-distress" class="px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 border border-amber-300 text-amber-800 flex items-center gap-1.5 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+          {% if run.patient_state_json.distress >= 3 %}วิกฤต/หายใจลำบากมาก (Severe Distress){% elif run.patient_state_json.distress > 0 %}หายใจลำบากปานกลาง (Moderate Distress){% else %}คงที่ / สงบ (Stable / Calm){% endif %}
+        </span>
+      </div>
+    </div>
+
+    <!-- Mini Telemetry Monitor Panels (Dark navy ONLY for monitor values) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-center">
+      <!-- SpO2 -->
+      <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">SpO₂</div>
+        <div id="monitor-spo2" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if run.patient_state_json.spo2 < 90 %}text-red-400{% elif run.patient_state_json.spo2 < 94 %}text-amber-400{% else %}text-emerald-400{% endif %}">
+          {{ run.patient_state_json.spo2 }}%
+        </div>
+        <div class="text-xs text-slate-400 font-mono">เป้าหมาย ≥ 94%</div>
+      </div>
+
+      <!-- Heart Rate -->
+      <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">ชีพจร (Heart Rate)</div>
+        <div id="monitor-hr" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if run.patient_state_json.hr < 50 or run.patient_state_json.hr > 120 %}text-red-400{% else %}text-cyan-400{% endif %}">
+          {{ run.patient_state_json.hr }} bpm
+        </div>
+        <div class="text-xs text-slate-400 font-mono">ปกติ 60–100 bpm</div>
+      </div>
+
+      <!-- Respiration Rate -->
+      <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">การหายใจ (Resp Rate)</div>
+        <div id="monitor-rr" class="text-2xl sm:text-3xl font-black font-mono my-0.5 text-cyan-300">
+          {{ run.patient_state_json.rr }} /min
+        </div>
+        <div class="text-xs text-slate-400 font-mono">ปกติ 12–20 /min</div>
+      </div>
+
+      <!-- Breath Sounds & Secretions -->
+      <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner text-left flex flex-col justify-between">
+        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">ทางเดินหายใจ / เสมหะ</div>
+        <div class="text-sm font-bold text-slate-100 mt-0.5 truncate">
+          {% set bs = run.patient_state_json.breath_sound %}
+          {% if bs == 'coarse_rhonchi' %}เสมหะเดือด (Coarse Rhonchi)
+          {% elif bs == 'expiratory_wheezing' %}เสียงหวีด (Expiratory Wheezes)
+          {% elif bs == 'bilateral_wheezes_and_rhonchi' %}เสียงหวีด & เสมหะ (Wheezes & Rhonchi)
+          {% elif bs == 'bilateral_basal_crackles' %}เสียงกรอบแกรบ (Basal Crackles)
+          {% elif 'clear' in bs %}เสียงปอดโปร่งดี (Clear)
+          {% else %}{{ bs|replace('_', ' ')|title }}
+          {% endif %}
+        </div>
+        <div class="text-xs text-cyan-300 mt-0.5 truncate">
+          เสมหะ:
+          {% set sec = run.patient_state_json.secretions %}
+          {% if sec in ['copious', 'copious_thick'] %}มาก/เหนียว (Copious)
+          {% elif sec == 'moderate' %}ปานกลาง (Moderate)
+          {% elif sec in ['minimal', 'minimal/clear'] %}เล็กน้อย (Minimal)
+          {% elif sec in ['none', 'clear'] %}ไม่มี (None)
+          {% else %}{{ sec }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- If Mission Run is Completed (Debrief Showcase) -->
+  {% if run.status == 'completed' %}
+  <section class="p-8 sm:p-10 rounded-[24px] bg-white border border-[#DCEAF7] shadow-sm text-center space-y-6" aria-labelledby="completed-heading">
+    <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-xs">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+
+    <div>
+      <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        ภารกิจห้อง {{ mission.room_number }} สำเร็จสมบูรณ์ (Mission Complete)
+      </span>
+      <h1 id="completed-heading" class="text-2xl sm:text-3xl font-black text-[#14213D] tracking-tight mt-3">
+        ยอดเยี่ยมมาก! คุณผ่านภารกิจแล้ว
+      </h1>
+      <p class="text-xs sm:text-sm text-[#64748B] mt-2 max-w-lg mx-auto leading-relaxed">
+        คุณได้ให้การพยาบาลอย่างถูกต้องตามหลักวิชาชีพ รักษาเทคนิคปลอดเชื้ออย่างเคร่งครัด ตอบสนองต่อการเปลี่ยนแปลงของสัญญาณชีพได้อย่างรวดเร็ว
+      </p>
+    </div>
+
+    <!-- Awarded Badge Card -->
+    {% if badge %}
+    <div class="max-w-md mx-auto p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] shadow-xs flex items-center space-x-4 text-left">
+      <div class="w-14 h-14 rounded-2xl bg-[#1296DB] flex items-center justify-center text-white shrink-0 shadow-sm" aria-hidden="true">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+      </div>
+      <div>
+        <div class="text-xs font-bold text-[#1296DB] uppercase tracking-wider">ตราสัญลักษณ์ที่ได้รับ (Badge Awarded)</div>
+        <div class="text-base font-bold text-[#14213D]">{{ badge.name }}</div>
+        <div class="text-xs text-[#64748B] mt-0.5">{{ badge.description }}</div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+      <a
+        href="{{ url_for('main.ward') }}"
+        class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl font-bold text-white bg-[#1296DB] hover:bg-[#0f80bc] transition shadow-xs touch-target"
+      >
+        <span>กลับสู่แผนผังหอผู้ป่วย (Return to Ward)</span>
+      </a>
+
+      <form method="POST" action="{{ url_for('api.replay_endpoint', run_id=run.id) }}" class="w-full sm:w-auto">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl font-semibold text-[#14213D] bg-white hover:bg-slate-50 border border-[#DCEAF7] transition shadow-xs touch-target"
+        >
+          <span>ทบทวนภารกิจอีกครั้ง (เริ่มรอบใหม่)</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Active Activity Workspace -->
+  {% else %}
+  <div
+    id="game-container"
+    data-run-id="{{ run.id }}"
+    data-activity-id="{{ current_activity.id }}"
+    data-revision="{{ run.state_revision }}"
+    data-activity-type="{{ current_activity.activity_type }}"
+    class="space-y-5"
+  >
+    
+    <!-- 3. ACTIVITY PROGRESS COMPONENT (Section G) -->
+    {% set pct_complete = ((current_activity.display_order / total_activities) * 100)|round|int %}
+    <div class="bg-white rounded-2xl border border-[#DCEAF7] p-3.5 sm:p-4 shadow-xs space-y-2">
+      <div class="flex items-center justify-between text-xs sm:text-sm">
+        <div class="flex items-center gap-2">
+          <span class="font-black text-[#1296DB] font-mono">Step {{ current_activity.display_order }} of {{ total_activities }}</span>
+          <span class="text-slate-300">•</span>
+          <span class="text-[#64748B] text-xs font-mono">(Activity {{ current_activity.display_order }} of {{ total_activities }})</span>
+          <span class="text-slate-300 hidden sm:inline">•</span>
+          <span class="font-bold text-[#14213D] truncate max-w-xs sm:max-w-md">{{ current_activity.title }}</span>
+        </div>
+        <span class="font-bold text-[#64748B] font-mono text-xs sm:text-sm">{{ pct_complete }}% complete</span>
+      </div>
+      <!-- Progress Bar -->
+      <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden" aria-hidden="true">
+        <div class="h-full bg-gradient-to-r from-[#1296DB] to-cyan-400 rounded-full transition-all duration-300" style="width: {{ pct_complete }}%;"></div>
+      </div>
+    </div>
+
+    <!-- 5. MAIN ACTIVITY WORKSPACE CARD -->
+    <article class="p-6 sm:p-8 rounded-[24px] bg-white border border-[#DCEAF7] space-y-6 shadow-xs" aria-labelledby="activity-heading">
+      <div>
+        <h1 id="activity-heading" class="text-xl sm:text-2xl font-black text-[#14213D] tracking-tight">
+          {{ current_activity.title }}
+        </h1>
+      </div>
+
+      <!-- Activity Type 1: Intro Screen -->
+      {% if current_activity.activity_type == 'intro' %}
+      <div class="p-5 sm:p-6 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] space-y-4 text-sm sm:text-base text-slate-800 leading-relaxed">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-2xl overflow-hidden border border-[#DCEAF7] shadow-sm bg-white">
+            {% if scenario.patient_name and 'อนงค์' in scenario.patient_name %}
+            <img src="{{ url_for('static', filename='images/patients/patient_anong.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
+            {% elif scenario.patient_name and 'สมชาย' in scenario.patient_name %}
+            <img src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
+            {% elif scenario.patient_name and 'มะลิ' in scenario.patient_name %}
+            <img src="{{ url_for('static', filename='images/patients/patient_mali.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
+            {% elif scenario.patient_name and 'ประเสริฐ' in scenario.patient_name %}
+            <img src="{{ url_for('static', filename='images/patients/patient_prasert.png') }}" alt="{{ scenario.patient_name }}" class="w-full h-full object-cover">
+            {% else %}
+            <div class="w-full h-full flex items-center justify-center text-slate-400 font-medium">ภาพจำลอง</div>
+            {% endif %}
+          </div>
+          <div class="space-y-2.5 flex-grow">
+            <p><strong class="text-[#14213D] font-bold">ผู้ป่วย:</strong> {{ scenario.patient_name }} (อายุ {{ scenario.patient_age }} ปี เพศ{{ 'ชาย' if scenario.patient_gender|lower in ['male', 'm', 'ชาย'] else 'หญิง' }})</p>
+            <p><strong class="text-[#14213D] font-bold">สถานการณ์ทางคลินิก:</strong> {{ scenario.clinical_summary }}</p>
+            {% if current_activity.content_json.goal %}
+            <p class="text-[#1296DB] font-bold text-sm sm:text-base pt-1">{{ current_activity.content_json.goal }}</p>
+            {% else %}
+            <p class="text-[#1296DB] font-bold text-sm sm:text-base pt-1">สังเกตมอนิเตอร์ข้างเตียงด้านบน และประเมินการตอบสนองของผู้ป่วยอย่างใกล้ชิด</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Type 2: Multi-Select Activities (Section I) -->
+      {% elif current_activity.activity_type in ['clinical_cues', 'equipment_select', 'medication_check', 'safety_check', 'aftercare'] %}
+      <div class="space-y-2.5" role="group" aria-label="Selection Options">
+        {% for option in current_activity.options %}
+        <div
+          class="selection-card p-4 rounded-2xl bg-white border border-[#DCEAF7] hover:border-[#1296DB] hover:bg-sky-50/20 cursor-pointer transition duration-150 flex items-center justify-between min-h-[64px] touch-target shadow-2xs"
+          data-option-key="{{ option.option_key }}"
+          tabindex="0"
+          role="checkbox"
+          aria-checked="false"
+        >
+          <div class="flex items-center space-x-3.5 flex-grow pr-3">
+            <!-- Hidden Checkbox input for accessibility -->
+            <input type="checkbox" class="sr-only" tabindex="-1">
+            
+            <!-- Left Clinical Icon / Dot -->
+            <div class="w-7 h-7 rounded-lg bg-sky-50 text-[#1296DB] flex items-center justify-center text-xs shrink-0 font-bold" aria-hidden="true">
+              📋
+            </div>
+
+            <!-- Option Text -->
+            <div class="space-y-0.5">
+              <div class="text-sm sm:text-base font-bold text-[#14213D] leading-snug">{{ option.label }}</div>
+              {% if option.description %}
+              <div class="text-xs sm:text-sm text-slate-600">{{ option.description }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Right Status Indicator & Thumbnail -->
+          <div class="flex items-center space-x-3 shrink-0">
+            {% if 'cannula' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/nasal_cannula.jpg') }}" alt="Nasal Cannula" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'simple_mask' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/simple_mask.jpg') }}" alt="Simple Mask" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'nrb' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/nrb_mask.jpg') }}" alt="NRB Mask" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'venturi' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/venturi_mask.jpg') }}" alt="Venturi Mask" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'catheter' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/suction_catheter.jpg') }}" alt="Suction Catheter" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'vacuum' in option.option_key or 'suction' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/suction_machine.jpg') }}" alt="Suction Unit" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'neb' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/jet_nebulizer.png') }}" alt="Nebulizer" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% elif 'oximeter' in option.option_key or 'spo2' in option.option_key %}
+            <img src="{{ url_for('static', filename='images/equipment/pulse_oximeter.jpg') }}" alt="Pulse Oximeter" class="w-11 h-11 rounded-lg object-cover border border-[#DCEAF7] hidden sm:block" loading="lazy">
+            {% endif %}
+
+            <!-- Right Circular Checkbox Indicator -->
+            <div class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center bg-white checkmark-box transition" aria-hidden="true">
+              <svg class="w-3.5 h-3.5 text-white hidden checkmark-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Activity Type 3: Sequence Activity (Section J) -->
+      {% elif current_activity.activity_type == 'sequence' %}
+      <div class="space-y-3">
+        <p class="text-xs text-[#64748B] italic">ลากการ์ดเพื่อจัดเรียงลำดับขั้นตอน หรือใช้ปุ่มลูกศรขึ้น/ลงสำหรับการควบคุมด้วยแป้นพิมพ์</p>
+        <ul id="sequence-list" class="space-y-2.5" aria-label="Procedure Steps Order">
+          {% for step in current_activity.procedure_steps %}
+          <li
+            class="p-4 rounded-2xl bg-white border border-[#DCEAF7] flex items-center justify-between gap-3 focus:ring-2 focus:ring-[#1296DB] focus:outline-none hover:border-sky-300 transition shadow-2xs"
+            data-step-key="{{ step.step_key }}"
+            tabindex="0"
+          >
+            <div class="flex items-center space-x-3.5">
+              <button type="button" class="drag-handle cursor-grab active:cursor-grabbing text-slate-400 hover:text-[#1296DB] p-1 font-bold text-base" title="ลากเพื่อจัดลำดับ" aria-hidden="true">
+                ⋮⋮
+              </button>
+              <div class="w-6 h-6 rounded-lg bg-sky-50 text-[#1296DB] font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                {{ loop.index }}
+              </div>
+              <span class="text-sm sm:text-base font-bold text-[#14213D]">{{ step.step_text }}</span>
+            </div>
+
+            <!-- Accessible Move Buttons -->
+            <div class="flex items-center space-x-1 shrink-0">
+              <button
+                type="button"
+                data-action="move-up"
+                class="p-2 rounded-lg bg-slate-50 text-[#14213D] hover:bg-sky-50 hover:text-[#1296DB] border border-[#DCEAF7] focus-visible:ring-1 focus-visible:ring-sky-500 touch-target shadow-2xs"
+                title="เลื่อนขึ้น"
+                aria-label="เลื่อน '{{ step.step_text }}' ขึ้น"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" /></svg>
+              </button>
+              <button
+                type="button"
+                data-action="move-down"
+                class="p-2 rounded-lg bg-slate-50 text-[#14213D] hover:bg-sky-50 hover:text-[#1296DB] border border-[#DCEAF7] focus-visible:ring-1 focus-visible:ring-sky-500 touch-target shadow-2xs"
+                title="เลื่อนลง"
+                aria-label="เลื่อน '{{ step.step_text }}' ลง"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Activity Type 4: Decision & Troubleshooting -->
+      {% elif current_activity.activity_type in ['decision', 'troubleshooting'] %}
+      <div class="space-y-2.5" role="radiogroup" aria-label="Clinical Decision Options">
+        {% for option in current_activity.options %}
+        <label class="p-4 rounded-2xl bg-white border border-[#DCEAF7] hover:border-[#1296DB] hover:bg-sky-50/20 cursor-pointer flex items-start space-x-3 transition block touch-target shadow-2xs has-[:checked]:border-[#1296DB] has-[:checked]:bg-[#F0F9FF] has-[:checked]:ring-2 has-[:checked]:ring-[#1296DB]/30">
+          <input
+            type="radio"
+            name="choice"
+            value="{{ option.option_key }}"
+            class="mt-1 text-[#1296DB] focus:ring-[#1296DB] focus:ring-2 bg-white border-slate-300"
+          >
+          <div class="space-y-0.5">
+            <div class="text-sm sm:text-base font-bold text-[#14213D]">{{ option.label }}</div>
+            {% if option.description %}
+            <div class="text-xs sm:text-sm text-slate-600">{{ option.description }}</div>
+            {% endif %}
+          </div>
+        </label>
+        {% endfor %}
+      </div>
+
+      <!-- Activity Type 5: Pressure Control -->
+      {% elif current_activity.activity_type == 'pressure_control' %}
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
+          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดันลบ (Suction Vacuum Gauge)</span>
+          <div class="text-3xl sm:text-4xl font-black font-mono text-[#1296DB]" id="pressure-display">
+            {{ current_activity.options[0].option_key }} mmHg
+          </div>
+          <p class="text-xs text-[#64748B]">เลือกการปรับตั้งค่าแรงดันที่ปลอดภัยสำหรับผู้ป่วยใส่ท่อช่วยหายใจ</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {% for option in current_activity.options %}
+          <label class="p-4 rounded-2xl bg-white border border-[#DCEAF7] hover:border-[#1296DB] cursor-pointer text-center block transition shadow-2xs has-[:checked]:border-[#1296DB] has-[:checked]:bg-[#F0F9FF] has-[:checked]:ring-2 has-[:checked]:ring-[#1296DB]/30">
+            <input
+              type="radio"
+              name="choice"
+              value="{{ option.option_key }}"
+              class="sr-only"
+              onchange="document.getElementById('pressure-display').textContent = '{{ option.option_key }} mmHg'"
+            >
+            <div class="text-base font-black text-[#14213D] font-mono">{{ option.option_key }} mmHg</div>
+            <div class="text-xs text-[#64748B] mt-1">{{ option.label }}</div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Activity Type 6: Matching Activity -->
+      {% elif current_activity.activity_type == 'matching' %}
+      <div class="space-y-4">
+        <p class="text-xs text-[#64748B]">จับคู่สถานการณ์ทางคลินิกกับอุปกรณ์หรือการปฏิบัติการพยาบาลที่ถูกต้อง:</p>
+        <div class="space-y-3">
+          {% for match in current_activity.content_json.matches %}
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1 md:max-w-md">
+              <span class="text-xs font-bold text-[#1296DB] uppercase tracking-wider">{{ match.prompt_label }}</span>
+              <p class="text-sm font-semibold text-[#14213D] leading-relaxed">{{ match.prompt_text }}</p>
+            </div>
+            <div class="shrink-0 w-full md:w-64">
+              <label for="match-select-{{ match.prompt_key }}" class="sr-only">เลือกตัวเลือกสำหรับ {{ match.prompt_label }}</label>
+              <select
+                id="match-select-{{ match.prompt_key }}"
+                data-prompt-key="{{ match.prompt_key }}"
+                class="matching-select w-full p-3 rounded-xl bg-white border border-slate-300 text-sm font-medium text-[#14213D] focus:outline-none focus:ring-2 focus:ring-[#1296DB] touch-target shadow-xs"
+              >
+                <option value="">-- กรุณาเลือกตัวเลือก (Choose Option) --</option>
+                {% for opt in current_activity.content_json.target_options %}
+                <option value="{{ opt.key }}">{{ opt.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Activity Type 7: Debrief Reflection -->
+      {% elif current_activity.activity_type == 'debrief' %}
+      <div class="space-y-3">
+        <label for="reflection-input" class="block text-sm sm:text-base font-bold text-[#14213D]">
+          ข้อคิดสำคัญเพื่อความปลอดภัยของผู้ป่วย (การสะท้อนคิดเพื่อพัฒนา — ไม่มีคะแนนหรือเกรด):
+        </label>
+        <textarea
+          id="reflection-input"
+          rows="4"
+          placeholder="{{ current_activity.content_json.placeholder or 'บันทึกการสะท้อนคิดของคุณที่นี่...' }}"
+          class="w-full p-4 rounded-xl bg-white border border-slate-300 text-base text-[#14213D] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1296DB] shadow-xs"
+        ></textarea>
+        <div class="text-xs sm:text-sm text-[#64748B]">แบ่งปันบทเรียนที่ได้เรียนรู้เกี่ยวกับการดูแลทางเดินหายใจและความปลอดภัยของผู้ป่วยอย่างน้อย 1 ข้อ</div>
+      </div>
+      {% endif %}
+
+      <!-- 6. ACTION AREA / SUBMIT FOOTER (Section K) -->
+      <div class="pt-5 border-t border-[#DCEAF7] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span class="text-xs sm:text-sm text-[#64748B]">
+          ข้อเสนอแนะเชิงพัฒนาทันทีในทุกการตัดสินใจทางคลินิก
+        </span>
+        <button
+          type="button"
+          id="submit-btn"
+          class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl font-bold text-white bg-[#1296DB] hover:bg-[#0f80bc] active:bg-[#0c6b9d] transition shadow-xs touch-target"
+        >
+          {% if current_activity.activity_type == 'intro' %}
+          <span>เริ่มกิจกรรม (Begin Activity)</span>
+          {% elif current_activity.activity_type == 'outcome' %}
+          <span>ไปยังขั้นตอนสะท้อนคิด (Proceed to Debrief)</span>
+          {% elif current_activity.activity_type == 'debrief' %}
+          <span>ส่งการสะท้อนคิด & จบภารกิจ (Submit & Complete)</span>
+          {% else %}
+          <span>ยืนยันคำตอบ (Confirm Action)</span>
+          {% endif %}
+          <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+
+    </article>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- 7. CLINICAL FEEDBACK CARD / MODAL (Section L) -->
+<div
+  id="feedback-modal"
+  class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="feedback-title"
+>
+  <div class="max-w-lg w-full bg-white border border-[#DCEAF7] rounded-[24px] p-6 sm:p-8 shadow-2xl space-y-4 animate-in fade-in zoom-in duration-200">
+    <div>
+      <h3 id="feedback-title" class="text-xl font-black text-[#14213D] tracking-tight"></h3>
+      <p id="feedback-message" class="text-sm sm:text-base text-[#64748B] mt-1.5 leading-relaxed"></p>
+    </div>
+
+    <!-- Clinical Safety Rationale Section -->
+    <div class="p-4 rounded-xl bg-sky-50 border border-sky-200 space-y-1.5 text-sm sm:text-base">
+      <span class="font-bold text-sky-800 uppercase tracking-wider block text-xs sm:text-sm">เหตุผลความปลอดภัยทางคลินิก (Clinical Safety Rationale)</span>
+      <p id="feedback-rationale" class="text-slate-800 leading-relaxed"></p>
+    </div>
+
+    <!-- Targeted Safety Hint Section (if incorrect) -->
+    <div id="feedback-hint-container" class="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5 text-sm sm:text-base hidden">
+      <span class="font-bold text-amber-800 uppercase tracking-wider block text-xs sm:text-sm">คำแนะนำเพื่อความปลอดภัย (Targeted Safety Hint)</span>
+      <p id="feedback-hint" class="text-amber-950 leading-relaxed"></p>
+    </div>
+
+    <div class="pt-2">
+      <button
+        type="button"
+        id="feedback-action-btn"
+        class="w-full py-3.5 px-6 rounded-xl font-bold transition touch-target"
+      >
+        ไปต่อ (Continue)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ARIA Live Region for Screen Reader Announcements -->
+<div id="aria-announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+{% endblock %}

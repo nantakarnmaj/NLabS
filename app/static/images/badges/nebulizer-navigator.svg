@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-neb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer Badge Shield -->
+  <polygon points="60,8 108,24 108,72 60,112 12,72 12,24" fill="url(#bg-neb)" stroke="#c4b5fd" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="60,16 100,30 100,68 60,102 20,68 20,30" fill="#0f172a" opacity="0.45"/>
+  <!-- Nebulizer Cup & Aerosol Mist -->
+  <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Nebulizer chamber -->
+    <path d="M52,62 L68,62 L65,85 L55,85 Z" fill="rgba(196,181,253,0.3)"/>
+    <path d="M60,85 L60,94" stroke-width="3"/>
+    <!-- T-mouthpiece -->
+    <path d="M46,55 L74,55 L74,62 L46,62 Z" fill="#ffffff"/>
+    <path d="M40,58.5 L46,58.5" stroke-width="4"/>
+    <!-- Aerosol mist droplets / plume -->
+    <path d="M40,54 Q32,46 36,36 Q42,26 52,32" stroke="#a78bfa" stroke-width="2.5" stroke-dasharray="3 3"/>
+    <path d="M42,50 Q48,36 60,34 Q70,32 76,40" stroke="#c4b5fd" stroke-width="2.5"/>
+    <circle cx="58" cy="42" r="2.5" fill="#facc15" stroke="none"/>
+    <circle cx="70" cy="36" r="2" fill="#facc15" stroke="none"/>
+    <circle cx="48" cy="34" r="2" fill="#facc15" stroke="none"/>
+  </g>
+</svg>

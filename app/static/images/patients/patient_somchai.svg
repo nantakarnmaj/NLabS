@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="somchai-bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="url(#somchai-bg)"/>
+  <!-- Hospital Pillow & Bed -->
+  <path d="M20,130 Q100,105 180,130 L180,190 L20,190 Z" fill="#334155" opacity="0.7"/>
+  <ellipse cx="100" cy="120" rx="70" ry="25" fill="#f8fafc" opacity="0.85"/>
+  <!-- Patient Body / Hospital Gown -->
+  <path d="M40,165 Q100,140 160,165 L175,200 L25,200 Z" fill="#0284c7"/>
+  <path d="M90,150 L100,165 L110,150" stroke="#f8fafc" stroke-width="2" fill="none"/>
+  <!-- Head & Neck -->
+  <rect x="85" y="105" width="30" height="25" rx="5" fill="#e2b79a"/>
+  <ellipse cx="100" cy="85" rx="32" ry="38" fill="#f0c9a8"/>
+  <!-- Hair (Elderly Grey) -->
+  <path d="M68,85 Q68,52 100,50 Q132,52 132,85 Q125,62 100,60 Q75,62 68,85 Z" fill="#94a3b8"/>
+  <!-- Closed eyes / Resting post-op -->
+  <path d="M82,82 Q88,86 94,82" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M106,82 Q112,86 118,82" stroke="#64748b" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Nose -->
+  <path d="M98,82 L97,94 L103,94" stroke="#d49a7a" stroke-width="2" fill="none"/>
+  <!-- Endotracheal Tube & White Bite Block / Tape -->
+  <rect x="86" y="99" width="28" height="8" rx="2" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <!-- ET Tube (Clear curved tube) -->
+  <path d="M100,103 Q102,118 120,128 L145,135" stroke="#38bdf8" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <!-- Ventilator circuit connection -->
+  <rect x="142" y="130" width="10" height="10" rx="2" fill="#0284c7"/>
+  <!-- Badge Label Tag -->
+  <rect x="25" y="15" width="150" height="24" rx="12" fill="#0369a1" opacity="0.9"/>
+  <text x="100" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">นายสมชาย (68 ปี) • หลังผ่าตัด</text>
+</svg>

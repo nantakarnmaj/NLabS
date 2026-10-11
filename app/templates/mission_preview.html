@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Room 501: Clear the Airway — Mission Preview | BreathQuest{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+  <!-- Breadcrumb Navigation -->
+  <nav class="flex items-center space-x-2 text-xs text-slate-500" aria-label="Breadcrumb">
+    <a href="{{ url_for('main.ward') }}" class="hover:text-sky-600 focus-visible:ring-1 focus-visible:ring-sky-500 rounded">หอผู้ป่วยระบบหายใจ (Respiratory Ward)</a>
+    <span class="text-slate-300">/</span>
+    <span class="text-slate-800 font-semibold">ห้อง 501 (Room 501 Preview)</span>
+  </nav>
+
+  <!-- Notice Banner -->
+  <div class="p-4 sm:p-5 rounded-2xl bg-sky-50 border border-sky-200 shadow-xs flex items-start space-x-4">
+    <div class="w-10 h-10 rounded-xl bg-sky-100 border border-sky-300 flex items-center justify-center shrink-0 text-sky-700" aria-hidden="true">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <div class="space-y-1">
+      <h2 class="text-base font-bold text-slate-900 tracking-tight">
+        ตัวอย่างภารกิจ (Mission Preview — Gameplay Coming in Checkpoint B)
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+        หน้านี้เป็นข้อมูลแนะนำภาพรวมและวัตถุประสงค์การเรียนรู้ก่อนเริ่มเข้าสู่สถานการณ์จำลองคลินิกจริง
+      </p>
+      <div class="pt-1 text-xs text-sky-700 font-medium">
+        ✓ ยังไม่มีการบันทึกผลการปฏิบัติ คุณสามารถเริ่มทำภารกิจจริงได้จากหน้าแผนผังหอผู้ป่วย
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission Overview Header -->
+  <div class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-sm">
+    <div class="flex items-center space-x-3">
+      <span class="px-3 py-1 rounded-lg text-xs font-bold font-mono bg-sky-50 text-sky-700 border border-sky-200">
+        ห้อง 501
+      </span>
+      <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        สถานการณ์พร้อมเรียนรู้ (Active Simulation)
+      </span>
+    </div>
+
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+      {{ mission.title }} — {{ mission.subtitle }}
+    </h1>
+
+    <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+      {{ mission.description }}
+    </p>
+  </div>
+
+  <!-- Clinical Scenario Briefing (Synthetic Patient) -->
+  <section class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-sm" aria-labelledby="scenario-heading">
+    <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+      <h2 id="scenario-heading" class="text-lg sm:text-xl font-bold text-slate-900 flex items-center space-x-2">
+        <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        <span>ข้อมูลสถานการณ์ผู้ป่วยจำลอง (Simulated Patient Scenario Brief)</span>
+      </h2>
+      <span class="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+        ข้อมูลจำลองเพื่อการศึกษา
+      </span>
+    </div>
+
+    <!-- Patient Context Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+        <span class="text-slate-500 block mb-1">ข้อมูลผู้ป่วย</span>
+        <span class="text-sm font-bold text-slate-900">คุณสมชาย (ผู้ป่วยจำลอง)</span>
+        <span class="text-slate-500 block mt-1">อายุ 58 ปี • วันที่ 2 หลังผ่าตัด</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+        <span class="text-slate-500 block mb-1">ทางเดินหายใจ & อุปกรณ์</span>
+        <span class="text-sm font-bold text-sky-700">ท่อช่วยหายใจ ETT เบอร์ 7.5</span>
+        <span class="text-slate-500 block mt-1">ใช้เครื่องช่วยหายใจ</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+        <span class="text-slate-500 block mb-1">สัญญาณชีพเริ่มต้น</span>
+        <span class="text-sm font-bold text-amber-700">SpO₂: 91% • HR: 108 bpm</span>
+        <span class="text-slate-500 block mt-1">RR: 26 ครั้ง/นาที • Coarse Rhonchi</span>
+      </div>
+    </div>
+
+    <!-- Scenario Narrative -->
+    <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+      <p>
+        ระหว่างการตรวจเยี่ยมหอผู้ป่วยวิกฤตระบบทางเดินหายใจ คุณพบว่าคุณสมชายมีอาการไอเกร็งต้านเครื่องช่วยหายใจ มีฟองเสมหะเหนียวข้นผุดขึ้นมาในท่อช่วยหายใจ และระดับความอิ่มตัวของออกซิเจนลดลงจาก 96% เหลือ 91%
+      </p>
+      <p>
+        จากการฟังเสียงปอดได้ยินเสียงเสมหะเดือดชัดเจน (Coarse Rhonchi) ทั่วบริเวณหลอดลมใหญ่ ผู้ป่วยดูกระสับกระส่ายและหายใจเร็วขึ้นอย่างเห็นได้ชัด
+      </p>
+    </div>
+  </section>
+
+  <!-- Key Learning Objectives & Core Competencies -->
+  <section class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-sm" aria-labelledby="objectives-heading">
+    <h2 id="objectives-heading" class="text-lg sm:text-xl font-bold text-slate-900 flex items-center space-x-2">
+      <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>สมรรถนะสำคัญทางการพยาบาล (Core Competencies)</span>
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+        <div class="text-xs font-bold text-sky-700 uppercase tracking-wide">สมรรถนะที่ 1</div>
+        <div class="text-sm font-semibold text-slate-900">การประเมินข้อบ่งชี้ (Indications Assessment)</div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          ตระหนักถึงข้อบ่งชี้ทางคลินิกในการดูดเสมหะ (เสมหะคั่งค้าง, เสียงปอดผิดปกติ, ค่า SpO₂ ลดลง) และไม่ดูดตามตารางเวลาที่กำหนดตายตัว
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+        <div class="text-xs font-bold text-sky-700 uppercase tracking-wide">สมรรถนะที่ 2</div>
+        <div class="text-sm font-semibold text-slate-900">เทคนิคปราศจากเชื้อและอุปกรณ์ (Sterile Technique)</div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          เลือกขนาดสายดูดเสมหะไม่เกิน 1/2 ของขนาดท่อช่วยหายใจ รักษาระเบียบถุงมือปลอดเชื้อ และควบคุมแรงดันดูดในระดับที่ปลอดภัย (100–120 mmHg)
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+        <div class="text-xs font-bold text-sky-700 uppercase tracking-wide">สมรรถนะที่ 3</div>
+        <div class="text-sm font-semibold text-slate-900">ความปลอดภัยและการให้ออกซิเจนล่วงหน้า (Pre-Oxygenation)</div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          ให้ออกซิเจนความเข้มข้นสูงก่อนดูดเสมหะ จำกัดระยะเวลาสอดสายไม่เกิน 10–15 วินาที และเปิดแรงดูดเฉพาะขณะดึงสายกลับเท่านั้น
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+        <div class="text-xs font-bold text-sky-700 uppercase tracking-wide">สมรรถนะที่ 4</div>
+        <div class="text-sm font-semibold text-slate-900">การจัดการภาวะไม่พึงประสงค์ (Adverse Event Management)</div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          ตรวจจับภาวะขาดออกซิเจนเฉียบพลันหรือภาวะหัวใจเต้นช้าจากการกระตุ้น Vagus nerve หยุดดูดเสมหะทันที ให้ออกซิเจน และประเมินสัญญาณชีพซ้ำ
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Return Action Button -->
+  <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <a
+      href="{{ url_for('main.ward') }}"
+      class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sky-600 hover:bg-sky-700 active:bg-sky-800 shadow transition focus:outline-none focus:ring-2 focus:ring-sky-500 touch-target"
+    >
+      <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span>กลับสู่แผนผังหอผู้ป่วย (Return to Respiratory Ward)</span>
+    </a>
+
+    <span class="text-xs text-slate-500 text-center sm:text-right">
+      ภาพรวมภารกิจเพื่อการเรียนรู้ทางการพยาบาล
+    </span>
+  </div>
+</div>
+{% endblock %}

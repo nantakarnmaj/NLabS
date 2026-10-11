@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="anong-bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="url(#anong-bg)"/>
+  <!-- Hospital Bed Backrest (Fowler 45-60 deg) -->
+  <path d="M25,120 Q100,95 175,120 L175,190 L25,190 Z" fill="#1e293b"/>
+  <ellipse cx="100" cy="115" rx="65" ry="24" fill="#f8fafc" opacity="0.9"/>
+  <!-- Gown -->
+  <path d="M45,160 Q100,135 155,160 L170,200 L30,200 Z" fill="#059669"/>
+  <!-- Head & Neck -->
+  <rect x="87" y="102" width="26" height="22" rx="4" fill="#deb887"/>
+  <ellipse cx="100" cy="80" rx="30" ry="34" fill="#f5d0a9"/>
+  <!-- Hair (Tied back bun, grey-black) -->
+  <ellipse cx="100" cy="50" rx="16" ry="12" fill="#475569"/>
+  <path d="M70,80 Q70,55 100,54 Q130,55 130,80 Q122,64 100,62 Q78,64 70,80 Z" fill="#334155"/>
+  <!-- Face features (Awake, slightly fatigued) -->
+  <ellipse cx="88" cy="78" rx="2.5" ry="2" fill="#1e293b"/>
+  <ellipse cx="112" cy="78" rx="2.5" ry="2" fill="#1e293b"/>
+  <path d="M98,78 L97,88 L103,88" stroke="#cf9b6b" stroke-width="1.8" fill="none"/>
+  <path d="M94,95 Q100,98 106,95" stroke="#be185d" stroke-width="2" fill="none"/>
+  <!-- Nasal Cannula (Green translucent prongs & tubing around ears) -->
+  <g stroke="#34d399" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <!-- Prongs at nares -->
+    <path d="M97,88 L97,91" stroke-width="2.5"/>
+    <path d="M103,88 L103,91" stroke-width="2.5"/>
+    <!-- Tubing branching to cheeks & over ears -->
+    <path d="M97,91 Q84,93 74,78 Q70,88 78,110 L94,135"/>
+    <path d="M103,91 Q116,93 126,78 Q130,88 122,110 L106,135"/>
+    <!-- Slide bolo under chin -->
+    <line x1="94" y1="135" x2="106" y2="135" stroke-width="4"/>
+    <line x1="100" y1="135" x2="100" y2="175" stroke-width="3"/>
+  </g>
+  <!-- Pulse Oximeter on finger probe -->
+  <rect x="25" y="15" width="150" height="24" rx="12" fill="#047857" opacity="0.95"/>
+  <text x="100" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">นางอนงค์ (62 ปี) • COPD กำเริบ</text>
+</svg>

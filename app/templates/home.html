@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}BreathQuest — การผจญภัยทบทวนทักษะคลินิกระบบหายใจสำหรับนักศึกษาพยาบาล{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
+  
+  <!-- HERO SECTION: 2-Column Responsive Layout -->
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
+    
+    <!-- LEFT COLUMN: Mission Proposition & CTAs -->
+    <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+      
+      <!-- Small Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-sky-50 text-[#1296DB] border border-[#DCEAF7] shadow-2xs">
+        <span class="w-2 h-2 rounded-full bg-[#1296DB] animate-pulse"></span>
+        <span>Clinical Learning Adventure</span>
+      </div>
+
+      <!-- Main Thai Heading -->
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-[#14213D] tracking-tight leading-tight">
+        พร้อมรับภารกิจดูแลระบบทางเดินหายใจแล้วหรือยัง?
+      </h1>
+
+      <!-- Short Supporting Text -->
+      <p class="text-sm sm:text-base text-[#64748B] leading-relaxed max-w-xl mx-auto lg:mx-0">
+        ทบทวนการประเมิน การดูดเสมหะ การให้ออกซิเจน และการพ่นยา ผ่านสถานการณ์จำลองทางคลินิกที่ปลอดภัยและเกื้อหนุน สำหรับนักศึกษาพยาบาลชั้นปีที่ 2
+      </p>
+
+      <!-- Primary & Secondary CTAs -->
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
+        <form method="POST" action="{{ url_for('main.session_start') }}" class="w-full sm:w-auto">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button
+            type="submit"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-2xl text-base font-bold text-white bg-[#1296DB] hover:bg-[#0f80bc] active:bg-[#0c6b9d] shadow-sm hover:shadow transition-all focus:outline-none focus:ring-4 focus:ring-sky-200 touch-target"
+          >
+            <span>เริ่มภารกิจ</span>
+            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </form>
+
+        <a
+          href="{{ url_for('main.ward') }}"
+          class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-2xl text-base font-semibold text-[#14213D] bg-white hover:bg-slate-50 border border-[#DCEAF7] transition shadow-xs hover:border-[#1296DB] touch-target"
+        >
+          <span>ดูแผนผังหอผู้ป่วย</span>
+        </a>
+      </div>
+
+      <!-- Mini Stats Row -->
+      <div class="pt-3 flex items-center justify-center lg:justify-start gap-6 border-t border-[#DCEAF7] max-w-md mx-auto lg:mx-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-100/80 text-[#1296DB] flex items-center justify-center font-black text-sm sm:text-base">
+            3
+          </div>
+          <div class="text-xs sm:text-sm text-left">
+            <span class="font-bold text-sm sm:text-base text-[#14213D] block">Clinical Missions</span>
+            <span class="text-[#64748B]">ห้อง 501, 502, 503</span>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-[#DCEAF7]"></div>
+
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-100/80 text-amber-600 flex items-center justify-center font-black text-sm sm:text-base">
+            1
+          </div>
+          <div class="text-xs sm:text-sm text-left">
+            <span class="font-bold text-sm sm:text-base text-[#14213D] block">Final Challenge</span>
+            <span class="text-[#64748B]">ห้อง 504 วิกฤตการณ์รวม</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Nurse Mascot with Speech Bubble & Subtle Airflow Decoration -->
+    <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
+      
+      <!-- Speech Bubble -->
+      <div class="relative mb-3 bg-white border border-[#DCEAF7] rounded-2xl p-4 shadow-sm max-w-xs text-sm sm:text-base font-semibold text-[#14213D] leading-relaxed animate-in fade-in duration-300">
+        <span class="inline-block mr-1">💬</span>
+        <span>มีผู้ป่วยรอการดูแลอยู่ 4 ห้องค่ะ พร้อมเริ่มภารกิจหรือยัง?</span>
+        <!-- Speech Bubble Arrow Pointing Down -->
+        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-r border-b border-[#DCEAF7] rotate-45" aria-hidden="true"></div>
+      </div>
+
+      <!-- Mascot Container with Subtle Airflow Accents -->
+      <div class="relative w-64 sm:w-72 lg:w-80 flex items-center justify-center">
+        <!-- Subtle Airflow Background Accents -->
+        <div class="absolute -inset-4 bg-gradient-to-tr from-sky-100/50 via-teal-50/40 to-blue-100/40 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
+        
+        <img
+          src="{{ url_for('static', filename='images/nurse_mascot.png') }}"
+          alt="BreathQuest Nurse Mascot"
+          class="relative w-full h-auto object-contain drop-shadow-md hover:scale-103 transition duration-300"
+        >
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ANONYMOUS SESSION CALLOUT -->
+  <div class="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCEAF7] text-left text-sm sm:text-base text-slate-700 flex items-start space-x-3.5 shadow-xs">
+    <div class="w-9 h-9 rounded-xl bg-sky-50 text-[#1296DB] flex items-center justify-center shrink-0 mt-0.5 font-bold text-base">
+      🔒
+    </div>
+    <div class="leading-relaxed">
+      <strong class="text-[#14213D] font-bold">เซสชันปลอดภัย (Formative Practice):</strong>
+      ระบบจำลองสถานการณ์เพื่อการเรียนรู้ บันทึกความก้าวหน้าบนอุปกรณ์นี้อย่างปลอดภัย เพื่อให้คุณกลับมาทบทวนได้ต่อเนื่อง
+    </div>
+  </div>
+
+  <!-- FOUR CLINICAL SIMULATION ROOMS OVERVIEW (UI v2 Mission Cards) -->
+  <section id="core-learning" class="space-y-6 pt-4">
+    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#DCEAF7] pb-4">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-[#14213D] tracking-tight">
+          4 ห้องจำลองสถานการณ์คลินิก (Respiratory Ward Overview)
+        </h2>
+        <p class="text-sm sm:text-base text-[#64748B] mt-1">
+          ฝึกฝนทักษะการพยาบาลระบบหายใจผ่านสถานการณ์จำลองเชิงลึก
+        </p>
+      </div>
+      <a href="{{ url_for('main.ward') }}" class="text-sm font-bold text-[#1296DB] hover:underline flex items-center gap-1">
+        <span>ไปยังแผนผังหอผู้ป่วย</span>
+        <span>→</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+      
+      <!-- Room 501 Card -->
+      <div class="p-6 rounded-[22px] bg-white border border-[#DCEAF7] hover:border-[#1296DB] hover:shadow-md transition duration-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-black text-[#1296DB] uppercase tracking-wider font-mono">Room 501</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              พร้อมเรียนรู้
+            </span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-black text-[#14213D]">ดูดเสมหะ: เคลียร์ทางเดินหายใจ</h3>
+          <p class="text-xs sm:text-sm font-bold text-[#1296DB]">Clear the Airway</p>
+          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            ประเมินข้อบ่งชี้ เทคนิคดูดเสมหะปลอดเชื้อ ให้ Pre-oxygenation และเฝ้าระวังสัญญาณชีพอย่างปลอดภัย
+          </p>
+        </div>
+        <div class="pt-3 border-t border-[#DCEAF7] flex items-center justify-between text-xs sm:text-sm text-[#64748B]">
+          <span>จุดเน้น: ความปลอดเชื้อ & ความปลอดภัย</span>
+          <span class="font-bold text-[#14213D]">คุณสมชาย (68 ปี)</span>
+        </div>
+      </div>
+
+      <!-- Room 502 Card -->
+      <div class="p-6 rounded-[22px] bg-white border border-[#DCEAF7] hover:border-emerald-400 hover:shadow-md transition duration-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-black text-emerald-600 uppercase tracking-wider font-mono">Room 502</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              พร้อมเรียนรู้
+            </span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-black text-[#14213D]">ให้ออกซิเจน: พยุงการหายใจ</h3>
+          <p class="text-xs sm:text-sm font-bold text-emerald-600">Support the Breath</p>
+          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            ประเมินความต้องการออกซิเจน เลือกอุปกรณ์เหมาะสม ปรับ Titration สู่เป้าหมาย และเฝ้าระวังความปลอดภัย
+          </p>
+        </div>
+        <div class="pt-3 border-t border-[#DCEAF7] flex items-center justify-between text-xs sm:text-sm text-[#64748B]">
+          <span>จุดเน้น: การปรับ Flow & ป้องกันแผลกดทับ</span>
+          <span class="font-bold text-[#14213D]">คุณอนงค์ (72 ปี)</span>
+        </div>
+      </div>
+
+      <!-- Room 503 Card -->
+      <div class="p-6 rounded-[22px] bg-white border border-[#DCEAF7] hover:border-purple-400 hover:shadow-md transition duration-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-black text-purple-600 uppercase tracking-wider font-mono">Room 503</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              พร้อมเรียนรู้
+            </span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-black text-[#14213D]">พ่นยา: เปิดทางเดินหายใจ</h3>
+          <p class="text-xs sm:text-sm font-bold text-purple-600">Open the Airway</p>
+          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            ตรวจ 6 Rights ยาขยายหลอดลม ต่อชุดพ่นยา คุม Flow ก๊าซ 6–8 L/min และติดตามการตอบสนอง
+          </p>
+        </div>
+        <div class="pt-3 border-t border-[#DCEAF7] flex items-center justify-between text-xs sm:text-sm text-[#64748B]">
+          <span>จุดเน้น: ละอองยา 1–5 ไมครอน & การบ้วนปาก</span>
+          <span class="font-bold text-[#14213D]">คุณมะลิ (55 ปี)</span>
+        </div>
+      </div>
+
+      <!-- Room 504 Card: Final Challenge -->
+      <div class="p-6 rounded-[22px] bg-white border border-amber-200/80 hover:border-amber-400 hover:shadow-md transition duration-200 flex flex-col justify-between space-y-4">
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-black text-amber-700 uppercase tracking-wider font-mono">Room 504 • FINAL CHALLENGE</span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200">
+              ภารกิจรวม
+            </span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-black text-[#14213D]">กู้ชีพฉุกเฉิน: Respiratory Rescue</h3>
+          <p class="text-xs sm:text-sm font-bold text-amber-700">FINAL CLINICAL CHALLENGE</p>
+          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            บูรณาการทักษะทั้ง 3 ห้อง ดูดเสมหะ ให้ออกซิเจน พ่นยา และรายงานแพทย์ด้วยรูปแบบ SBAR เพื่อช่วยชีวิตผู้ป่วยวิกฤต
+          </p>
+        </div>
+        <div class="pt-3 border-t border-[#DCEAF7] flex items-center justify-between text-xs sm:text-sm text-[#64748B]">
+          <span>จุดเน้น: การบูรณาการ & รายงาน SBAR</span>
+          <span class="font-bold text-[#14213D]">คุณประเสริฐ (65 ปี)</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}

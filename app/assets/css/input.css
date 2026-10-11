@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Ensure minimum touch target size for interactive elements on touch screens */
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  /* High-contrast focus indicators for WCAG 2.2 AA */
+  :focus-visible {
+    outline: 2px solid #1296DB;
+    outline-offset: 2px;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* BreathQuest UI v2 Visual Tokens */
+  .bg-page {
+    background-color: #F5FAFF;
+  }
+
+  .text-navy {
+    color: #14213D;
+  }
+
+  .text-muted {
+    color: #64748B;
+  }
+
+  .border-clinical {
+    border-color: #DCEAF7;
+  }
+
+  .bg-primary-blue {
+    background-color: #1296DB;
+  }
+
+  /* Subtle Clinical Airflow & Bubble Patterns */
+  .bg-airflow {
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(18, 150, 219, 0.04) 0%, transparent 25%),
+      radial-gradient(circle at 85% 60%, rgba(0, 168, 107, 0.03) 0%, transparent 30%),
+      radial-gradient(circle at 50% 90%, rgba(123, 44, 191, 0.03) 0%, transparent 25%);
+  }
+
+  .bg-bubble-pattern {
+    background-image: radial-gradient(rgba(18, 150, 219, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Prominent Multi-selection Card Active State */
+  .selection-card[aria-checked="true"] {
+    border-color: #1296DB !important;
+    background-color: #F0F9FF !important;
+    box-shadow: 0 0 0 2px rgba(18, 150, 219, 0.35) !important;
+  }
+
+  .selection-card[aria-checked="true"] .checkmark-box {
+    background-color: #1296DB !important;
+    border-color: #1296DB !important;
+  }
+
+  .selection-card[aria-checked="true"] .checkmark-icon {
+    display: block !important;
+  }
+
+  /* Single-Choice Radio Active State */
+  label:has(input[type="radio"]:checked) {
+    border-color: #1296DB !important;
+    background-color: #F0F9FF !important;
+    box-shadow: 0 0 0 2px rgba(18, 150, 219, 0.25) !important;
+  }
+}
+

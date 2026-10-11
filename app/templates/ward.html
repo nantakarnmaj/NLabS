@@ -1,0 +1,555 @@
+{% extends "base.html" %}
+
+{% block title %}หอผู้ป่วยระบบทางเดินหายใจจำลอง (Simulated Respiratory Ward) — BreathQuest{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8">
+
+  <!-- ================= TOP WARD HERO CARD ================= -->
+  <section class="bg-white rounded-[24px] border border-[#DCEAF7] p-6 sm:p-8 shadow-xs relative overflow-hidden">
+    <!-- Subtle Top Rainbow Accent Strip -->
+    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#1296DB] via-[#00A86B] via-[#7B2CBF] to-[#F59E0B]" aria-hidden="true"></div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2 text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-[#1296DB] border border-[#DCEAF7]">
+          <span>หน่วยที่ 5</span>
+          <span>•</span>
+          <span>การพยาบาลระบบทางเดินหายใจ</span>
+          <span>•</span>
+          <span class="text-[#64748B]">Clinical Learning Adventure</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-[#14213D] tracking-tight">
+          หอผู้ป่วยระบบทางเดินหายใจจำลอง
+        </h1>
+        <div class="text-sm sm:text-base font-bold text-[#1296DB]">
+          (Simulated Respiratory Ward)
+        </div>
+        <p class="text-xs sm:text-sm text-[#64748B] max-w-2xl leading-relaxed">
+          เลือกห้องผู้ป่วยเพื่อฝึกการประเมิน ทบทวนลำดับขั้นตอน และการคิดวิเคราะห์ทางคลินิก ให้ผู้ป่วยปลอดภัยและหายใจได้ดีขึ้น
+        </p>
+      </div>
+
+      <!-- Quick Ward Progression Stat -->
+      {% set completed_count = rooms|selectattr('display_status', 'equalto', 'completed')|list|length %}
+      <div class="shrink-0 bg-[#F5FAFF] border border-[#DCEAF7] rounded-2xl p-4 sm:p-5 text-center min-w-[180px] shadow-2xs">
+        <div class="text-xs font-bold text-[#64748B] uppercase tracking-wider">ความก้าวหน้า</div>
+        <div class="text-2xl sm:text-3xl font-black text-[#14213D] font-mono mt-0.5">
+          {{ completed_count }} <span class="text-sm font-semibold text-[#64748B]">/ 4 ภารกิจ</span>
+        </div>
+        <div class="text-[11px] text-[#1296DB] font-semibold mt-1">
+          {% if completed_count == 4 %}
+          ✓ ผ่านครบทุกภารกิจแล้ว
+          {% elif completed_count > 0 %}
+          กำลังดำเนินภารกิจ
+          {% else %}
+          พร้อมเริ่มภารกิจแรก
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WARD PROGRESSION COMPONENT (Section D) ================= -->
+  <section id="progress-flow" class="bg-white rounded-[24px] border border-[#DCEAF7] p-5 sm:p-6 shadow-xs space-y-3" aria-label="ลำดับความก้าวหน้าของภารกิจ">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-black text-[#14213D] uppercase tracking-wider flex items-center gap-1.5">
+        <span>🗺️</span>
+        <span>เส้นทางภารกิจ (Mission Pathway)</span>
+      </span>
+      <span class="text-sm font-bold text-[#1296DB]">
+        ความก้าวหน้า {{ completed_count }} / 4 ภารกิจ
+      </span>
+    </div>
+
+    <!-- Stepper 501 ─ 502 ─ 503 ─ 504 -->
+    {% set room501 = rooms|selectattr('room_number', 'equalto', '501')|first %}
+    {% set room502 = rooms|selectattr('room_number', 'equalto', '502')|first %}
+    {% set room503 = rooms|selectattr('room_number', 'equalto', '503')|first %}
+    {% set room504 = rooms|selectattr('room_number', 'equalto', '504')|first %}
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+      <!-- 501 -->
+      <div class="p-3.5 rounded-xl border {% if room501 and room501.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room501 and room501.display_status == 'in_progress' %}bg-sky-50 border-[#1296DB] ring-2 ring-sky-100{% else %}bg-white border-[#DCEAF7]{% endif %} flex items-center gap-3 transition">
+        <div class="w-9 h-9 rounded-lg {% if room501 and room501.display_status == 'completed' %}bg-emerald-500 text-white{% elif room501 and room501.display_status == 'in_progress' %}bg-[#1296DB] text-white{% else %}bg-sky-100 text-[#1296DB]{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+          {% if room501 and room501.display_status == 'completed' %}✓{% else %}501{% endif %}
+        </div>
+        <div class="leading-tight min-w-0">
+          <span class="font-bold text-sm text-[#14213D] block truncate">ดูดเสมหะ</span>
+          <span class="text-xs text-[#64748B]">Suction</span>
+        </div>
+      </div>
+
+      <!-- 502 -->
+      <div class="p-3.5 rounded-xl border {% if room502 and room502.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room502 and room502.display_status == 'in_progress' %}bg-emerald-50 border-emerald-500 ring-2 ring-emerald-100{% else %}bg-white border-[#DCEAF7]{% endif %} flex items-center gap-3 transition">
+        <div class="w-9 h-9 rounded-lg {% if room502 and room502.display_status == 'completed' %}bg-emerald-500 text-white{% elif room502 and room502.display_status == 'in_progress' %}bg-emerald-600 text-white{% else %}bg-emerald-100 text-emerald-700{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+          {% if room502 and room502.display_status == 'completed' %}✓{% else %}502{% endif %}
+        </div>
+        <div class="leading-tight min-w-0">
+          <span class="font-bold text-sm text-[#14213D] block truncate">ให้ออกซิเจน</span>
+          <span class="text-xs text-[#64748B]">Oxygen</span>
+        </div>
+      </div>
+
+      <!-- 503 -->
+      <div class="p-3.5 rounded-xl border {% if room503 and room503.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room503 and room503.display_status == 'in_progress' %}bg-purple-50 border-purple-500 ring-2 ring-purple-100{% else %}bg-white border-[#DCEAF7]{% endif %} flex items-center gap-3 transition">
+        <div class="w-9 h-9 rounded-lg {% if room503 and room503.display_status == 'completed' %}bg-emerald-500 text-white{% elif room503 and room503.display_status == 'in_progress' %}bg-purple-600 text-white{% else %}bg-purple-100 text-purple-700{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+          {% if room503 and room503.display_status == 'completed' %}✓{% else %}503{% endif %}
+        </div>
+        <div class="leading-tight min-w-0">
+          <span class="font-bold text-sm text-[#14213D] block truncate">พ่นยา</span>
+          <span class="text-xs text-[#64748B]">Nebulizer</span>
+        </div>
+      </div>
+
+      <!-- 504: FINAL CHALLENGE -->
+      <div class="p-3.5 rounded-xl border {% if room504 and room504.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room504 and room504.can_open %}bg-amber-50/80 border-amber-400 ring-2 ring-amber-100{% else %}bg-slate-50 border-slate-200{% endif %} flex items-center gap-3 transition">
+        <div class="w-9 h-9 rounded-lg {% if room504 and room504.display_status == 'completed' %}bg-emerald-500 text-white{% elif room504 and room504.can_open %}bg-amber-500 text-white{% else %}bg-slate-200 text-slate-500{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+          {% if room504 and room504.display_status == 'completed' %}✓{% elif room504 and not room504.can_open %}🔒{% else %}504{% endif %}
+        </div>
+        <div class="leading-tight min-w-0">
+          <span class="font-bold text-sm text-[#14213D] block truncate">FINAL CHALLENGE</span>
+          <span class="text-xs text-[#64748B]">Rescue</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOUR CLINICAL MISSION CARDS (Section C) ================= -->
+  <section aria-labelledby="ward-rooms-heading" class="space-y-6">
+    <h2 id="ward-rooms-heading" class="sr-only">ห้องผู้ป่วยในหอ (Respiratory Ward Rooms)</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- ================= CARD 1: ROOM 501 (BLUE ACCENT) ================= -->
+      {% if room501 %}
+      <article class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-[#1296DB] shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+        <!-- Top Blue Accent Strip -->
+        <div class="h-1.5 bg-[#1296DB]" aria-hidden="true"></div>
+
+        <div class="p-5 sm:p-6 space-y-4">
+          <!-- Room Header & Status -->
+          <div class="flex items-center justify-between gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-black text-[#1296DB] bg-sky-50 border border-sky-200">
+              <span>🫁</span>
+              <span>Room 501</span>
+            </span>
+
+            {% if room501.display_status == 'completed' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              ✓ สำเร็จแล้ว (Completed)
+            </span>
+            {% elif room501.display_status == 'in_progress' %}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-sky-50 text-[#1296DB] border border-sky-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#1296DB] animate-pulse"></span>
+              <span>กำลังเรียนรู้</span>
+            </span>
+            {% else %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Ready
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Patient Image Anchor (~170–190px Desktop) -->
+          <div class="relative h-44 sm:h-48 rounded-2xl overflow-hidden bg-slate-100 border border-[#DCEAF7] group-hover:border-sky-200 transition">
+            <img
+              src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}"
+              alt="นายสมชาย — ห้อง 501"
+              class="w-full h-full object-cover object-center group-hover:scale-102 transition duration-300"
+            >
+            <div class="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-xs sm:text-sm font-bold text-white">
+              คุณสมชาย (68 ปี) • ท่อ ETT #7.5
+            </div>
+          </div>
+
+          <!-- Titles & Short Description -->
+          <div class="space-y-1.5">
+            <h3 class="text-lg sm:text-xl font-black text-[#14213D] leading-snug">
+              ดูดเสมหะ: เคลียร์ทางเดินหายใจ
+            </h3>
+            <div class="text-xs sm:text-sm font-bold text-[#1296DB]">
+              Clear the Airway
+            </div>
+            <p class="text-sm sm:text-base text-slate-700 leading-relaxed pt-1">
+              ประเมินข้อบ่งชี้ เทคนิคดูดเสมหะปลอดเชื้อ ให้ Pre-oxygenation และเฝ้าระวังสัญญาณชีพอย่างปลอดภัย
+            </p>
+          </div>
+
+          <!-- 3 Short Skill Cues -->
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <span class="px-2.5 py-1 rounded-lg bg-sky-50 text-xs sm:text-sm font-medium text-[#1296DB] border border-sky-100">
+              ประเมินทางเดินหายใจ
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-sky-50 text-xs sm:text-sm font-medium text-[#1296DB] border border-sky-100">
+              เทคนิคปลอดเชื้อ
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-sky-50 text-xs sm:text-sm font-medium text-[#1296DB] border border-sky-100">
+              ความปลอดภัยผู้ป่วย
+            </span>
+          </div>
+
+          <!-- Notice / Preview Warning -->
+          {% if room501.notice %}
+          <div class="p-3 rounded-xl bg-sky-50/80 border border-sky-100 text-sky-900 text-xs sm:text-sm leading-relaxed">
+            <span class="font-bold">ข้อควรทราบ:</span> {{ room501.notice }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- CTA Action Button -->
+        <div class="p-5 sm:p-6 pt-0">
+          {% if room501.can_open and room501.action_url %}
+          <a
+            href="{{ room501.action_url }}"
+            class="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl text-sm font-bold text-white bg-[#1296DB] hover:bg-[#0f80bc] active:bg-[#0c6b9d] shadow-xs transition touch-target"
+          >
+            <span>{{ room501.action_label }}</span>
+            <svg class="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+          </a>
+          {% endif %}
+        </div>
+      </article>
+      {% endif %}
+
+      <!-- ================= CARD 2: ROOM 502 (GREEN ACCENT) ================= -->
+      {% if room502 %}
+      <article class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-emerald-400 shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+        <!-- Top Green Accent Strip -->
+        <div class="h-1.5 bg-[#00A86B]" aria-hidden="true"></div>
+
+        <div class="p-5 sm:p-6 space-y-4">
+          <!-- Room Header & Status -->
+          <div class="flex items-center justify-between gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-black text-emerald-700 bg-emerald-50 border border-emerald-200">
+              <span>O₂</span>
+              <span>Room 502</span>
+            </span>
+
+            {% if room502.display_status == 'completed' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              ✓ สำเร็จแล้ว (Completed)
+            </span>
+            {% elif room502.display_status == 'in_progress' %}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-sky-50 text-[#1296DB] border border-sky-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#1296DB] animate-pulse"></span>
+              <span>กำลังเรียนรู้</span>
+            </span>
+            {% elif room502.display_status == 'coming_soon' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200">
+              Coming Soon
+            </span>
+            {% else %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Ready
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Patient Image Anchor (~170–190px Desktop) -->
+          <div class="relative h-44 sm:h-48 rounded-2xl overflow-hidden bg-slate-100 border border-[#DCEAF7] group-hover:border-emerald-200 transition">
+            <img
+              src="{{ url_for('static', filename='images/patients/patient_anong.png') }}"
+              alt="นางอนงค์ — ห้อง 502"
+              class="w-full h-full object-cover object-center group-hover:scale-102 transition duration-300"
+            >
+            <div class="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-xs sm:text-sm font-bold text-white">
+              คุณอนงค์ (72 ปี) • ออกซิเจนบำบัด
+            </div>
+          </div>
+
+          <!-- Titles & Short Description -->
+          <div class="space-y-1.5">
+            <h3 class="text-lg sm:text-xl font-black text-[#14213D] leading-snug">
+              ให้ออกซิเจน: พยุงการหายใจ
+            </h3>
+            <div class="text-xs sm:text-sm font-bold text-emerald-600">
+              Support the Breath
+            </div>
+            <p class="text-sm sm:text-base text-slate-700 leading-relaxed pt-1">
+              ประเมินความต้องการออกซิเจน เลือกอุปกรณ์เหมาะสม ปรับ Titration สู่เป้าหมาย และเฝ้าระวังความปลอดภัย
+            </p>
+          </div>
+
+          <!-- 3 Short Skill Cues -->
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-xs sm:text-sm font-medium text-emerald-700 border border-emerald-100">
+              เลือกอุปกรณ์ออกซิเจน
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-xs sm:text-sm font-medium text-emerald-700 border border-emerald-100">
+              ปรับ Titration ตามเป้าหมาย
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-xs sm:text-sm font-medium text-emerald-700 border border-emerald-100">
+              เฝ้าระวังความปลอดภัย
+            </span>
+          </div>
+
+          {% if room502.notice %}
+          <div class="p-3 rounded-xl bg-emerald-50/80 border border-emerald-100 text-emerald-900 text-xs sm:text-sm leading-relaxed">
+            <span class="font-bold">ข้อควรทราบ:</span> {{ room502.notice }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- CTA Action Button -->
+        <div class="p-5 sm:p-6 pt-0">
+          {% if room502.can_open and room502.action_url %}
+          <a
+            href="{{ room502.action_url }}"
+            class="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl text-sm sm:text-base font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 shadow-xs transition touch-target"
+          >
+            <span>{{ room502.action_label }}</span>
+            <svg class="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+          </a>
+          {% endif %}
+        </div>
+      </article>
+      {% endif %}
+
+      <!-- ================= CARD 3: ROOM 503 (PURPLE ACCENT) ================= -->
+      {% if room503 %}
+      <article class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-purple-400 shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+        <!-- Top Purple Accent Strip -->
+        <div class="h-1.5 bg-[#7B2CBF]" aria-hidden="true"></div>
+
+        <div class="p-5 sm:p-6 space-y-4">
+          <!-- Room Header & Status -->
+          <div class="flex items-center justify-between gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-black text-purple-700 bg-purple-50 border border-purple-200">
+              <span>☁️</span>
+              <span>Room 503</span>
+            </span>
+
+            {% if room503.display_status == 'completed' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              ✓ สำเร็จแล้ว (Completed)
+            </span>
+            {% elif room503.display_status == 'in_progress' %}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-sky-50 text-[#1296DB] border border-sky-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#1296DB] animate-pulse"></span>
+              <span>กำลังเรียนรู้</span>
+            </span>
+            {% elif room503.display_status == 'coming_soon' %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200">
+              Coming Soon
+            </span>
+            {% else %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Ready
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Patient Image Anchor (~170–190px Desktop) -->
+          <div class="relative h-44 sm:h-48 rounded-2xl overflow-hidden bg-slate-100 border border-[#DCEAF7] group-hover:border-purple-200 transition">
+            <img
+              src="{{ url_for('static', filename='images/patients/patient_mali.png') }}"
+              alt="นางมะลิ — ห้อง 503"
+              class="w-full h-full object-cover object-center group-hover:scale-102 transition duration-300"
+            >
+            <div class="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-xs sm:text-sm font-bold text-white">
+              คุณมะลิ (55 ปี) • พ่นยาขยายหลอดลม
+            </div>
+          </div>
+
+          <!-- Titles & Short Description -->
+          <div class="space-y-1.5">
+            <h3 class="text-lg sm:text-xl font-black text-[#14213D] leading-snug">
+              พ่นยา: เปิดทางเดินหายใจ
+            </h3>
+            <div class="text-xs sm:text-sm font-bold text-purple-600">
+              Open the Airway
+            </div>
+            <p class="text-sm sm:text-base text-slate-700 leading-relaxed pt-1">
+              ตรวจ 6 Rights ยาขยายหลอดลม ต่อชุดพ่นยา คุม Flow ก๊าซ 6–8 L/min และติดตามการตอบสนอง
+            </p>
+          </div>
+
+          <!-- 3 Short Skill Cues -->
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-xs sm:text-sm font-medium text-purple-700 border border-purple-100">
+              ตรวจ 6 Rights ถูกต้อง
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-xs sm:text-sm font-medium text-purple-700 border border-purple-100">
+              คุม Flow 6–8 L/min
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-xs sm:text-sm font-medium text-purple-700 border border-purple-100">
+              ประเมินเสียงหายใจ
+            </span>
+          </div>
+
+          {% if room503.notice %}
+          <div class="p-3 rounded-xl bg-purple-50/80 border border-purple-100 text-purple-900 text-xs sm:text-sm leading-relaxed">
+            <span class="font-bold">ข้อควรทราบ:</span> {{ room503.notice }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- CTA Action Button -->
+        <div class="p-5 sm:p-6 pt-0">
+          {% if room503.can_open and room503.action_url %}
+          <a
+            href="{{ room503.action_url }}"
+            class="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl text-sm sm:text-base font-bold text-white bg-purple-600 hover:bg-purple-700 active:bg-purple-800 shadow-xs transition touch-target"
+          >
+            <span>{{ room503.action_label }}</span>
+            <svg class="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+          </a>
+          {% endif %}
+        </div>
+      </article>
+      {% endif %}
+
+    </div>
+
+    <!-- ================= CARD 4: ROOM 504 - FINAL CLINICAL CHALLENGE ================= -->
+    {% if room504 %}
+    <article class="bg-white rounded-[24px] border {% if room504.can_open %}border-amber-300 ring-1 ring-amber-200/60 shadow-md{% else %}border-slate-200 shadow-xs{% endif %} overflow-hidden relative">
+      <!-- Top Gold Strip -->
+      <div class="h-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600" aria-hidden="true"></div>
+
+      <div class="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <!-- Left: Image & Badge -->
+        <div class="lg:col-span-4 relative rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 h-44 sm:h-52">
+          <img
+            src="{{ url_for('static', filename='images/patients/patient_prasert.png') }}"
+            alt="นายประเสริฐ — ห้อง 504"
+            class="w-full h-full object-cover object-center"
+          >
+          <div class="absolute top-2 left-2 px-3 py-1 rounded-md bg-amber-500 text-white font-black text-xs tracking-wide uppercase shadow-xs">
+            🏆 FINAL CHALLENGE
+          </div>
+          <div class="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-xs sm:text-sm font-bold text-white">
+            คุณประเสริฐ (65 ปี) • ภาวะวิกฤตฉุกเฉิน
+          </div>
+        </div>
+
+        <!-- Center: Mission Details -->
+        <div class="lg:col-span-5 space-y-2.5">
+          <div class="flex items-center gap-2">
+            <span class="text-xs sm:text-sm font-black text-amber-700 uppercase tracking-wider font-mono">Room 504</span>
+            {% if room504.can_open %}
+              {% if room504.display_status == 'completed' %}
+              <span class="px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                ✓ สำเร็จแล้ว (Completed)
+              </span>
+              {% else %}
+              <span class="px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-50 text-amber-800 border border-amber-300">
+                Ready (พร้อม)
+              </span>
+              {% endif %}
+            {% else %}
+            <span class="px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-200">
+              🔒 Locked (ล็อกอยู่)
+            </span>
+            {% endif %}
+          </div>
+
+          <h3 class="text-xl sm:text-2xl font-black text-[#14213D] tracking-tight">
+            กู้ชีพฉุกเฉิน: Respiratory Rescue
+          </h3>
+          <p class="text-xs sm:text-sm font-bold text-amber-700 uppercase tracking-wide">
+            ภารกิจรวมหอผู้ป่วย (FINAL CLINICAL CHALLENGE)
+          </p>
+          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            บูรณาการทักษะทั้ง 3 ห้อง ดูดเสมหะ ให้ออกซิเจน พ่นยา และรายงานแพทย์ด้วยรูปแบบ SBAR เพื่อช่วยชีวิตผู้ป่วยภาวะวิกฤต
+          </p>
+
+          <!-- Status Notice / Prerequisite -->
+          {% if not room504.can_open %}
+          <div class="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs sm:text-sm text-amber-950 leading-relaxed">
+            <span class="font-bold">เงื่อนไข:</span> Requires completion of Room 501, 502, and 503 (ต้องผ่าน 3 ห้องแรกก่อน)
+          </div>
+          {% else %}
+          <div class="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200 text-xs sm:text-sm text-emerald-950 leading-relaxed font-medium">
+            ✓ ปลดล็อกเรียบร้อย: Integrated clinical simulation ready to play.
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Right: Action Button -->
+        <div class="lg:col-span-3 flex flex-col justify-center space-y-2">
+          {% if room504.can_open and room504.action_url %}
+          <a
+            href="{{ room504.action_url }}"
+            class="w-full inline-flex items-center justify-center px-6 py-4 rounded-xl text-sm sm:text-base font-bold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:from-amber-700 active:to-amber-800 shadow-sm transition touch-target"
+          >
+            <span>{{ room504.action_label or 'เริ่มทำภารกิจ (Start mission)' }}</span>
+            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          </a>
+          {% else %}
+          <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <div class="text-2xl">🔒</div>
+            <div class="text-sm font-bold text-slate-700">ทางเข้าถูกล็อก</div>
+            <div class="text-xs text-slate-500">ต้องผ่าน 3 ห้องแรกก่อน</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+    {% endif %}
+
+    <!-- Additional / Extension Ward Rooms (e.g. Test, elective or future units) -->
+    {% for extra_room in rooms %}
+      {% if extra_room.room_number not in ['501', '502', '503', '504'] %}
+      <div class="mt-4 p-4 rounded-2xl bg-white border border-[#DCEAF7] text-xs space-y-1 shadow-2xs">
+        <span class="font-bold text-slate-600 font-mono">ห้อง {{ extra_room.room_number }}</span>
+        <h4 class="font-bold text-[#14213D] text-sm">{{ extra_room.title }}</h4>
+        <p class="text-slate-500">{{ extra_room.subtitle }}</p>
+        <p class="text-slate-600">{{ extra_room.description }}</p>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </section>
+
+  <!-- ================= PARTICIPATION BADGES SHOWCASE ================= -->
+  <section aria-labelledby="badges-heading" class="bg-white rounded-[24px] border border-[#DCEAF7] p-6 sm:p-8 shadow-xs space-y-5">
+    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#DCEAF7] pb-4">
+      <div>
+        <h2 id="badges-heading" class="text-lg sm:text-xl font-black text-[#14213D] tracking-tight flex items-center gap-2">
+          <span>🎖️</span>
+          <span>ตราสัญลักษณ์การมีส่วนร่วม (Participation Badges)</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-[#64748B] mt-1 font-medium">
+          ตราสัญลักษณ์มอบให้เพื่อยกย่องการมีส่วนร่วมและการสะท้อนคิดหลังปฏิบัติการ ไม่มีคะแนนตัวเลขหรือการจัดอันดับ
+        </p>
+      </div>
+      <span class="text-xs sm:text-sm text-[#1296DB] font-bold bg-sky-50 px-3 py-1 rounded-full border border-[#DCEAF7] shrink-0">
+        การยกย่องตามหมุดหมายการเรียนรู้
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {% for badge in badges %}
+      <div class="p-4 rounded-2xl {% if badge.is_unlocked %}bg-white border border-sky-300 ring-1 ring-sky-100 shadow-xs{% else %}bg-slate-50/70 border border-slate-200/80 opacity-70{% endif %} flex items-start space-x-3 transition">
+        <div class="w-12 h-12 rounded-xl {% if badge.is_unlocked %}bg-sky-50 border border-sky-200{% else %}bg-slate-100 border border-slate-200 filter grayscale opacity-50{% endif %} p-1.5 flex items-center justify-center shrink-0" aria-hidden="true">
+          {% if badge.icon == 'oxygen' or '502' in badge.room_number|string %}
+          <img src="{{ url_for('static', filename='images/badges/oxygen-guardian.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          {% elif badge.icon == 'airway' or '501' in badge.room_number|string %}
+          <img src="{{ url_for('static', filename='images/badges/airway-explorer.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          {% elif badge.icon == 'nebulizer' or '503' in badge.room_number|string %}
+          <img src="{{ url_for('static', filename='images/badges/nebulizer-navigator.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          {% elif badge.icon == 'rescue' or '504' in badge.room_number|string %}
+          <img src="{{ url_for('static', filename='images/badges/respiratory-ready.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          {% else %}
+          <span class="text-xl">🎖️</span>
+          {% endif %}
+        </div>
+        <div class="space-y-1">
+          <div class="text-sm sm:text-base font-bold {% if badge.is_unlocked %}text-[#14213D]{% else %}text-slate-600{% endif %}">
+            {{ badge.name }}
+          </div>
+          <div class="text-xs sm:text-sm text-[#64748B] leading-snug">
+            {{ badge.description }}
+          </div>
+          <div class="text-xs sm:text-sm {% if badge.is_unlocked %}text-emerald-700 font-bold{% else %}text-slate-400 font-medium{% endif %} pt-0.5">
+            ห้อง {{ badge.room_number }} • {{ badge.status_text|safe }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,601 @@
+"""Complete seed content for Room 502: Support the Breath (Oxygen Therapy Mission).
+
+Idempotent: creates or updates scenario, 10 activities, options, procedure steps,
+feedback rules, and the 'Oxygen Guardian' badge.
+"""
+
+from __future__ import annotations
+
+import logging
+from sqlalchemy import select
+from app.extensions import db
+from app.models.mission import Mission
+from app.models.scenario import Scenario
+from app.models.activity import Activity, ActivityOption, ProcedureStep, Feedback
+from app.models.badge import Badge
+
+logger = logging.getLogger(__name__)
+
+
+def seed_oxygen_mission() -> dict[str, int]:
+    """Seed Room 502 scenario, activities, options, steps, feedback, and badge."""
+    mission = db.session.execute(
+        select(Mission).where((Mission.room_number == "502") | (Mission.slug == "support-the-breath"))
+    ).scalar_one_or_none()
+
+    if not mission:
+        logger.warning("Room 502 mission not found. Run seed_rooms() first.")
+        return {"scenario": 0, "activities": 0}
+
+    # Update Room 502 availability to playable
+    mission.availability = "playable"
+
+    # 1. Create or update Scenario
+    scenario = db.session.execute(
+        select(Scenario).where(Scenario.mission_id == mission.id)
+    ).scalar_one_or_none()
+
+    initial_vitals = {
+        "spo2": 88,
+        "rr": 28,
+        "hr": 104,
+        "distress": 3,
+        "secretions": "minimal",
+        "breath_sound": "bilateral_basal_crackles",
+        "consciousness": "alert_anxious",
+    }
+
+    scenario_title = "การให้ออกซิเจนบำบัดและการปรับขนาดยาสำหรับคุณอนงค์ (Oxygen Therapy & Titration for Ms. Anong)"
+    patient_name = "นางอนงค์ (Ms. Anong)"
+    clinical_summary = (
+        "นางอนงค์ อายุ 62 ปี วันที่ 1 หลังผ่าตัดถุงน้ำดีผ่านกล้อง (Laparoscopic Cholecystectomy) "
+        "หายใจในอากาศห้อง บ่นแน่นหน้าอกและหายใจไม่อิ่ม มีอาการกระสับกระส่ายและหายใจเร็ว "
+        "มอนิเตอร์ข้างเตียงแสดง SpO2 88%, อัตราการหายใจ 28 ครั้ง/นาที, ชีพจร 104 ครั้ง/นาที ฟังปอดได้ยินเสียง crackles ที่ชายปอดทั้งสองข้าง"
+    )
+
+    if not scenario:
+        scenario = Scenario(
+            mission_id=mission.id,
+            title=scenario_title,
+            patient_name=patient_name,
+            patient_age=62,
+            patient_gender="หญิง",
+            clinical_summary=clinical_summary,
+            initial_state_json=initial_vitals,
+            difficulty="intermediate",
+            is_active=True,
+        )
+        db.session.add(scenario)
+        db.session.flush()
+        logger.info("Created Scenario for Room 502 id=%s", scenario.id)
+    else:
+        scenario.title = scenario_title
+        scenario.patient_name = patient_name
+        scenario.patient_age = 62
+        scenario.patient_gender = "หญิง"
+        scenario.clinical_summary = clinical_summary
+        scenario.initial_state_json = initial_vitals
+        scenario.is_active = True
+
+    # 2. Activities Data (10 activities)
+    ACTIVITIES_DATA = [
+        # Activity 1: Intro / Meet Patient
+        {
+            "activity_type": "intro",
+            "title": "พบคุณอนงค์ (Meet Ms. Anong) & ข้อมูลผู้ป่วย",
+            "instruction": "ทบทวนข้อมูลผู้ป่วย บริบททางคลินิก และสัญญาณชีพระดับฐานบนจอมอนิเตอร์ข้างเตียง",
+            "content_json": {
+                "patient_name": "นางอนงค์ (Ms. Anong, 62 ปี)",
+                "context": (
+                    "นางอนงค์ อยู่ในระยะ 24 ชั่วโมงหลังผ่าตัดถุงน้ำดีผ่านกล้อง กดกริ่งเรียกพยาบาลแจ้งว่าหายใจเหนื่อยและรู้สึกวิตกกังวล "
+                    "ค่า SpO2 ลดลงเหลือ 88% ในอากาศห้อง อัตราการหายใจเร็ว 28 ครั้ง/นาที"
+                ),
+                "goal": "ประเมินสัญญาณภาวะพร่องออกซิเจน เลือกและติดตั้งอุปกรณ์ให้ออกซิเจนที่เหมาะสม ติดตามผลการตอบสนอง และฝึกฝนการเลือกอุปกรณ์ตามสถานการณ์ทางคลินิก",
+            },
+            "display_order": 1,
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "เริ่มต้นการประเมินทางคลินิก (Clinical Assessment Initiated)",
+                    "message": "เริ่มการประเมินระบบหายใจแบบเฉพาะเจาะจงเพื่อระบุสัญญาณทางคลินิกทั้งหมดของภาวะพร่องออกซิเจน",
+                    "clinical_rationale": "การตรวจพบภาวะพร่องออกซิเจนหลังผ่าตัดตั้งแต่เนิ่นๆ ช่วยป้องกันภาวะเนื้อเยื่อขาดออกซิเจนและการทำงานหนักของกล้ามเนื้อหัวใจ",
+                }
+            ],
+        },
+        # Activity 2: Clinical Cues
+        {
+            "activity_type": "clinical_cues",
+            "title": "ประเมินสัญญาณภาวะพร่องออกซิเจน (Identify Cues of Hypoxemia)",
+            "instruction": "เลือกข้อค้นพบจากการประเมินทางคลินิกทั้งหมดที่บ่งชี้ว่าจำเป็นต้องให้ออกซิเจนบำบัด",
+            "content_json": {},
+            "display_order": 2,
+            "options": [
+                {"option_key": "spo2_88", "label": "SpO₂ 88% ในอากาศห้อง (ภาวะพร่องออกซิเจนต่ำกว่าเป้าหมาย ≥ 94%)", "is_correct": True},
+                {"option_key": "tachypnea_rr28", "label": "หายใจเร็วผิดปกติ (Tachypnea อัตราการหายใจ 28 ครั้ง/นาที)", "is_correct": True},
+                {"option_key": "tachycardia_hr104", "label": "หัวใจเต้นเร็ว (Tachycardia ชีพจร 104 ครั้ง/นาที กลไกชดเชยของร่างกาย)", "is_correct": True},
+                {"option_key": "dyspnea_anxiety", "label": "รู้สึกเหนื่อย หายใจไม่อิ่ม ร่วมกับวิตกกังวลกระสับกระส่าย", "is_correct": True},
+                {"option_key": "nausea_postop", "label": "คลื่นไส้เล็กน้อยหลังผ่าตัดโดยไม่มีการอาเจียน", "is_correct": False},
+                {"option_key": "normal_urine", "label": "ปัสสาวะออกปกติ (45 มล./ชม.)", "is_correct": False},
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "ระบุสัญญาณทางคลินิกถูกต้อง (Accurate Clinical Cue Recognition)",
+                    "message": "คุณระบุสัญญาณสำคัญของภาวะพร่องออกซิเจนเฉียบพลันได้อย่างถูกต้อง: SpO2 88%, หายใจเร็ว, หัวใจเต้นเร็ว และหายใจเหนื่อย",
+                    "clinical_rationale": "หัวใจเต้นเร็วและการหายใจเร็วเป็นกลไกชดเชยหลักของร่างกายเมื่อปริมาณออกซิเจนในหลอดเลือดแดงลดต่ำลง",
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "nausea_postop",
+                    "feedback_type": "guidance",
+                    "title": "อาการทั่วไปหลังผ่าตัด (Incidental Postoperative Finding)",
+                    "message": "แม้ว่าอาการคลื่นไส้จะพบได้บ่อยหลังผ่าตัดถุงน้ำดี แต่ไม่ใช่ข้อบ่งชี้โดยตรงในการให้ออกซิเจนบำบัด",
+                    "hint": "เน้นตัวบ่งชี้ของการแลกเปลี่ยนก๊าซบกพร่องและการไหลเวียนเลือดไปเลี้ยงเนื้อเยื่อ",
+                },
+            ],
+        },
+        # Activity 3: Equipment Select (Choose Initial Oxygen Device)
+        {
+            "activity_type": "equipment_select",
+            "title": "เลือกอุปกรณ์ให้ออกซิเจนเริ่มต้น (Choose Initial Oxygen Delivery Device)",
+            "instruction": "เลือกอุปกรณ์ให้ออกซิเจนและอัตราการไหลเริ่มต้นที่เหมาะสมที่สุดสำหรับคุณอนงค์",
+            "content_json": {},
+            "display_order": 3,
+            "options": [
+                {
+                    "option_key": "nasal_cannula_3l",
+                    "label": "สายให้ออกซิเจนทางจมูก (Nasal Cannula) 3 L/min (ให้ FiO₂ ~32% สบาย พูดคุยและดื่มน้ำได้)",
+                    "is_correct": True,
+                },
+                {
+                    "option_key": "simple_mask_2l",
+                    "label": "หน้ากากธรรมดา (Simple Face Mask) 2 L/min",
+                    "is_correct": False,
+                },
+                {
+                    "option_key": "nrb_mask_15l",
+                    "label": "หน้ากากแบบมีถุงสำรองชนิดไม่ไหลย้อน (Non-Rebreather Mask - NRB) 15 L/min",
+                    "is_correct": False,
+                },
+                {
+                    "option_key": "room_air_deep_breath",
+                    "label": "ฝึกหายใจลึกในอากาศห้องโดยไม่ให้ออกซิเจน",
+                    "is_correct": False,
+                },
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "เลือกอุปกรณ์เริ่มต้นได้เหมาะสมที่สุด (Optimal First-Line Device Selection)",
+                    "message": "Nasal cannula อัตรา 2–4 L/min เหมาะอย่างยิ่งสำหรับภาวะพร่องออกซิเจนระดับเล็กน้อยถึงปานกลางในผู้ป่วยที่รู้สึกตัวดีและไม่มีอาการหายใจลำบากขั้นวิกฤต",
+                    "clinical_rationale": "Nasal cannula ให้ออกซิเจนแบบ low-flow (FiO2 24–44%) โดยที่ผู้ป่วยยังสุขสบายและสื่อสารได้",
+                    "patient_effect_json": {"distress_delta": -1},
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "simple_mask_2l",
+                    "feedback_type": "critical",
+                    "title": "อันตราย: อัตราการไหลต่ำเกินไปสำหรับหน้ากาก (Safety Hazard: Flow Rate Too Low)",
+                    "message": "การใช้ Simple face mask ด้วยอัตราการไหลต่ำกว่า 5 L/min จะทำให้คาร์บอนไดออกไซด์จากการหายใจออกสะสมคั่งอยู่ในหน้ากาก ส่งผลให้ผู้ป่วยสูดดม CO2 ซ้ำ (CO2 rebreathing)",
+                    "hint": "Simple face mask ต้องเปิดอัตราการไหลอย่างน้อย 5–10 L/min เสมอเพื่อชะล้างก๊าซ CO2",
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "nrb_mask_15l",
+                    "feedback_type": "guidance",
+                    "title": "ออกซิเจนสูงเกินความจำเป็น (Excessive Oxygen Delivery)",
+                    "message": "Non-rebreather mask สงวนไว้สำหรับภาวะพร่องออกซิเจนรุนแรงหรือภาวะฉุกเฉินวิกฤต (เช่น ช็อก, ได้รับก๊าซพิษ, การบาดเจ็บรุนแรง)",
+                    "hint": "เริ่มต้นด้วยการปรับขนาดแบบ Low-flow เพื่อหลีกเลี่ยงภาวะเป็นพิษจากออกซิเจนและความอึดอัดของผู้ป่วย",
+                },
+            ],
+        },
+        # Activity 4: Sequence (Setup and Administration Flow)
+        {
+            "activity_type": "sequence",
+            "title": "จัดลำดับขั้นตอนการเตรียมและการให้ออกซิเจน (Oxygen Setup Sequence)",
+            "instruction": "จัดลำดับขั้นตอนการเตรียมและใส่สาย Nasal Cannula ให้ถูกต้องตามลำดับหัตถการ",
+            "content_json": {},
+            "display_order": 4,
+            "steps": [
+                {
+                    "step_key": "step_verify_source",
+                    "step_text": "ตรวจสอบเกจวัดอัตราการไหล (Flowmeter) เสียบแน่นกับท่อออกซิเจนบนผนังและต่อขวดน้ำให้ความชื้น (Humidifier) แน่นหนา",
+                    "correct_order": 1,
+                    "rationale": "การตรวจสอบแหล่งก๊าซและระบบความชื้นช่วยป้องกันก๊าซรั่วซึมและการระคายเคืองทางเดินหายใจแห้ง",
+                },
+                {
+                    "step_key": "step_set_flow",
+                    "step_text": "ต่อสาย Nasal cannula เข้ากับท่อขวดน้ำให้ความชื้น และหมุนปรับปุ่มเปิดให้กึ่งกลางลูกลอยอยู่ที่ 3 L/min",
+                    "correct_order": 2,
+                    "rationale": "ต้องตรวจสอบการไหลของก๊าซจากปลายสายเสมอก่อนนำไปใส่ให้ผู้ป่วย",
+                },
+                {
+                    "step_key": "step_verify_gas_flow",
+                    "step_text": "ตรวจสอบว่ามีออกซิเจนไหลผ่านปลายสายจริง (ทดสอบสัมผัสแรงลมที่หลังมือ)",
+                    "correct_order": 3,
+                    "rationale": "การทดสอบลมไหลจริงช่วยป้องกันการใส่สายที่ไม่มีก๊าซไหลหรือสายพับหักงอ",
+                },
+                {
+                    "step_key": "step_insert_prongs",
+                    "step_text": "สอดง่ามสาย (Prongs) ทั้งสองข้างเข้าไปในรูจมูก โดยให้ส่วนโค้งโค้งชี้ลงตามแนวโครงสร้างกายวิภาคของโพรงจมูก",
+                    "correct_order": 4,
+                    "rationale": "ง่ามสายโค้งลงตามกายวิภาคของโพรงจมูกช่วยเพิ่มประสิทธิภาพการไหลและไม่ระคายเคืองเยื่อบุ",
+                },
+                {
+                    "step_key": "step_loop_ears_snug",
+                    "step_text": "คล้องสายพาดเหนือบานหูทั้งสองข้าง และเลื่อนตัวปรับใต้คางขึ้นให้กระชับพอดีอย่างนุ่มนวล",
+                    "correct_order": 5,
+                    "rationale": "ช่วยยึดสายให้กระชับโดยไม่แน่นตึงจนทำให้เกิดแผลกดทับที่ใบหู",
+                },
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "การเตรียมและให้ออกซิเจนราบรื่นถูกต้อง (Smooth Administration & Delivery)",
+                    "message": "ติดตั้งและให้ออกซิเจนเรียบร้อย! คุณอนงค์เริ่มได้รับออกซิเจนอย่างสบายและมีประสิทธิภาพ",
+                    "clinical_rationale": "การจัดวางง่ามสายและทดสอบลมไหลช่วยให้ออกซิเจนส่งถึงผู้ป่วยอย่างต่อเนื่องและสุขสบาย",
+                    "patient_effect_json": {"spo2_delta": 3, "distress_delta": -1},
+                }
+            ],
+        },
+        # Activity 5: Safety Check (Fire Precautions & Cylinder Safety)
+        {
+            "activity_type": "safety_check",
+            "title": "ความปลอดภัยในการใช้ออกซิเจนและการป้องกันอัคคีภัย (Oxygen Safety & Fire Precautions)",
+            "instruction": "เลือกข้อควรระวังความปลอดภัยที่จำเป็นทั้งหมดระหว่างการให้ออกซิเจนบำบัดในหอผู้ป่วย",
+            "content_json": {},
+            "display_order": 5,
+            "options": [
+                {"option_key": "no_smoking_signs", "label": "ติดป้ายเตือน 'ห้ามสูบบุหรี่ / มีการใช้ออกซิเจน' และห้ามจุดประกายไฟหรือเปลวไฟในห้อง", "is_correct": True},
+                {"option_key": "sterile_water_level", "label": "ตรวจสอบระดับน้ำกลั่นปลอดเชื้อ (Sterile water) ในกระบอกความชื้นให้อยู่ระหว่างขีด Min/Max", "is_correct": True},
+                {"option_key": "grounded_electrical", "label": "ตรวจสอบอุปกรณ์ไฟฟ้าข้างเตียงทั้งหมดให้มีสายดินและอยู่ในสภาพปลอดภัยไม่มีประกายไฟ", "is_correct": True},
+                {"option_key": "avoid_petroleum", "label": "หลีกเลี่ยงสารหล่อลื่นที่มีส่วนผสมของน้ำมันปิโตรเลียม (Petroleum jelly) บริเวณใบหน้าและจมูก (ให้ใช้สารหล่อลื่นที่ละลายน้ำได้)", "is_correct": True},
+                {"option_key": "vaseline_nares", "label": "ทาวาสลีน (Vaseline) ชุ่มๆ ในรูจมูกเพื่อป้องกันเยื่อบุแห้ง", "is_correct": False},
+                {"option_key": "oil_flowmeter", "label": "หยอดน้ำมันหล่อลื่นที่เกจ flowmeter เพื่อให้หมุนคล่องขึ้น", "is_correct": False},
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "ตรวจสอบความปลอดภัยครบถ้วน (Safety Protocols Fully Verified)",
+                    "message": "คุณตรวจสอบการป้องกันไฟ ระดับน้ำให้ความชื้น และการหลีกเลี่ยงสารไฮโดรคาร์บอนติดไฟได้อย่างถูกต้อง",
+                    "clinical_rationale": "ออกซิเจนช่วยเร่งการลุกไหม้อย่างรุนแรง การสัมผัสกับสารปิโตรเลียมหรือน้ำมันในบรรยากาศออกซิเจนเข้มข้นก่อความเสี่ยงไฟลุกไหม้รุนแรง",
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "vaseline_nares",
+                    "feedback_type": "critical",
+                    "title": "อันตรายจากเพลิงไหม้: ผลิตภัณฑ์ปิโตรเลียมใกล้ออกซิเจน (Fire Hazard: Petroleum Products)",
+                    "message": "วาสลีน (Petroleum jelly) เป็นสารไฮโดรคาร์บอนติดไฟง่าย ในบรรยากาศที่มีออกซิเจนเข้มข้นจะติดไฟและลุกไหม้ใบหน้าอย่างรุนแรง",
+                    "hint": "เลือกใช้เจลหล่อลื่นสูตรน้ำ (Water-soluble lubricant เช่น K-Y jelly) เสมอในการดูแลความชุ่มชื้นเยื่อบุระหว่างให้ออกซิเจน",
+                },
+            ],
+        },
+        # Activity 6: Troubleshooting / Trend Monitoring (Watch the Monitor)
+        {
+            "activity_type": "troubleshooting",
+            "title": "เฝ้าระวังมอนิเตอร์และการวิเคราะห์แนวโน้มสัญญาณชีพ (Watch the Monitor)",
+            "instruction": "ประเมินแนวโน้มสัญญาณชีพบังเกิดผล 10 นาทีบนจอมอนิเตอร์ และตัดสินใจเลือกการปฏิบัติทางการพยาบาลที่เหมาะสม",
+            "content_json": {},
+            "display_order": 6,
+            "options": [
+                {
+                    "option_key": "maintain_and_reassess",
+                    "label": "คงออกซิเจน 3 L/min ผ่าน Nasal cannula ต่อไปและเฝ้าระวังต่อเนื่อง (SpO₂ คงที่ที่ 94%)",
+                    "is_correct": True,
+                },
+                {
+                    "option_key": "crank_to_10l",
+                    "label": "เพิ่มอัตราออกซิเจน Nasal cannula เป็น 10 L/min เพื่อให้ SpO₂ แตะ 100% เร็วขึ้น",
+                    "is_correct": False,
+                },
+                {
+                    "option_key": "stop_oxygen_abruptly",
+                    "label": "หยุดให้ออกซิเจนทันทีเพราะ SpO₂ แตะ 94% แล้ว",
+                    "is_correct": False,
+                },
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "บรรลุเป้าหมายการให้ออกซิเจน (Target Oxygenation Achieved)",
+                    "message": "สัญญาณชีพของคุณอนงค์เริ่มคงที่: SpO2 94%, หายใจ 20 ครั้ง/นาที, ชีพจร 86 ครั้ง/นาที อาการหายใจเหนื่อยทุเลาลง",
+                    "clinical_rationale": "เป้าหมายค่าความอิ่มตัวออกซิเจนในผู้ป่วยผู้ใหญ่ส่วนใหญ่คือ 94–98% การปรับขนาดให้อยู่ในช่วงนี้ช่วยป้องกันทั้งภาวะพร่องออกซิเจนและอันตรายจากออกซิเจนเกิน (Hyperoxia)",
+                    "patient_effect_json": {"spo2_set": 94, "rr_set": 20, "hr_set": 86, "distress_set": 1},
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "crank_to_10l",
+                    "feedback_type": "caution",
+                    "title": "อัตราการไหลสูงเกินขีดจำกัดของ Nasal Cannula (Excessive Flow)",
+                    "message": "อัตราการไหลที่เกิน 6 L/min บน Nasal cannula ไม่ช่วยเพิ่ม FiO2 อย่างมีนัยสำคัญเนื่องจากข้อจำกัดทางกายวิภาคของโพรงจมูก แต่จะทำให้เยื่อบุจมูกแห้งแตก ปวดศีรษะ และเลือดกำเดาไหล",
+                    "hint": "อัตราการไหลสูงสุดที่แนะนำสำหรับ Nasal cannula มาตรฐานคือไม่เกิน 6 L/min",
+                },
+            ],
+        },
+        # Activity 7: Matching (Device Match Challenge)
+        {
+            "activity_type": "matching",
+            "title": "กิจกรรมจับคู่อุปกรณ์ออกซิเจนตามสถานการณ์ทางคลินิก (Oxygen Device Match Challenge)",
+            "instruction": "จับคู่สถานการณ์ผู้ป่วยจำลองทางคลินิกแต่ละข้อกับอุปกรณ์ให้ออกซิเจนที่เหมาะสมที่สุด",
+            "content_json": {
+                "matches": [
+                    {
+                        "prompt_key": "case_mild_postop",
+                        "prompt_label": "กรณีที่ 1: ผู้ป่วยหลังผ่าตัดอาการคงที่ มีภาวะพร่องออกซิเจนเล็กน้อย",
+                        "prompt_text": "ผู้ป่วยอายุ 54 ปี หลังผ่าตัด SpO2 92% ในอากาศห้อง รู้สึกตัวดี พูดคุยได้ ต้องการดื่มน้ำ",
+                        "correct_target_key": "nasal_cannula",
+                        "target_label": "สายให้ออกซิเจนทางจมูก Nasal Cannula (1–6 L/min)",
+                        "rationale": "Nasal cannula ให้ออกซิเจนแบบ low-flow (24–44% FiO2) สุขสบาย สามารถรับประทานอาหารและพูดคุยได้",
+                        "hint": "เลือกอุปกรณ์ low-flow ที่ไม่เกะกะและเอื้อต่อการรับประทานอาหาร/ดื่มน้ำ",
+                    },
+                    {
+                        "prompt_key": "case_copd_precise",
+                        "prompt_label": "กรณีที่ 2: ผู้ป่วยโรคถุงลมโป่งพองกำเริบเฉียบพลัน (COPD Exacerbation)",
+                        "prompt_text": "ผู้ป่วยอายุ 68 ปี โรค COPD กำเริบเฉียบพลัน ต้องการออกซิเจนความเข้มข้นคงที่แน่นอน (FiO2 28%) เพื่อหลีกเลี่ยงภาวะคั่งก๊าซ CO2",
+                        "correct_target_key": "venturi_mask",
+                        "target_label": "หน้ากากเวนจูรี่ Venturi Mask (FiO₂ คงที่ 24–50%)",
+                        "rationale": "Venturi mask ใช้ตัวต่อปรับอากาศตามรหัสสีเพื่อให้ FiO2 คงที่แม่นยำ ไม่แปรผันตามรูปแบบการหายใจของผู้ป่วย",
+                        "hint": "อุปกรณ์ใดเป็นมาตรฐานทองคำในการควบคุม FiO2 ให้คงที่แม่นยำในผู้ป่วยที่เสี่ยงต่อการคั่ง CO2?",
+                    },
+                    {
+                        "prompt_key": "case_severe_hypoxemia",
+                        "prompt_label": "กรณีที่ 3: ภาวะพร่องออกซิเจนรุนแรงเฉียบพลัน (Acute Severe Hypoxemic Distress)",
+                        "prompt_text": "ผู้ป่วยอายุ 45 ปี สูดควันไฟในเหตุเพลิงไหม้ หายใจลำบากวิกฤต ค่า SpO2 81% ในอากาศห้อง",
+                        "correct_target_key": "nrb_mask",
+                        "target_label": "หน้ากากแบบมีถุงสำรองไม่ไหลย้อน Non-Rebreather Mask (10–15 L/min)",
+                        "rationale": "Non-rebreather mask สามารถให้ออกซิเจนความเข้มข้นสูง (FiO2 60–90%) ผ่านถุง Reservoir bag สำหรับการกู้ชีพในภาวะฉุกเฉินวิกฤต",
+                        "hint": "มองหาอุปกรณ์ที่มีถุงสำรองออกซิเจนความเข้มข้นสูงสำหรับภาวะวิกฤตฉุกเฉิน",
+                    },
+                    {
+                        "prompt_key": "case_mouth_breather",
+                        "prompt_label": "กรณีที่ 4: คัดจมูก หายใจทางปาก ต้องการออกซิเจนปานกลาง",
+                        "prompt_text": "ผู้ป่วยอายุ 60 ปี ริดสีดวงจมูกอุดกั้นแน่น หายใจทางปากตลอดเวลา ต้องการ FiO2 ระดับปานกลาง (40–50%)",
+                        "correct_target_key": "simple_mask",
+                        "target_label": "หน้ากากธรรมดา Simple Face Mask (5–10 L/min)",
+                        "rationale": "Simple face mask ครอบคลุมทั้งจมูกและปาก ให้ออกซิเจนระดับปานกลาง (ต้องใช้อัตราการไหลอย่างน้อย 5 L/min)",
+                        "hint": "อุปกรณ์ใดครอบทั้งจมูกและปากสำหรับผู้ป่วยที่หายใจทางปากและต้องการออกซิเจนระดับปานกลาง?",
+                    },
+                ],
+                "target_options": [
+                    {"key": "nasal_cannula", "label": "Nasal Cannula (1–6 L/min, FiO₂ 24–44%)", "image": "equipment/nasal_cannula.jpg"},
+                    {"key": "simple_mask", "label": "Simple Face Mask (5–10 L/min, FiO₂ 40–60%)", "image": "equipment/simple_mask.jpg"},
+                    {"key": "venturi_mask", "label": "Venturi Mask (ปรับ FiO₂ คงที่แม่นยำ 24–50%)", "image": "equipment/venturi_mask.jpg"},
+                    {"key": "nrb_mask", "label": "Non-Rebreather Mask (10–15 L/min, FiO₂ 60–90%)", "image": "equipment/nrb_mask.jpg"},
+                ],
+            },
+            "display_order": 7,
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "เชี่ยวชาญระบบการให้ออกซิเจน (Mastery of Oxygen Delivery Systems)",
+                    "message": "ยอดเยี่ยมมาก! คุณจับคู่สถานการณ์ทางคลินิกของผู้ป่วยแต่ละรายกับอุปกรณ์ให้ออกซิเจนได้อย่างถูกต้องสมบูรณ์แบบ",
+                    "clinical_rationale": "การเลือกอุปกรณ์ตามความแม่นยำของ FiO2 รูปแบบการหายใจ และความเร่งด่วนทางคลินิกช่วยให้การรักษาปลอดภัยและตรงจุด",
+                }
+            ],
+        },
+        # Activity 8: Decision (Sudden Desaturation Challenge)
+        {
+            "activity_type": "decision",
+            "title": "สถานการณ์ท้าทาย: ภาวะออกซิเจนตกเฉียบพลัน (Sudden Desaturation Challenge)",
+            "instruction": "สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้น: ค่า SpO₂ ของคุณอนงค์ลดลงฮวบจาก 94% เหลือ 88% การปฏิบัติลำดับแรกของคุณคืออะไร?",
+            "content_json": {},
+            "display_order": 8,
+            "options": [
+                {
+                    "option_key": "check_patient_and_tubing",
+                    "label": "ตรวจประเมินคุณอนงค์ทันที ตรวจดูว่าง่ามสายหลุดจากรูจมูกหรือไม่ และตรวจสายท่อว่าหักงอหรือหลุดจากข้อต่อหรือไม่",
+                    "is_correct": True,
+                },
+                {
+                    "option_key": "call_code_intubation",
+                    "label": "รีบประกาศภาวะวิกฤต (Code Blue) เพื่อเตรียมใส่ท่อช่วยหายใจฉุกเฉินทันที",
+                    "is_correct": False,
+                },
+                {
+                    "option_key": "silence_alarm_wait",
+                    "label": "กดปิดเสียงเตือนบนมอนิเตอร์แล้วรอ 15 นาทีเพื่อดูว่าค่าจะดีขึ้นเองหรือไม่",
+                    "is_correct": False,
+                },
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "การแก้ไขปัญหาอย่างเป็นระบบ (Systematic Troubleshooting)",
+                    "message": "คุณพบว่าคุณอนงค์พลิกตะแคงตัวทำให้ง่ามสายออกซิเจนเลื่อนหลุดจากรูจมูก เมื่อจัดสายเข้าที่เดิม ค่า SpO2 ก็กลับขึ้นมาเป็น 95% ทันที",
+                    "clinical_rationale": "ต้องตรวจประเมินผู้ป่วยและอุปกรณ์ก่อนเสมอ ก่อนที่จะตัดสินใจยกระดับการรักษาที่รุนแรงเกินจำเป็น",
+                    "patient_effect_json": {"spo2_set": 95, "distress_delta": -1},
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "call_code_intubation",
+                    "feedback_type": "guidance",
+                    "title": "การยกระดับการรักษาเร็วเกินไป (Premature Escalation)",
+                    "message": "การเรียกทีมกู้ชีพก่อนดูตัวผู้ป่วยเป็นการกระทำที่เร็วเกินไป สาเหตุที่พบบ่อยที่สุดของภาวะออกซิเจนตกเฉียบพลันหลังผ่าตัดคือสายหลุดหรือสายหักงอ",
+                    "hint": "ตรวจดูผู้ป่วย ท่าทาง และการเชื่อมต่อของสายออกซิเจนก่อนเป็นอันดับแรก",
+                },
+            ],
+        },
+        # Activity 9: Aftercare (Comfort & Skin Protection)
+        {
+            "activity_type": "aftercare",
+            "title": "ความสุขสบาย การปกป้องผิวหนัง และการสื่อสาร (Comfort & Skin Protection)",
+            "instruction": "เลือกการพยาบาลที่ช่วยปกป้องผิวหนังและส่งเสริมความสุขสบายทางจิตใจระหว่างการให้ออกซิเจนบำบัด",
+            "content_json": {},
+            "display_order": 9,
+            "options": [
+                {"option_key": "ear_padding", "label": "ใส่แผ่นรองนุ่มๆ เหนือใบหูทั้งสองข้างเพื่อป้องกันแผลกดทับจากสายออกซิเจน", "is_correct": True},
+                {"option_key": "nares_water_lube", "label": "ตรวจดูรูจมูกและทาสารหล่อลื่นสูตรน้ำหากเยื่อบุจมูกแห้ง", "is_correct": True},
+                {"option_key": "reassure_anxiety", "label": "อธิบายให้คุณอนงค์ทราบว่าระดับออกซิเจนอยู่ในเกณฑ์ปลอดภัยแล้วเพื่อคลายความวิตกกังวล", "is_correct": True},
+                {"option_key": "document_care", "label": "บันทึกทางการพยาบาล: อัตราออกซิเจน (3 L/min NC), ค่า SpO₂ (95%), อัตราหายใจ (18 ครั้ง/นาที) และสภาพผิวหนัง", "is_correct": True},
+                {"option_key": "tape_prongs_tight", "label": "ใช้พลาสเตอร์เหนียวปิดตรึงสายออกซิเจนแน่นหนาแนบกับแก้มและใบหู", "is_correct": False},
+            ],
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "การดูแลแบบองค์รวมครอบคลุม (Comprehensive Patient-Centered Care)",
+                    "message": "การดูแลยอดเยี่ยมมาก ผิวหนังของคุณอนงค์ได้รับการปกป้อง ความวิตกกังวลลดลง และการบันทึกข้อมูลครบถ้วนสมบูรณ์",
+                    "clinical_rationale": "แผลกดทับบริเวณหลังใบหูจากสายออกซิเจนเป็นภาวะแทรกซ้อนในโรงพยาบาลที่พบบ่อยแต่ป้องกันได้",
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "tape_prongs_tight",
+                    "feedback_type": "caution",
+                    "title": "อันตรายจากการฉีกขาดของผิวหนัง (Skin Shear Hazard)",
+                    "message": "การติดพลาสเตอร์เหนียวแน่นเกินไปอาจทำให้ผิวหนังชั้นนอกลอกและฉีกขาดในผู้สูงอายุ",
+                    "hint": "ใช้ตัวปรับใต้คางของสายร่วมกับแผ่นรองนุ่มแทนการใช้เทปกาวเหนียวติดแน่น",
+                },
+            ],
+        },
+        # Activity 10: Debrief (Shift Reflection)
+        {
+            "activity_type": "debrief",
+            "title": "สะท้อนคิดและสรุปบทเรียน (Shift Reflection & Debriefing)",
+            "instruction": "สะท้อนคิดจากสถานการณ์นี้: สิ่งสำคัญที่สุดที่คุณได้เรียนรู้เกี่ยวกับการเลือกอุปกรณ์ให้ออกซิเจน การติดตามแนวโน้ม และความปลอดภัยคืออะไร?",
+            "content_json": {
+                "prompt": "แบ่งปันสิ่งที่คุณได้เรียนรู้เกี่ยวกับการเลือกอุปกรณ์ให้ออกซิเจน การปรับขนาด และการดูแลความปลอดภัยของผู้ป่วย",
+            },
+            "display_order": 10,
+            "feedback_rules": [
+                {
+                    "trigger_type": "on_success",
+                    "title": "ภารกิจห้อง 502 สำเร็จ — ได้รับเหรียญผู้พิทักษ์ออกซิเจน (Oxygen Guardian)!",
+                    "message": "ยินดีด้วยที่คุณช่วยเหลือการหายใจของคุณอนงค์สำเร็จเรียบร้อย และเชี่ยวชาญหลักการให้ออกซิเจนบำบัดอย่างปลอดภัย",
+                    "clinical_rationale": "ออกซิเจนถือเป็นยาที่มีข้อบ่งชี้ เป้าหมายการปรับขนาด และข้อควรระวังความปลอดภัยเฉพาะที่ต้องปฏิบัติตามอย่างเคร่งครัด",
+                    "patient_effect_json": {
+                        "spo2_set": 96,
+                        "rr_set": 18,
+                        "hr_set": 80,
+                        "distress_set": 0,
+                        "consciousness": "comfortable_resting",
+                    },
+                }
+            ],
+        },
+    ]
+
+    for act_data in ACTIVITIES_DATA:
+        activity = db.session.execute(
+            select(Activity).where(
+                Activity.scenario_id == scenario.id,
+                Activity.display_order == act_data["display_order"],
+            )
+        ).scalar_one_or_none()
+
+        if not activity:
+            activity = Activity(
+                scenario_id=scenario.id,
+                activity_type=act_data["activity_type"],
+                title=act_data["title"],
+                instruction=act_data["instruction"],
+                content_json=act_data.get("content_json", {}),
+                display_order=act_data["display_order"],
+                is_required=True,
+                is_active=True,
+            )
+            db.session.add(activity)
+            db.session.flush()
+        else:
+            activity.title = act_data["title"]
+            activity.instruction = act_data["instruction"]
+            activity.content_json = act_data.get("content_json", {})
+            activity.is_required = True
+            activity.is_active = True
+
+        # Options
+        for opt_idx, opt_data in enumerate(act_data.get("options", [])):
+            existing_opt = db.session.execute(
+                select(ActivityOption).where(
+                    ActivityOption.activity_id == activity.id,
+                    ActivityOption.option_key == opt_data["option_key"],
+                )
+            ).scalar_one_or_none()
+            if not existing_opt:
+                db.session.add(ActivityOption(
+                    activity_id=activity.id,
+                    label=opt_data["label"],
+                    option_key=opt_data["option_key"],
+                    is_correct=opt_data["is_correct"],
+                    display_order=opt_idx + 1,
+                ))
+            else:
+                existing_opt.label = opt_data["label"]
+                existing_opt.is_correct = opt_data["is_correct"]
+                existing_opt.display_order = opt_idx + 1
+
+        # Steps
+        for step_data in act_data.get("steps", []):
+            existing_step = db.session.execute(
+                select(ProcedureStep).where(
+                    ProcedureStep.activity_id == activity.id,
+                    ProcedureStep.step_key == step_data["step_key"],
+                )
+            ).scalar_one_or_none()
+            if not existing_step:
+                db.session.add(ProcedureStep(
+                    activity_id=activity.id,
+                    step_key=step_data["step_key"],
+                    step_text=step_data["step_text"],
+                    correct_order=step_data["correct_order"],
+                    rationale=step_data.get("rationale"),
+                ))
+            else:
+                existing_step.step_text = step_data["step_text"]
+                existing_step.correct_order = step_data["correct_order"]
+                existing_step.rationale = step_data.get("rationale")
+
+        # Feedback
+        for fb_data in act_data.get("feedback_rules", []):
+            trigger_type = fb_data.get("trigger_type") or ("on_selection" if fb_data.get("trigger_key") else "on_success")
+            trigger_key = fb_data.get("trigger_key")
+
+            existing_fb = db.session.execute(
+                select(Feedback).where(
+                    Feedback.activity_id == activity.id,
+                    Feedback.trigger_type == trigger_type,
+                    Feedback.trigger_key == trigger_key,
+                )
+            ).scalar_one_or_none()
+            if not existing_fb:
+                db.session.add(Feedback(
+                    activity_id=activity.id,
+                    trigger_type=trigger_type,
+                    trigger_key=trigger_key,
+                    feedback_type=fb_data.get("feedback_type", "guidance"),
+                    title=fb_data["title"],
+                    message=fb_data["message"],
+                    clinical_rationale=fb_data.get("clinical_rationale"),
+                    hint=fb_data.get("hint"),
+                    patient_effect_json=fb_data.get("patient_effect_json"),
+                ))
+            else:
+                existing_fb.feedback_type = fb_data.get("feedback_type", "guidance")
+                existing_fb.title = fb_data["title"]
+                existing_fb.message = fb_data["message"]
+                existing_fb.clinical_rationale = fb_data.get("clinical_rationale")
+                existing_fb.hint = fb_data.get("hint")
+                existing_fb.patient_effect_json = fb_data.get("patient_effect_json")
+
+    # 3. Seed Oxygen Guardian Badge
+    badge = db.session.execute(
+        select(Badge).where(Badge.slug == "oxygen-guardian")
+    ).scalar_one_or_none()
+
+    if not badge:
+        badge = Badge(
+            slug="oxygen-guardian",
+            name="ผู้พิทักษ์ออกซิเจน (Oxygen Guardian)",
+            description="มีส่วนร่วมในการประเมินภาวะพร่องออกซิเจน การเลือกอุปกรณ์ให้ออกซิเจนอย่างปลอดภัย และการเฝ้าระวังแนวโน้ม",
+            icon="oxygen",
+            mission_id=mission.id,
+        )
+        db.session.add(badge)
+        logger.info("Created Badge 'ผู้พิทักษ์ออกซิเจน (Oxygen Guardian)'")
+    else:
+        badge.name = "ผู้พิทักษ์ออกซิเจน (Oxygen Guardian)"
+        badge.description = "มีส่วนร่วมในการประเมินภาวะพร่องออกซิเจน การเลือกอุปกรณ์ให้ออกซิเจนอย่างปลอดภัย และการเฝ้าระวังแนวโน้ม"
+        badge.icon = "oxygen"
+        badge.mission_id = mission.id
+
+    db.session.commit()
+    logger.info("Room 502 content seeding complete. %s activities configured.", len(ACTIVITIES_DATA))
+    return {"scenario": scenario.id, "activities": len(ACTIVITIES_DATA)}

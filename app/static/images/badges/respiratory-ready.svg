@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-rescue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer Badge Shield -->
+  <polygon points="60,8 108,24 108,72 60,112 12,72 12,24" fill="url(#bg-rescue)" stroke="#fca5a5" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="60,16 100,30 100,68 60,102 20,68 20,30" fill="#0f172a" opacity="0.45"/>
+  <!-- Heart with ECG rhythm line -->
+  <g>
+    <!-- Stylized Heart -->
+    <path d="M60,82 C60,82 32,64 32,46 C32,36 40,30 48,30 C54,30 58,34 60,38 C62,34 66,30 72,30 C80,30 88,36 88,46 C88,64 60,82 60,82 Z" fill="#ef4444" stroke="#ffffff" stroke-width="2.5"/>
+    <!-- ECG pulse line through heart -->
+    <path d="M26,52 L42,52 L46,42 L52,64 L58,38 L64,58 L68,48 L72,52 L94,52" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Gold Star of Excellence -->
+    <polygon points="60,18 63,24 69,25 64,29 66,35 60,32 54,35 56,29 51,25 57,24" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+  </g>
+</svg>
