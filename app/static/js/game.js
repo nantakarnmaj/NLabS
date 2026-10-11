@@ -13,6 +13,10 @@
   const monitorRr = document.getElementById('monitor-rr');
   const monitorDistress = document.getElementById('monitor-distress');
   const feedbackModal = document.getElementById('feedback-modal');
+  const feedbackBanner = document.getElementById('feedback-banner');
+  const feedbackIconBox = document.getElementById('feedback-icon-box');
+  const feedbackStatusBadge = document.getElementById('feedback-status-badge');
+  const confettiCanvas = document.getElementById('confetti-canvas');
   const feedbackTitle = document.getElementById('feedback-title');
   const feedbackMessage = document.getElementById('feedback-message');
   const feedbackRationale = document.getElementById('feedback-rationale');
@@ -89,6 +93,119 @@
     }
   }
 
+  // Synthesize pleasant, non-blocking Web Audio tones for feedback
+  function playFeedbackSound(isSuccess) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      if (isSuccess) {
+        // Cheerful ascending 3-note arpeggio (C5 -> E5 -> G5)
+        const notes = [523.25, 659.25, 783.99];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.09);
+
+          gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.09);
+          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + idx * 0.09 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.09 + 0.28);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.09);
+          osc.stop(ctx.currentTime + idx * 0.09 + 0.3);
+        });
+      } else {
+        // Gentle caution tone
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(260, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(190, ctx.currentTime + 0.22);
+
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      }
+    } catch (_) {
+      // Audio is optional and non-blocking
+    }
+  }
+
+  // Lightweight zero-dependency celebration confetti burst
+  function fireConfetti() {
+    if (!confettiCanvas) return;
+    const ctx = confettiCanvas.getContext('2d');
+    if (!ctx) return;
+
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+    confettiCanvas.classList.remove('hidden');
+
+    const particles = [];
+    const colors = ['#10B981', '#06B6D4', '#3B82F6', '#F59E0B', '#EC4899', '#8B5CF6'];
+    const count = 45;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 160,
+        y: confettiCanvas.height / 2 - 120 + (Math.random() - 0.5) * 100,
+        vx: (Math.random() - 0.5) * 15,
+        vy: -Math.random() * 8 - 4,
+        size: Math.random() * 9 + 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rSpeed: (Math.random() - 0.5) * 12,
+        opacity: 1,
+      });
+    }
+
+    let frame = 0;
+    function animate() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      let alive = false;
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35; // gravity
+        p.vx *= 0.98; // drag
+        p.rotation += p.rSpeed;
+        p.opacity -= 0.013;
+
+        if (p.opacity > 0 && p.y < confettiCanvas.height) {
+          alive = true;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.opacity);
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+          ctx.restore();
+        }
+      });
+
+      frame++;
+      if (alive && frame < 90) {
+        requestAnimationFrame(animate);
+      } else {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        confettiCanvas.classList.add('hidden');
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
   // Display feedback modal
   function showFeedback(result) {
     if (!feedbackModal) return;
@@ -111,17 +228,57 @@
     }
 
     if (result.success) {
-      feedbackActionBtn.textContent = result.is_mission_completed ? 'ดูการสะท้อนคิดปิดภารกิจ (View Debrief)' : 'ไปยังขั้นตอนถัดไป (Next Step)';
-      feedbackActionBtn.className = 'w-full py-3 px-6 rounded-xl font-bold text-white bg-sky-600 hover:bg-sky-700 transition shadow-sm';
+      if (feedbackBanner) {
+        feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400';
+      }
+      if (feedbackIconBox) {
+        feedbackIconBox.innerHTML = `
+          <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-8 ring-emerald-100 animate-bounce">
+            <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        `;
+      }
+      if (feedbackStatusBadge) {
+        feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs';
+        feedbackStatusBadge.innerHTML = '<span>🎉</span><span>ถูกต้องยอดเยี่ยม! (EXCELLENT!)</span>';
+      }
+
+      const nextLabel = result.is_mission_completed ? 'ดูการสะท้อนคิดปิดภารกิจ (View Debrief)' : 'ไปยังขั้นตอนถัดไป (Next Step)';
+      feedbackActionBtn.innerHTML = `<span>${nextLabel}</span> <svg class="w-5 h-5 ml-1 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
+      feedbackActionBtn.className = 'w-full py-4 px-6 rounded-2xl font-black text-base text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 active:scale-[0.98] shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
       feedbackActionBtn.onclick = function () {
         window.location.reload();
       };
+
+      playFeedbackSound(true);
+      fireConfetti();
     } else {
-      feedbackActionBtn.textContent = 'ลองใหม่อีกครั้ง (Try Again Safely)';
-      feedbackActionBtn.className = 'w-full py-3 px-6 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition shadow-xs';
+      if (feedbackBanner) {
+        feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-amber-500 via-orange-400 to-rose-400';
+      }
+      if (feedbackIconBox) {
+        feedbackIconBox.innerHTML = `
+          <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-amber-500 to-rose-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/30 ring-8 ring-amber-100 animate-pulse">
+            <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+        `;
+      }
+      if (feedbackStatusBadge) {
+        feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs';
+        feedbackStatusBadge.innerHTML = '<span>⚠️</span><span>ข้อควรระวังความปลอดภัย (SAFETY ALERT)</span>';
+      }
+
+      feedbackActionBtn.innerHTML = '<span>ลองใหม่อีกครั้ง (Try Again Safely)</span>';
+      feedbackActionBtn.className = 'w-full py-3.5 px-6 rounded-2xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
       feedbackActionBtn.onclick = function () {
         closeFeedback();
       };
+
+      playFeedbackSound(false);
     }
 
     feedbackModal.classList.remove('hidden');
