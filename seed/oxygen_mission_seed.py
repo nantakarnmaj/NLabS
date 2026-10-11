@@ -144,7 +144,7 @@ def seed_oxygen_mission() -> dict[str, int]:
             "options": [
                 {
                     "option_key": "nasal_cannula_3l",
-                    "label": "สายให้ออกซิเจนทางจมูก (Nasal Cannula) 3 L/min (ให้ FiO₂ ~32% สบาย พูดคุยและดื่มน้ำได้)",
+                    "label": "สายให้ออกซิเจนทางจมูก (Nasal Cannula) 3 L/min",
                     "is_correct": True,
                 },
                 {
@@ -159,7 +159,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                 },
                 {
                     "option_key": "room_air_deep_breath",
-                    "label": "ฝึกหายใจลึกในอากาศห้องโดยไม่ให้ออกซิเจน",
+                    "label": "ฝึกหายใจอย่างมีประสิทธิภาพ โดยไม่ให้ออกซิเจน",
                     "is_correct": False,
                 },
             ],
