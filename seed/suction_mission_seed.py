@@ -110,10 +110,10 @@ def seed_suction_mission() -> dict[str, int]:
             "title": "สัญญาณทางคลินิก: ประเมินข้อบ่งชี้การดูดเสมหะ (Clinical Cues)",
             "instruction": "เลือกข้อค้นพบจากการตรวจประเมินทางคลินิกทั้งหมดที่บ่งชี้ว่าจำเป็นต้องดูดเสมหะ หลีกเลี่ยงการทำเป็นกิจวัตรที่ไม่มีข้อบ่งชี้",
             "options": [
-                {"option_key": "audible_gurgling", "label": "มองเห็นเสมหะบริเวณปากท่อเจาะคอ (Tracheostomy tube)", "is_correct": True, "display_order": 1},
+                {"option_key": "audible_gurgling", "label": "มองเห็นเสมหะบริเวณท่อเจาะคอ", "is_correct": True, "display_order": 1},
                 {"option_key": "rhonchi", "label": "ฟังปอดได้ยินเสียง rhonchi ทั้งสองข้าง", "is_correct": True, "display_order": 2},
                 {"option_key": "desaturation", "label": "ค่าความอิ่มตัวของออกซิเจนลดลง (SpO2 ลดลงเหลือ 91%) ร่วมกับมีอาการกระสับกระส่าย", "is_correct": True, "display_order": 3},
-                {"option_key": "scheduled_q2h", "label": "ดูดเสมหะตามรอบเวลาที่กำหนดทุก 2 ชั่วโมงเป็นกิจวัตรโดยไม่มีอาการบ่งชี้", "is_correct": False, "display_order": 4},
+                {"option_key": "scheduled_q2h", "label": "ดูดเสมหะตามรอบเวลาที่กำหนดทุก 2 ชั่วโมง", "is_correct": False, "display_order": 4},
                 {"option_key": "prevent_fever", "label": "ดูดเสมหะเป็นประจำเพื่อป้องกันไข้หลังผ่าตัด", "is_correct": False, "display_order": 5},
             ],
             "feedback": [
