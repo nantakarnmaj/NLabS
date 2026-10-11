@@ -6,6 +6,7 @@ import logging
 from flask import (
     Blueprint,
     abort,
+    current_app,
     make_response,
     redirect,
     render_template,
@@ -30,7 +31,27 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/", methods=["GET"])
 def home():
-    """Home landing page explaining the game's formative purpose and anonymous session."""
+    """Main research platform entry portal: Login required before accessing clinical ward."""
+    from app.routes.auth import get_current_user
+    current_user = get_current_user()
+    if current_user:
+        return redirect(url_for("main.ward"))
+
+    tenant_domain = current_app.config.get("M365_TENANT_DOMAIN", "nursingmu.org")
+    has_azure_config = bool(
+        current_app.config.get("M365_CLIENT_ID")
+        and current_app.config.get("M365_CLIENT_SECRET")
+    )
+    return render_template(
+        "login.html",
+        tenant_domain=tenant_domain,
+        has_azure_config=has_azure_config,
+    )
+
+
+@main_bp.route("/overview", methods=["GET"])
+def overview():
+    """Project overview and clinical simulation introduction."""
     session = get_current_session()
     return render_template("home.html", session=session)
 

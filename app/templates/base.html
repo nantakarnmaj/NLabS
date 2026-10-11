@@ -26,6 +26,7 @@
       </div>
 
       <!-- Center: Distinct Colored Navigation Tabs (Desktop) -->
+      {% if current_user or request.path not in ['/', '/login'] %}
       <nav class="hidden md:flex items-center gap-1.5 bg-[#F5FAFF] border border-[#DCEAF7] rounded-full p-1 shadow-inner text-xs sm:text-sm font-semibold" aria-label="Main Navigation">
         <!-- 1. หน้าแรก (Sky Blue Theme) -->
         <a
@@ -64,6 +65,7 @@
           <span>ความรู้เพิ่มเติม</span>
         </a>
       </nav>
+      {% endif %}
 
       <!-- Right: User Identity / Learner Status Pill -->
       <div class="flex items-center gap-2">
@@ -85,7 +87,7 @@
             ออก
           </a>
         </div>
-        {% elif session and not session.is_expired %}
+        {% elif session and not session.is_expired and request.path not in ['/', '/login'] %}
         <!-- Anonymous Learner Session (Identified Context: Do NOT show Login button) -->
         <div class="flex items-center bg-white border border-[#DCEAF7] rounded-full pl-1.5 pr-3 py-1 shadow-xs">
           <div class="w-7 h-7 rounded-full overflow-hidden border border-sky-200 bg-sky-50 shrink-0 mr-2 flex items-center justify-center">
@@ -99,7 +101,7 @@
             </div>
           </div>
         </div>
-        {% else %}
+        {% elif request.path not in ['/', '/login'] %}
         <!-- Unauthenticated Guest -->
         <a
           href="{{ url_for('auth.login') }}"
@@ -111,6 +113,7 @@
         {% endif %}
 
         <!-- Mobile Navigation Dropdown/Pill Link -->
+        {% if current_user or request.path not in ['/', '/login'] %}
         <div class="flex md:hidden items-center ml-1">
           <a
             href="{{ url_for('main.ward') }}"
@@ -121,6 +124,7 @@
             <span class="text-[11px]">วอร์ด</span>
           </a>
         </div>
+        {% endif %}
       </div>
     </div>
   </header>
