@@ -54,8 +54,8 @@ def seed_suction_mission() -> dict[str, int]:
             patient_gender="ชาย",
             clinical_summary=(
                 "นายสมชาย อายุ 68 ปี พักฟื้นหลังผ่าตัดช่องท้อง ได้รับการใส่ท่อเจาะคอ (Tracheostomy) "
-                "ต่อชุดให้ออกซิเจน Tracheostomy Collar (T-collar) เริ่มมีอาการไอเหนื่อยและได้ยินเสียงเสมหะเดือดในทางเดินหายใจ "
-                "จอมอนิเตอร์แสดงค่า SpO2 ลดลงเหลือ 91% หายใจ 26 ครั้ง/นาที ชีพจร 96 ครั้ง/นาที ฟังปอดได้ยิน coarse rhonchi"
+                "ต่อชุดให้ออกซิเจน Tracheostomy Collar (T-collar) เริ่มมีอาการไอเหนื่อยและได้ยินเสียงเสมหะในทางเดินหายใจ "
+                "จอมอนิเตอร์แสดงค่า SpO2 ลดลงเหลือ 91% หายใจ 26 ครั้ง/นาที ชีพจร 96 ครั้ง/นาที ฟังปอดได้ยิน rhonchi"
             ),
             initial_state_json=initial_vitals,
             difficulty="intermediate",
@@ -73,8 +73,8 @@ def seed_suction_mission() -> dict[str, int]:
         scenario.patient_gender = "ชาย"
         scenario.clinical_summary = (
             "นายสมชาย อายุ 68 ปี พักฟื้นหลังผ่าตัดช่องท้อง ได้รับการใส่ท่อเจาะคอ (Tracheostomy) "
-            "ต่อชุดให้ออกซิเจน Tracheostomy Collar (T-collar) เริ่มมีอาการไอเหนื่อยและได้ยินเสียงเสมหะเดือดในทางเดินหายใจ "
-            "จอมอนิเตอร์แสดงค่า SpO2 ลดลงเหลือ 91% หายใจ 26 ครั้ง/นาที ชีพจร 96 ครั้ง/นาที ฟังปอดได้ยิน coarse rhonchi"
+            "ต่อชุดให้ออกซิเจน Tracheostomy Collar (T-collar) เริ่มมีอาการไอเหนื่อยและได้ยินเสียงเสมหะในทางเดินหายใจ "
+            "จอมอนิเตอร์แสดงค่า SpO2 ลดลงเหลือ 91% หายใจ 26 ครั้ง/นาที ชีพจร 96 ครั้ง/นาที ฟังปอดได้ยิน rhonchi"
         )
         scenario.initial_state_json = initial_vitals
         scenario.approval_status = "approved"
@@ -92,7 +92,7 @@ def seed_suction_mission() -> dict[str, int]:
                 "age": 68,
                 "history": "วันที่ 2 หลังผ่าตัดช่องท้อง (Post-Op Laparotomy) พักฟื้นหายใจเองผ่านท่อเจาะคอใส่ออกซิเจน Collar",
                 "airway": "ท่อเจาะคอ (Tracheostomy tube) เบอร์ 7.5 มม. ต่อชุดให้ออกซิเจนแบบ Tracheostomy collar",
-                "cues_preview": "ได้ยินเสียงเสมหะเดือดที่ท่อเจาะคอ หายใจตื้นเหนื่อย กระสับกระส่าย",
+                "cues_preview": "ได้ยินเสียงเสมหะในทางเดินหายใจ หายใจตื้นเหนื่อย กระสับกระส่าย",
             },
             "feedback": [
                 {
@@ -111,7 +111,7 @@ def seed_suction_mission() -> dict[str, int]:
             "instruction": "เลือกข้อค้นพบจากการตรวจประเมินทางคลินิกทั้งหมดที่บ่งชี้ว่าจำเป็นต้องดูดเสมหะ หลีกเลี่ยงการทำเป็นกิจวัตรที่ไม่มีข้อบ่งชี้",
             "options": [
                 {"option_key": "audible_gurgling", "label": "มองเห็นเสมหะบริเวณปากท่อเจาะคอ (Tracheostomy tube)", "is_correct": True, "display_order": 1},
-                {"option_key": "rhonchi", "label": "ฟังปอดได้ยินเสียง coarse rhonchi ทั้งสองข้าง", "is_correct": True, "display_order": 2},
+                {"option_key": "rhonchi", "label": "ฟังปอดได้ยินเสียง rhonchi ทั้งสองข้าง", "is_correct": True, "display_order": 2},
                 {"option_key": "desaturation", "label": "ค่าความอิ่มตัวของออกซิเจนลดลง (SpO2 ลดลงเหลือ 91%) ร่วมกับมีอาการกระสับกระส่าย", "is_correct": True, "display_order": 3},
                 {"option_key": "scheduled_q2h", "label": "ดูดเสมหะตามรอบเวลาที่กำหนดทุก 2 ชั่วโมงเป็นกิจวัตรโดยไม่มีอาการบ่งชี้", "is_correct": False, "display_order": 4},
                 {"option_key": "prevent_fever", "label": "ดูดเสมหะเป็นประจำเพื่อป้องกันไข้หลังผ่าตัด", "is_correct": False, "display_order": 5},
@@ -335,7 +335,7 @@ def seed_suction_mission() -> dict[str, int]:
             "title": "ผลลัพธ์การดูแลผู้ป่วยและการประเมินขั้นสุดท้าย (Patient Outcome)",
             "instruction": "ทบทวนผลการตอบสนองจำลองของผู้ป่วย เปรียบเทียบสัญญาณชีพหลังทำหัตถการกับข้อมูลตั้งต้นก่อนทำ",
             "content_json": {
-                "before": {"spo2": 91, "rr": 26, "hr": 96, "breath_sound": "เสียงเสมหะเดือด Coarse Rhonchi", "secretions": "เสมหะมาก (Copious)"},
+                "before": {"spo2": 91, "rr": 26, "hr": 96, "breath_sound": "เสียงเสมหะ Rhonchi", "secretions": "เสมหะมาก (Copious)"},
                 "after": {"spo2": 97, "rr": 18, "hr": 78, "breath_sound": "เสียงปอดโล่งชัดเจนทั้งสองข้าง (Clear)", "secretions": "เสมหะเล็กน้อย/ใส (Minimal/Clear)"},
                 "summary": "ภาวะอุดกั้นทางเดินหายใจคลี่คลาย เสียงปอดโล่ง การออกแรงหายใจกลับสู่ปกติ สัญญาณชีพคงที่ปลอดภัย",
             },
