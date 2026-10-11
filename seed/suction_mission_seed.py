@@ -48,13 +48,13 @@ def seed_suction_mission() -> dict[str, int]:
     if not scenario:
         scenario = Scenario(
             mission_id=mission.id,
-            title="การดูดเสมหะท่อช่วยหายใจสำหรับคุณสมชาย (Endotracheal Airway Clearance for Somchai)",
+            title="การดูดเสมหะท่อเจาะคอสำหรับคุณสมชาย (Tracheostomy Airway Clearance for Somchai)",
             patient_name="นายสมชาย (Mr. Somchai)",
             patient_age=68,
             patient_gender="ชาย",
             clinical_summary=(
-                "นายสมชาย อายุ 68 ปี วันที่ 2 หลังผ่าตัดช่องท้อง ใส่ท่อช่วยหายใจเบอร์ 7.5 "
-                "ไอสู้เครื่องช่วยหายใจและได้ยินเสียงเสมหะเดือดในทางเดินหายใจ "
+                "นายสมชาย อายุ 68 ปี พักฟื้นหลังผ่าตัดช่องท้อง ได้รับการใส่ท่อเจาะคอ (Tracheostomy) "
+                "ต่อชุดให้ออกซิเจน Tracheostomy Collar (T-collar) เริ่มมีอาการไอเหนื่อยและได้ยินเสียงเสมหะเดือดในทางเดินหายใจ "
                 "จอมอนิเตอร์แสดงค่า SpO2 ลดลงเหลือ 91% หายใจ 26 ครั้ง/นาที ชีพจร 96 ครั้ง/นาที ฟังปอดได้ยิน coarse rhonchi"
             ),
             initial_state_json=initial_vitals,
@@ -67,13 +67,13 @@ def seed_suction_mission() -> dict[str, int]:
         db.session.flush()
         logger.info("Created Scenario for Room 501 (id=%s)", scenario.id)
     else:
-        scenario.title = "การดูดเสมหะท่อช่วยหายใจสำหรับคุณสมชาย (Endotracheal Airway Clearance for Somchai)"
+        scenario.title = "การดูดเสมหะท่อเจาะคอสำหรับคุณสมชาย (Tracheostomy Airway Clearance for Somchai)"
         scenario.patient_name = "นายสมชาย (Mr. Somchai)"
         scenario.patient_age = 68
         scenario.patient_gender = "ชาย"
         scenario.clinical_summary = (
-            "นายสมชาย อายุ 68 ปี วันที่ 2 หลังผ่าตัดช่องท้อง ใส่ท่อช่วยหายใจเบอร์ 7.5 "
-            "ไอสู้เครื่องช่วยหายใจและได้ยินเสียงเสมหะเดือดในทางเดินหายใจ "
+            "นายสมชาย อายุ 68 ปี พักฟื้นหลังผ่าตัดช่องท้อง ได้รับการใส่ท่อเจาะคอ (Tracheostomy) "
+            "ต่อชุดให้ออกซิเจน Tracheostomy Collar (T-collar) เริ่มมีอาการไอเหนื่อยและได้ยินเสียงเสมหะเดือดในทางเดินหายใจ "
             "จอมอนิเตอร์แสดงค่า SpO2 ลดลงเหลือ 91% หายใจ 26 ครั้ง/นาที ชีพจร 96 ครั้ง/นาที ฟังปอดได้ยิน coarse rhonchi"
         )
         scenario.initial_state_json = initial_vitals
@@ -90,9 +90,9 @@ def seed_suction_mission() -> dict[str, int]:
             "content_json": {
                 "patient_name": "นายสมชาย (Mr. Somchai)",
                 "age": 68,
-                "history": "วันที่ 2 หลังผ่าตัดช่องท้อง (Post-Op Laparotomy) ใช้เครื่องช่วยหายใจ",
-                "airway": "ท่อช่วยหายใจทางปาก (Oral ETT) เบอร์ 7.5 มม. ลึก 22 ซม. ที่มุมปาก",
-                "cues_preview": "ได้ยินเสียงเสมหะเดือดในวงจรเครื่องช่วยหายใจ หายใจเร็ว กระสับกระส่าย",
+                "history": "วันที่ 2 หลังผ่าตัดช่องท้อง (Post-Op Laparotomy) พักฟื้นหายใจเองผ่านท่อเจาะคอใส่ออกซิเจน Collar",
+                "airway": "ท่อเจาะคอ (Tracheostomy tube) เบอร์ 7.5 มม. ต่อชุดให้ออกซิเจนแบบ Tracheostomy collar",
+                "cues_preview": "ได้ยินเสียงเสมหะเดือดที่ท่อเจาะคอ หายใจตื้นเหนื่อย กระสับกระส่าย",
             },
             "feedback": [
                 {
@@ -110,7 +110,7 @@ def seed_suction_mission() -> dict[str, int]:
             "title": "สัญญาณทางคลินิก: ประเมินข้อบ่งชี้การดูดเสมหะ (Clinical Cues)",
             "instruction": "เลือกข้อค้นพบจากการตรวจประเมินทางคลินิกทั้งหมดที่บ่งชี้ว่าจำเป็นต้องดูดเสมหะ หลีกเลี่ยงการทำเป็นกิจวัตรที่ไม่มีข้อบ่งชี้",
             "options": [
-                {"option_key": "audible_gurgling", "label": "มองเห็นเสมหะบริเวณข้อต่อ ETT", "is_correct": True, "display_order": 1},
+                {"option_key": "audible_gurgling", "label": "มองเห็นเสมหะบริเวณปากท่อเจาะคอ (Tracheostomy tube)", "is_correct": True, "display_order": 1},
                 {"option_key": "rhonchi", "label": "ฟังปอดได้ยินเสียง coarse rhonchi ทั้งสองข้าง", "is_correct": True, "display_order": 2},
                 {"option_key": "desaturation", "label": "ค่าความอิ่มตัวของออกซิเจนลดลง (SpO2 ลดลงเหลือ 91%) ร่วมกับมีอาการกระสับกระส่าย", "is_correct": True, "display_order": 3},
                 {"option_key": "scheduled_q2h", "label": "ดูดเสมหะตามรอบเวลาที่กำหนดทุก 2 ชั่วโมงเป็นกิจวัตรโดยไม่มีอาการบ่งชี้", "is_correct": False, "display_order": 4},
@@ -129,7 +129,7 @@ def seed_suction_mission() -> dict[str, int]:
                     "feedback_type": "caution",
                     "title": "อันตรายจากการดูดเสมหะตามรอบเวลา (Routine Suctioning Hazard)",
                     "message": "การดูดเสมหะตามตารางเวลาเป็นประจำล้าสมัยและก่ออันตราย ควรดูดเสมหะเมื่อมีอาการทางคลินิกบ่งชี้เท่านั้น",
-                    "clinical_rationale": "การใส่สายดูดเสมหะโดยไม่จำเป็นจะครูดทำลายเยื่อบุหลอดลมและเพิ่มความเสี่ยงต่อการเกิดปอดอักเสบจากการใช้เครื่องช่วยหายใจ (VAP)",
+                    "clinical_rationale": "การใส่สายดูดเสมหะโดยไม่จำเป็นจะครูดทำลายเยื่อบุหลอดลมและเพิ่มความเสี่ยงต่อการติดเชื้อทางเดินหายใจและปอดอักเสบ",
                     "hint": "เลือกเฉพาะข้อค้นพบที่แสดงถึงการอุดกั้นของเสมหะในทางเดินหายใจหรือการแลกเปลี่ยนออกซิเจนลดลง",
                 },
             ],
@@ -141,7 +141,7 @@ def seed_suction_mission() -> dict[str, int]:
             "title": "เตรียมอุปกรณ์ปลอดเชื้อและการตั้งค่าแรงดันดูด (Gear Up)",
             "instruction": "เลือกรายการอุปกรณ์ปลอดเชื้อ อุปกรณ์ป้องกันส่วนบุคคล (PPE) และการตั้งค่าแรงดันดูดสุญญากาศที่ปลอดภัยสำหรับผู้ใหญ่",
             "options": [
-                {"option_key": "sterile_catheter", "label": "สายดูดเสมหะปลอดเชื้อ (ขนาด 12 Fr — เส้นผ่านศูนย์กลางภายนอกไม่เกินครึ่งหนึ่งของเส้นผ่านศูนย์กลางภายในท่อ ETT)", "is_correct": True, "display_order": 1},
+                {"option_key": "sterile_catheter", "label": "สายดูดเสมหะปลอดเชื้อ (ขนาด 12 Fr — เส้นผ่านศูนย์กลางภายนอกไม่เกินครึ่งหนึ่งของเส้นผ่านศูนย์กลางภายในท่อเจาะคอ)", "is_correct": True, "display_order": 1},
                 {"option_key": "sterile_gloves", "label": "ถุงมือปลอดเชื้อ (Sterile gloves) สำหรับเทคนิคการดูดเสมหะระบบเปิด", "is_correct": True, "display_order": 2},
                 {"option_key": "vacuum_100_120", "label": "ปรับแรงดันเครื่องดูดเสมหะที่ 100–120 mmHg สำหรับผู้ใหญ่", "is_correct": True, "display_order": 3},
                 {"option_key": "sterile_saline", "label": "ภาชนะใส่น้ำเกลือปลอดเชื้อ (Sterile normal saline) สำหรับล้างสายดูดเสมหะ", "is_correct": True, "display_order": 4},
@@ -154,7 +154,7 @@ def seed_suction_mission() -> dict[str, int]:
                     "trigger_type": "on_success",
                     "title": "ตรวจสอบอุปกรณ์และความปลอดภัยเรียบร้อย (Equipment & Safety Verified)",
                     "message": "อุปกรณ์ปลอดเชื้อ อุปกรณ์ PPE และแรงดันสุญญากาศที่ปลอดภัย (100–120 mmHg) พร้อมใช้งานแล้ว",
-                    "clinical_rationale": "การเลือกขนาดสายดูดเสมหะที่เหมาะสม (≤ 1/2 ของขนาด ETT) ป้องกันการอุดตันทางเดินหายใจอย่างสมบูรณ์ขณะดูดเสมหะ",
+                    "clinical_rationale": "การเลือกขนาดสายดูดเสมหะที่เหมาะสม (≤ 1/2 ของขนาดท่อเจาะคอ) ป้องกันการอุดตันทางเดินหายใจอย่างสมบูรณ์ขณะดูดเสมหะ",
                 },
                 {
                     "trigger_type": "on_selection",
@@ -177,7 +177,7 @@ def seed_suction_mission() -> dict[str, int]:
                 {"option_key": "pre_oxygenate", "label": "ให้ออกซิเจนความเข้มข้นสูง (Hyperoxygenate 100% O2) อย่างน้อย 30–60 วินาทีก่อนทำหัตถการ", "is_correct": True, "display_order": 1},
                 {"option_key": "semi_fowler", "label": "จัดผู้ป่วยนอนท่าศีรษะสูง Semi-Fowler's (30–45 องศา) หากไม่มีข้อห้าม", "is_correct": True, "display_order": 2},
                 {"option_key": "monitor_vitals", "label": "ติดเครื่องวัดออกซิเจนปลายนิ้ว (Pulse Oximeter) ต่อเนื่องและเปิดเสียงเตือนภัย", "is_correct": True, "display_order": 3},
-                {"option_key": "routine_saline_bolus", "label": "หยดน้ำเกลือปลอดเชื้อ 5 มล. เข้าท่อ ETT โดยตรงเป็นกิจวัตรเพื่อละลายเสมหะ", "is_correct": False, "display_order": 4},
+                {"option_key": "routine_saline_bolus", "label": "หยดน้ำเกลือปลอดเชื้อ 5 มล. เข้าท่อเจาะคอโดยตรงเป็นกิจวัตรเพื่อละลายเสมหะ", "is_correct": False, "display_order": 4},
             ],
             "feedback": [
                 {
@@ -191,10 +191,10 @@ def seed_suction_mission() -> dict[str, int]:
                     "trigger_type": "on_selection",
                     "trigger_key": "routine_saline_bolus",
                     "feedback_type": "caution",
-                    "title": "ไม่แนะนำให้หยดน้ำเกลือเข้าท่อช่วยหายใจเป็นกิจวัตร (Routine Saline Lavage Discouraged)",
-                    "message": "แนวปฏิบัติปัจจุบันไม่แนะนำให้หยดน้ำเกลือลงในท่อช่วยหายใจเป็นกิจวัตร",
+                    "title": "ไม่แนะนำให้หยดน้ำเกลือเข้าท่อเจาะคอเป็นกิจวัตร (Routine Saline Lavage Discouraged)",
+                    "message": "แนวปฏิบัติปัจจุบันไม่แนะนำให้หยดน้ำเกลือลงในท่อเจาะคอเป็นกิจวัตร",
                     "clinical_rationale": "น้ำเกลือไม่ช่วยละลายเสมหะอย่างแท้จริง แต่จะชะล้างคราบจุลชีพ (biofilm) ลงสู่ปอดส่วนลึก เพิ่มความเสี่ยงปอดอักเสบ",
-                    "hint": "เน้นการให้ออกซิเจนล่วงหน้าและการจัดท่าผู้ป่วย หลีกเลี่ยงการหยดน้ำเกลือลงท่อช่วยหายใจ",
+                    "hint": "เน้นการให้ออกซิเจนล่วงหน้าและการจัดท่าผู้ป่วย หลีกเลี่ยงการหยดน้ำเกลือลงท่อเจาะคอ",
                 },
             ],
         },
@@ -207,9 +207,9 @@ def seed_suction_mission() -> dict[str, int]:
             "steps": [
                 {"step_key": "step_preox", "step_text": "ให้ออกซิเจน 100% O2 แก่ผู้ป่วยล่วงหน้าเป็นเวลา 30–60 วินาที", "correct_order": 1, "rationale": "ต้องให้ออกซิเจนล่วงหน้าเสมอก่อนสอดสายดูดเสมหะ", "critical_step": True},
                 {"step_key": "step_don_sterile", "step_text": "สวมถุงมือปลอดเชื้อและต่อสายดูดเสมหะเข้ากับท่อยางโดยใช้มือข้างที่ไม่ถนัด", "correct_order": 2, "rationale": "รักษามือข้างที่ถนัดให้ปลอดเชื้ออย่างเคร่งครัด", "critical_step": True},
-                {"step_key": "step_insert_no_suction", "step_text": "ค่อยๆ สอดสายดูดเสมหะเข้าท่อ ETT โดยไม่เปิดแรงดันดูด จนกระทั่งรู้สึกถึงแรงต้านหรือผู้ป่วยไอ แล้วถอยสายออก 1 ซม.", "correct_order": 3, "rationale": "การดูดเสมหะขณะสอดสายจะฉีกขาดเนื้อเยื่อและทำให้ออกซิเจนลดฮวบ", "critical_step": True},
+                {"step_key": "step_insert_no_suction", "step_text": "ค่อยๆ สอดสายดูดเสมหะเข้าท่อเจาะคอโดยไม่เปิดแรงดันดูด จนกระทั่งรู้สึกถึงแรงต้านหรือผู้ป่วยไอ แล้วถอยสายออก 1 ซม.", "correct_order": 3, "rationale": "การดูดเสมหะขณะสอดสายจะฉีกขาดเนื้อเยื่อและทำให้ออกซิเจนลดฮวบ", "critical_step": True},
                 {"step_key": "step_suction_withdraw", "step_text": "กดเปิดแรงดันดูดเป็นระยะ (Intermittent) พร้อมหมุนสายและค่อยๆ ดึงสายออก (ใช้เวลารวมไม่เกิน 10–15 วินาที)", "correct_order": 4, "rationale": "การดูดต่อเนื่องหรือนานเกินไปทำให้ปอดแฟบและออกซิเจนลดลงรุนแรง", "critical_step": True},
-                {"step_key": "step_post_oxygenate", "step_text": "ต่อเครื่องช่วยหายใจ/แหล่งออกซิเจนกลับทันทีและให้ออกซิเจน 100% เพื่อให้ผู้ป่วยฟื้นตัวก่อนทำรอบถัดไป", "correct_order": 5, "rationale": "การให้ออกซิเจนชดเชยช่วยคืนค่าออกซิเจนในเลือดและทำให้หัวใจเต้นคงที่", "critical_step": True},
+                {"step_key": "step_post_oxygenate", "step_text": "ครอบ Oxygen collar/ต่อแหล่งออกซิเจนกลับทันทีและให้ออกซิเจนเพื่อช่วยให้ผู้ป่วยฟื้นตัวก่อนทำรอบถัดไป", "correct_order": 5, "rationale": "การให้ออกซิเจนชดเชยช่วยคืนค่าออกซิเจนในเลือดและทำให้หัวใจเต้นคงที่", "critical_step": True},
             ],
             "feedback": [
                 {
@@ -305,7 +305,7 @@ def seed_suction_mission() -> dict[str, int]:
             "options": [
                 {"option_key": "re_auscultate", "label": "ฟังเสียงหายใจที่ปอดทั้งสองข้างซ้ำเพื่อประเมินประสิทธิผลของการกำจัดเสมหะ", "is_correct": True, "display_order": 1},
                 {"option_key": "flush_tubing", "label": "ดูดน้ำเกลือปลอดเชื้อล้างสายท่อยางดูดเสมหะจนสะอาด", "is_correct": True, "display_order": 2},
-                {"option_key": "restore_fio2", "label": "ปรับลดความเข้มข้นของออกซิเจนบนเครื่องช่วยหายใจกลับสู่ค่าเดิมตามแผนการรักษาเมื่อสัญญาณชีพคงที่", "is_correct": True, "display_order": 3},
+                {"option_key": "restore_fio2", "label": "ปรับอัตราการไหลของออกซิเจนผ่าน Oxygen collar กลับสู่ค่าเดิมตามแผนการรักษาเมื่อสัญญาณชีพคงที่", "is_correct": True, "display_order": 3},
                 {"option_key": "document_care", "label": "บันทึกทางการพยาบาล: สี ลักษณะ ปริมาณเสมหะ และการตอบสนองของผู้ป่วย", "is_correct": True, "display_order": 4},
                 {"option_key": "leave_100_percent", "label": "เปิดออกซิเจน 100% FiO2 ค้างไว้ตลอดไป", "is_correct": False, "display_order": 5},
             ],
@@ -361,7 +361,7 @@ def seed_suction_mission() -> dict[str, int]:
             "display_order": 10,
             "activity_type": "debrief",
             "title": "สะท้อนคิดและสรุปบทเรียน (Shift Reflection & Debriefing)",
-            "instruction": "สะท้อนคิดจากสถานการณ์นี้: หลักการความปลอดภัยที่สำคัญที่สุดที่คุณได้ฝึกฝนในการดูดเสมหะท่อช่วยหายใจคืออะไร?",
+            "instruction": "สะท้อนคิดจากสถานการณ์นี้: หลักการความปลอดภัยที่สำคัญที่สุดที่คุณได้ฝึกฝนในการดูดเสมหะท่อเจาะคอคืออะไร?",
             "content_json": {
                 "prompt": "แบ่งปันสิ่งที่คุณได้เรียนรู้เกี่ยวกับการให้ออกซิเจนล่วงหน้า การคุมแรงดันดูด หรือการรับมือเมื่อสัญญาณชีพบกพร่อง",
                 "placeholder": "เช่น การให้ออกซิเจน 100% ก่อนใส่สาย และการหยุดดูดทันทีเมื่อพบหัวใจเต้นช้า...",
@@ -495,7 +495,7 @@ def seed_suction_mission() -> dict[str, int]:
         badge = Badge(
             slug="airway-explorer",
             name="ผู้พิชิตทางเดินหายใจ (Airway Explorer)",
-            description="มีส่วนร่วมในการประเมินและดูดเสมหะท่อช่วยหายใจแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน",
+            description="มีส่วนร่วมในการประเมินและดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน",
             icon="airway",
             mission_id=mission.id,
         )
@@ -503,7 +503,7 @@ def seed_suction_mission() -> dict[str, int]:
         logger.info("Created Badge 'ผู้พิชิตทางเดินหายใจ (Airway Explorer)'")
     else:
         badge.name = "ผู้พิชิตทางเดินหายใจ (Airway Explorer)"
-        badge.description = "มีส่วนร่วมในการประเมินและดูดเสมหะท่อช่วยหายใจแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน"
+        badge.description = "มีส่วนร่วมในการประเมินและดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน"
         badge.icon = "airway"
         badge.mission_id = mission.id
 

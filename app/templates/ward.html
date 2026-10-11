@@ -213,13 +213,14 @@
             <!-- Patient Image Anchor (Fixed Uniform 3:2 Ratio) -->
             <div class="relative aspect-[3/2] w-full rounded-2xl overflow-hidden bg-slate-100 border border-[#DCEAF7] group-hover:border-sky-200 transition shrink-0">
               <img
-                src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=4"
+                src="{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=5"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_somchai.jpg') }}?v=5';"
                 alt="นายสมชาย — ห้อง 501"
                 class="w-full h-full object-cover object-center group-hover:scale-102 transition duration-300"
                 loading="lazy"
               >
               <div class="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-xs sm:text-sm font-bold text-white">
-                คุณสมชาย (68 ปี) • ท่อ ETT #7.5
+                คุณสมชาย (68 ปี) • เจาะคอ + Oxygen Collar
               </div>
             </div>
 
@@ -232,7 +233,7 @@
                 Clear the Airway
               </div>
               <p class="text-sm sm:text-base text-slate-700 leading-relaxed pt-1">
-                ประเมินข้อบ่งชี้ เทคนิคดูดเสมหะปลอดเชื้อ ให้ Pre-oxygenation และเฝ้าระวังสัญญาณชีพอย่างปลอดภัย
+                ประเมินข้อบ่งชี้ เทคนิคดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ ให้ออกซิเจนล่วงหน้าผ่าน Oxygen Collar และเฝ้าระวังสัญญาณชีพอย่างปลอดภัย
               </p>
             </div>
           </div>

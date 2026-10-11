@@ -18,7 +18,7 @@ INITIAL_ROOMS = [
         "slug": "clear-the-airway",
         "title": "เคลียร์ทางเดินหายใจ (Clear the Airway)",
         "subtitle": "ภารกิจการดูดเสมหะ (Suctioning Mission)",
-        "description": "ทบทวนการประเมิน, การเตรียมสายและเทคนิคปลอดเชื้อ, การควบคุมแรงดัน และการเฝ้าระวังความปลอดภัยขณะดูดเสมหะ",
+        "description": "ทบทวนการประเมิน, การเตรียมสายและเทคนิคปลอดเชื้อ, การควบคุมแรงดัน และการเฝ้าระวังความปลอดภัยขณะดูดเสมหะท่อเจาะคอ",
         "icon": "airway",
         "availability": "preview",
         "display_order": 1,
