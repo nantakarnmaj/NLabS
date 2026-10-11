@@ -144,7 +144,7 @@ def seed_suction_mission() -> dict[str, int]:
                 {"option_key": "sterile_catheter", "label": "สายดูดเสมหะปลอดเชื้อ (ขนาด 12 Fr — เส้นผ่านศูนย์กลางภายนอกไม่เกินครึ่งหนึ่งของเส้นผ่านศูนย์กลางภายในท่อเจาะคอ)", "is_correct": True, "display_order": 1},
                 {"option_key": "sterile_gloves", "label": "ถุงมือปลอดเชื้อ (Sterile gloves) สำหรับเทคนิคการดูดเสมหะระบบเปิด", "is_correct": True, "display_order": 2},
                 {"option_key": "vacuum_100_120", "label": "ปรับแรงดันเครื่องดูดเสมหะที่ 100–120 mmHg สำหรับผู้ใหญ่", "is_correct": True, "display_order": 3},
-                {"option_key": "sterile_saline", "label": "ภาชนะใส่น้ำเกลือปลอดเชื้อ (Sterile normal saline) สำหรับล้างสายดูดเสมหะ", "is_correct": True, "display_order": 4},
+                {"option_key": "sterile_saline", "label": "ภาชนะใส่น้ำสะอาด (น้ำเปล่า) สำหรับล้างสายดูดเสมหะ", "is_correct": True, "display_order": 4},
                 {"option_key": "face_shield", "label": "อุปกรณ์ป้องกันส่วนบุคคล (PPE): หน้ากากพร้อมกระบังหน้า (Face shield) หรือแว่นป้องกัน", "is_correct": True, "display_order": 5},
                 {"option_key": "clean_gloves_only", "label": "ถุงมือสะอาดธรรมดาที่ไม่ปลอดเชื้อสำหรับการดูดเสมหะระบบเปิด", "is_correct": False, "display_order": 6},
                 {"option_key": "vacuum_200", "label": "ตั้งแรงดันเครื่องดูดเสมหะสูงถึง 200 mmHg", "is_correct": False, "display_order": 7},
