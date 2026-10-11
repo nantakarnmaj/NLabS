@@ -247,7 +247,7 @@ def seed_oxygen_mission() -> dict[str, int]:
             "display_order": 5,
             "options": [
                 {"option_key": "no_smoking_signs", "label": "ติดป้ายเตือน 'ห้ามสูบบุหรี่' และห้ามจุดประกายไฟหรือเปลวไฟในห้อง", "is_correct": True},
-                {"option_key": "sterile_water_level", "label": "ตรวจสอบระดับน้ำกลั่นปลอดเชื้อ (Sterile water) ในกระบอกความชื้นให้มากกว่าระดับ Min", "is_correct": True},
+                {"option_key": "sterile_water_level", "label": "ตรวจสอบระดับน้ำกลั่นปลอดเชื้อ (Sterile water) ในกระบอกความชื้นให้ไม่น้อยกว่าระดับ Min", "is_correct": True},
                 {"option_key": "grounded_electrical", "label": "ตรวจสอบอุปกรณ์ไฟฟ้าข้างเตียงทั้งหมดให้มีสายดินและอยู่ในสภาพปลอดภัยไม่มีประกายไฟ", "is_correct": True},
                 {"option_key": "avoid_petroleum", "label": "หลีกเลี่ยงสารหล่อลื่นที่มีส่วนผสมของน้ำมันปิโตรเลียม บริเวณใบหน้าและจมูก", "is_correct": True},
                 {"option_key": "vaseline_nares", "label": "ทาวาสลีนชุ่มๆ ในรูจมูกเพื่อป้องกันเยื่อบุแห้ง", "is_correct": False},
