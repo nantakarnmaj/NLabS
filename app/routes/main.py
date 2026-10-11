@@ -199,11 +199,31 @@ def mission_view(slug: str):
 
         run, _ = start_or_resume_run(session, mission.slug)
         scenario = run.scenario
-        total_activities = len(scenario.activities)
-        current_activity = db.session.get(Activity, run.current_activity_id) if run.current_activity_id else None
+        activities = sorted(scenario.activities, key=lambda a: a.display_order)
+        total_activities = len(activities)
+
+        active_activity = db.session.get(Activity, run.current_activity_id) if run.current_activity_id else None
+        active_step = active_activity.display_order if active_activity else (total_activities if run.status == "completed" else 1)
+
+        # Allow viewing completed steps in review mode
+        requested_step = request.args.get("step", type=int)
+        current_activity = active_activity
+        is_review_mode = False
+
+        if requested_step:
+            max_allowed_step = total_activities if run.status == "completed" else active_step
+            if 1 <= requested_step <= max_allowed_step:
+                target_act = next((a for a in activities if a.display_order == requested_step), None)
+                if target_act:
+                    current_activity = target_act
+                    if run.status == "completed" or (active_activity and target_act.id != active_activity.id):
+                        is_review_mode = True
+
+        if not current_activity and activities:
+            current_activity = activities[0]
 
         # Ensure patient telemetry reflects cleared airway if student has reached outcome or debrief
-        if current_activity and current_activity.activity_type in ("outcome", "debrief"):
+        if active_activity and active_activity.activity_type in ("outcome", "debrief"):
             if run.patient_state_json and run.patient_state_json.get("breath_sound") != "clear":
                 st = dict(run.patient_state_json)
                 st["breath_sound"] = "clear"
@@ -226,6 +246,10 @@ def mission_view(slug: str):
                 scenario=scenario,
                 run=run,
                 current_activity=current_activity,
+                active_activity=active_activity,
+                active_step=active_step,
+                is_review_mode=is_review_mode,
+                activities=activities,
                 total_activities=total_activities,
                 badge=badge,
                 session=session,

@@ -190,31 +190,119 @@
     data-activity-id="{{ current_activity.id }}"
     data-revision="{{ run.state_revision }}"
     data-activity-type="{{ current_activity.activity_type }}"
+    data-is-review="{{ 'true' if is_review_mode else 'false' }}"
     class="space-y-5"
   >
     <input type="hidden" id="csrf-token-fallback" value="{{ csrf_token() }}">
     
     <!-- 3. ACTIVITY PROGRESS COMPONENT (Section G) -->
     {% set pct_complete = ((current_activity.display_order / total_activities) * 100)|round|int %}
-    <div class="bg-white rounded-2xl border border-[#DCEAF7] p-3.5 sm:p-4 shadow-xs space-y-2">
-      <div class="flex items-center justify-between text-xs sm:text-sm">
-        <div class="flex items-center gap-2">
+    <div class="bg-white rounded-2xl border border-[#DCEAF7] p-3.5 sm:p-4 shadow-xs space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm">
+        <div class="flex items-center gap-2 flex-wrap">
           <span class="font-black text-[#1296DB] font-mono">Step {{ current_activity.display_order }} of {{ total_activities }}</span>
           <span class="text-slate-300">•</span>
           <span class="text-[#64748B] text-xs font-mono">(Activity {{ current_activity.display_order }} of {{ total_activities }})</span>
           <span class="text-slate-300 hidden sm:inline">•</span>
           <span class="font-bold text-[#14213D] truncate max-w-xs sm:max-w-md">{{ current_activity.title }}</span>
+          {% if is_review_mode %}
+          <span class="px-2 py-0.5 rounded-full text-2xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+            โหมดทบทวน (Review Mode)
+          </span>
+          {% endif %}
         </div>
-        <span class="font-bold text-[#64748B] font-mono text-xs sm:text-sm">{{ pct_complete }}% complete</span>
+        <div class="flex items-center gap-3">
+          {% if current_activity.display_order > 1 %}
+          <a
+            href="{{ url_for('main.mission_view', slug=mission.slug, step=current_activity.display_order - 1) }}"
+            class="text-xs font-bold text-[#1296DB] hover:text-[#0f80bc] hover:underline inline-flex items-center gap-1"
+          >
+            <span>◀ ย้อนดูขั้นตอนก่อนหน้า</span>
+          </a>
+          {% endif %}
+          <span class="font-bold text-[#64748B] font-mono text-xs sm:text-sm">{{ pct_complete }}% complete</span>
+        </div>
       </div>
       <!-- Progress Bar -->
       <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden" aria-hidden="true">
         <div class="h-full bg-gradient-to-r from-[#1296DB] to-cyan-400 rounded-full transition-all duration-300" style="width: {{ pct_complete }}%;"></div>
       </div>
+
+      <!-- Step Navigation Pills (1..total_activities) -->
+      <div class="pt-1 flex items-center gap-1.5 overflow-x-auto pb-1" aria-label="ขั้นตอนทั้งหมด">
+        {% for act in activities %}
+          {% set step_num = act.display_order %}
+          {% if step_num < active_step %}
+            <!-- Completed step: clickable with checkmark -->
+            <a
+              href="{{ url_for('main.mission_view', slug=mission.slug, step=step_num) }}"
+              class="shrink-0 inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs font-bold font-mono transition {{ 'bg-[#1296DB] text-white ring-2 ring-[#1296DB]/40 shadow-xs' if step_num == current_activity.display_order else 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' }}"
+              title="ขั้นตอนที่ {{ step_num }}: {{ act.title }} (คลิกเพื่อย้อนดู)"
+            >
+              {% if step_num == current_activity.display_order %}
+                {{ step_num }}
+              {% else %}
+                ✓
+              {% endif %}
+            </a>
+          {% elif step_num == active_step %}
+            <!-- Current active step -->
+            <a
+              href="{{ url_for('main.mission_view', slug=mission.slug) }}"
+              class="shrink-0 inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs font-bold font-mono transition {{ 'bg-[#1296DB] text-white ring-2 ring-[#1296DB]/40 shadow-xs' if step_num == current_activity.display_order else 'bg-sky-100 text-[#1296DB] hover:bg-sky-200' }}"
+              title="ขั้นตอนที่ {{ step_num }}: {{ act.title }} (ขั้นตอนปัจจุบัน)"
+            >
+              {{ step_num }}
+            </a>
+          {% else %}
+            <!-- Locked future step -->
+            <span
+              class="shrink-0 inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs font-medium font-mono bg-slate-100 text-slate-400 cursor-not-allowed"
+              title="ขั้นตอนที่ {{ step_num }} (ยังไม่ปลดล็อก)"
+            >
+              {{ step_num }}
+            </span>
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
 
     <!-- 5. MAIN ACTIVITY WORKSPACE CARD -->
     <article class="p-6 sm:p-8 rounded-[24px] bg-white border border-[#DCEAF7] space-y-6 shadow-xs" aria-labelledby="activity-heading">
+      {% if is_review_mode %}
+      <!-- Review Mode Top Banner -->
+      <div class="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-2xs">
+            ✓
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-800">โหมดทบทวนขั้นตอนที่สำเร็จแล้ว (Review Mode)</span>
+              <span class="px-2 py-0.5 text-2xs font-bold rounded-md bg-amber-200 text-amber-900">Step {{ current_activity.display_order }} of {{ total_activities }}</span>
+            </div>
+            <p class="text-xs sm:text-sm font-semibold text-amber-950 mt-0.5">คุณได้ทำขั้นตอนนี้สำเร็จแล้ว สามารถทบทวนเนื้อหาและเหตุผลทางคลินิกได้</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          {% if current_activity.display_order > 1 %}
+          <a href="{{ url_for('main.mission_view', slug=mission.slug, step=current_activity.display_order - 1) }}" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition shadow-2xs">
+            <span>◀ ก่อนหน้า</span>
+          </a>
+          {% endif %}
+          {% if current_activity.display_order < active_step %}
+          <a href="{{ url_for('main.mission_view', slug=mission.slug, step=current_activity.display_order + 1) }}" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition shadow-2xs">
+            <span>ถัดไป ▶</span>
+          </a>
+          {% endif %}
+          <a href="{{ url_for('main.mission_view', slug=mission.slug) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-[#1296DB] hover:bg-[#0f80bc] transition shadow-xs">
+            <span>กลับสู่ขั้นตอนปัจจุบัน (Step {{ active_step }})</span>
+            <span>➔</span>
+          </a>
+        </div>
+      </div>
+      {% endif %}
+
       <div>
         <h1 id="activity-heading" class="text-xl sm:text-2xl font-black text-[#14213D] tracking-tight">
           {{ current_activity.title }}
@@ -255,6 +343,30 @@
 
       <!-- Activity Type 2: Multi-Select Activities (Section I) -->
       {% elif current_activity.activity_type in ['clinical_cues', 'equipment_select', 'medication_check', 'safety_check', 'aftercare'] %}
+      {% if is_review_mode %}
+      <div class="space-y-2.5">
+        {% for option in current_activity.options %}
+        <div class="p-4 rounded-2xl border transition shadow-2xs flex items-start justify-between gap-3 {{ 'bg-emerald-50/50 border-emerald-300 ring-1 ring-emerald-300' if option.is_correct else 'bg-slate-50/60 border-slate-200 opacity-60' }}">
+          <div class="flex items-start gap-3 flex-grow">
+            <div class="w-6 h-6 rounded-lg flex items-center justify-center text-xs shrink-0 font-bold mt-0.5 {{ 'bg-emerald-500 text-white' if option.is_correct else 'bg-slate-200 text-slate-500' }}">
+              {% if option.is_correct %}✓{% else %}✕{% endif %}
+            </div>
+            <div class="space-y-1">
+              <div class="text-sm sm:text-base font-bold {{ 'text-emerald-950' if option.is_correct else 'text-slate-700' }}">{{ option.label }}</div>
+              {% if option.description %}
+              <div class="text-xs sm:text-sm {{ 'text-emerald-800 font-medium' if option.is_correct else 'text-slate-500' }}">
+                {{ '💡 ' if option.is_correct else '⚠️ ' }}{{ option.description }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 {{ 'bg-emerald-100 text-emerald-800' if option.is_correct else 'bg-slate-200 text-slate-600' }}">
+            {% if option.is_correct %}ตัวเลือกที่ถูกต้อง{% else %}ไม่แนะนำ{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
       <div class="space-y-2.5" role="group" aria-label="Selection Options">
         {% for option in current_activity.options %}
         <div
@@ -294,9 +406,30 @@
         </div>
         {% endfor %}
       </div>
+      {% endif %}
 
       <!-- Activity Type 3: Sequence Activity (Section J) -->
       {% elif current_activity.activity_type == 'sequence' %}
+      {% if is_review_mode %}
+      <div class="space-y-3">
+        <p class="text-xs font-bold text-emerald-800">ลำดับขั้นตอนที่ถูกต้องตามมาตรฐานความปลอดภัย:</p>
+        <ul class="space-y-2.5">
+          {% for step in current_activity.procedure_steps | sort(attribute='correct_order') %}
+          <li class="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-200/80 flex items-start gap-3.5 shadow-2xs">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500 text-white font-mono font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+              {{ step.correct_order }}
+            </div>
+            <div class="space-y-1">
+              <div class="text-sm sm:text-base font-bold text-[#14213D]">{{ step.step_text }}</div>
+              {% if step.rationale %}
+              <div class="text-xs text-emerald-800 font-medium leading-relaxed">💡 เหตุผลทางคลินิก: {{ step.rationale }}</div>
+              {% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% else %}
       <div class="space-y-3">
         <p class="text-xs text-[#64748B] italic">ลากการ์ดเพื่อจัดเรียงลำดับขั้นตอน หรือใช้ปุ่มลูกศรขึ้น/ลงสำหรับการควบคุมด้วยแป้นพิมพ์</p>
         <ul id="sequence-list" class="space-y-2.5" aria-label="Procedure Steps Order">
@@ -341,9 +474,34 @@
           {% endfor %}
         </ul>
       </div>
+      {% endif %}
 
       <!-- Activity Type 4: Decision & Troubleshooting -->
       {% elif current_activity.activity_type in ['decision', 'troubleshooting'] %}
+      {% if is_review_mode %}
+      <div class="space-y-2.5">
+        {% for option in current_activity.options %}
+        <div class="p-4 rounded-2xl border transition shadow-2xs flex items-start justify-between gap-3 {{ 'bg-emerald-50/50 border-emerald-300 ring-1 ring-emerald-300' if option.is_correct else 'bg-slate-50/60 border-slate-200 opacity-60' }}">
+          <div class="flex items-start gap-3 flex-grow">
+            <div class="w-6 h-6 rounded-lg flex items-center justify-center text-xs shrink-0 font-bold mt-0.5 {{ 'bg-emerald-500 text-white' if option.is_correct else 'bg-slate-200 text-slate-500' }}">
+              {% if option.is_correct %}✓{% else %}✕{% endif %}
+            </div>
+            <div class="space-y-1">
+              <div class="text-sm sm:text-base font-bold {{ 'text-emerald-950' if option.is_correct else 'text-slate-700' }}">{{ option.label }}</div>
+              {% if option.description %}
+              <div class="text-xs sm:text-sm {{ 'text-emerald-800 font-medium' if option.is_correct else 'text-slate-500' }}">
+                {{ '💡 เหตุผล: ' if option.is_correct else '⚠️ ' }}{{ option.description }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 {{ 'bg-emerald-100 text-emerald-800' if option.is_correct else 'bg-slate-200 text-slate-600' }}">
+            {% if option.is_correct %}การตัดสินใจที่ถูกต้อง{% else %}ไม่แนะนำ{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
       <div class="space-y-2.5" role="radiogroup" aria-label="Clinical Decision Options">
         {% for option in current_activity.options %}
         <label class="p-4 rounded-2xl bg-white border border-[#DCEAF7] hover:border-[#1296DB] hover:bg-sky-50/20 cursor-pointer flex items-start space-x-3 transition block touch-target shadow-2xs has-[:checked]:border-[#1296DB] has-[:checked]:bg-[#F0F9FF] has-[:checked]:ring-2 has-[:checked]:ring-[#1296DB]/30">
@@ -359,9 +517,33 @@
         </label>
         {% endfor %}
       </div>
+      {% endif %}
 
       <!-- Activity Type 5: Pressure Control -->
       {% elif current_activity.activity_type == 'pressure_control' %}
+      {% if is_review_mode %}
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
+          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดันลบ (Suction Vacuum Gauge)</span>
+          {% set correct_pressure = current_activity.options | selectattr('is_correct', 'equalto', true) | first %}
+          <div class="text-3xl sm:text-4xl font-black font-mono text-emerald-600">
+            {{ correct_pressure.option_key if correct_pressure else '80-120' }} mmHg
+          </div>
+          <p class="text-xs text-emerald-800 font-semibold">ค่าแรงดันสุญญากาศที่ปลอดภัยสำหรับผู้ใหญ่ใส่ท่อช่วยหายใจ</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {% for option in current_activity.options %}
+          <div class="p-4 rounded-2xl border text-center transition shadow-2xs {{ 'bg-emerald-50 border-emerald-300 ring-1 ring-emerald-300' if option.is_correct else 'bg-slate-50/60 border-slate-200 opacity-60' }}">
+            <div class="text-base font-black font-mono {{ 'text-emerald-900' if option.is_correct else 'text-slate-600' }}">{{ option.option_key }} mmHg</div>
+            <div class="text-xs {{ 'text-emerald-800 font-bold' if option.is_correct else 'text-slate-500' }} mt-1">{{ option.label }}</div>
+            {% if option.is_correct %}
+            <span class="mt-2 inline-block px-2 py-0.5 rounded-full text-2xs font-bold bg-emerald-100 text-emerald-800">ค่าที่ถูกต้อง</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
       <div class="space-y-4">
         <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
           <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดันลบ (Suction Vacuum Gauge)</span>
@@ -387,9 +569,32 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
       <!-- Activity Type 6: Matching Activity -->
       {% elif current_activity.activity_type == 'matching' %}
+      {% if is_review_mode %}
+      <div class="space-y-4">
+        <p class="text-xs font-bold text-emerald-800">เฉลยการจับคู่ที่ถูกต้อง:</p>
+        <div class="space-y-3">
+          {% for match in current_activity.content_json.matches %}
+          <div class="p-4 sm:p-5 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1 md:max-w-md">
+              <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider">{{ match.prompt_label }}</span>
+              <p class="text-sm font-semibold text-[#14213D] leading-relaxed">{{ match.prompt_text }}</p>
+            </div>
+            <div class="shrink-0 w-full md:w-64 p-3 rounded-xl bg-white border border-emerald-300 text-sm font-bold text-emerald-900 shadow-2xs">
+              {% for opt in current_activity.content_json.target_options %}
+                {% if opt.key == match.correct_key %}
+                  ✓ {{ opt.label }}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
       <div class="space-y-4">
         <p class="text-xs text-[#64748B]">จับคู่สถานการณ์ทางคลินิกกับอุปกรณ์หรือการปฏิบัติการพยาบาลที่ถูกต้อง:</p>
         <div class="space-y-3">
@@ -416,6 +621,7 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
       <!-- Activity Type 7: Outcome Screen (Before vs After Comparison) -->
       {% elif current_activity.activity_type == 'outcome' %}
@@ -542,9 +748,48 @@
 
       <!-- 6. ACTION AREA / SUBMIT FOOTER (Section K) -->
       <div class="pt-5 border-t border-[#DCEAF7] flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-xs sm:text-sm text-[#64748B]">
-          ข้อเสนอแนะเชิงพัฒนาทันทีในทุกการตัดสินใจทางคลินิก
-        </span>
+        {% if is_review_mode %}
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          {% if current_activity.display_order > 1 %}
+          <a
+            href="{{ url_for('main.mission_view', slug=mission.slug, step=current_activity.display_order - 1) }}"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition shadow-2xs text-xs sm:text-sm touch-target"
+          >
+            <span>◀ ก่อนหน้า</span>
+          </a>
+          {% endif %}
+          {% if current_activity.display_order < active_step %}
+          <a
+            href="{{ url_for('main.mission_view', slug=mission.slug, step=current_activity.display_order + 1) }}"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition shadow-2xs text-xs sm:text-sm touch-target"
+          >
+            <span>ถัดไป ▶</span>
+          </a>
+          {% endif %}
+        </div>
+        <a
+          href="{{ url_for('main.mission_view', slug=mission.slug) }}"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-[#1296DB] hover:bg-[#0f80bc] transition shadow-xs text-xs sm:text-sm touch-target"
+        >
+          <span>กลับสู่ขั้นตอนปัจจุบัน (Step {{ active_step }})</span>
+          <span>➔</span>
+        </a>
+        {% else %}
+        <!-- Active mode: Show Previous button on the left (if step > 1) and Submit button on the right -->
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+          {% if current_activity.display_order > 1 %}
+          <a
+            href="{{ url_for('main.mission_view', slug=mission.slug, step=current_activity.display_order - 1) }}"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition shadow-2xs text-xs sm:text-sm touch-target"
+          >
+            <span>◀ ย้อนดูขั้นตอนก่อนหน้า</span>
+          </a>
+          {% else %}
+          <span class="text-xs sm:text-sm text-[#64748B]">
+            ข้อเสนอแนะเชิงพัฒนาทันทีในทุกการตัดสินใจทางคลินิก
+          </span>
+          {% endif %}
+        </div>
         <button
           type="button"
           id="submit-btn"
@@ -563,6 +808,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </button>
+        {% endif %}
       </div>
 
     </article>

@@ -133,10 +133,30 @@ def test_room_501_full_playthrough_and_badge_award(client, app):
     assert res8.status_code == 200
     assert res8.json["success"] is True
 
-    # 11. Step 9: Outcome
+    # 11. Step 9: Outcome & Review Mode Verification
     with app.app_context():
         run = db.session.get(MissionRun, run_id)
         act_id = run.current_activity_id
+
+    # Test navigating back to completed step 5 in review mode
+    res_review = client.get("/missions/clear-the-airway?step=5")
+    assert res_review.status_code == 200
+    review_html = res_review.get_data(as_text=True)
+    assert "โหมดทบทวน" in review_html
+    assert "กลับสู่ขั้นตอนปัจจุบัน" in review_html
+
+    # Test that requesting locked step 10 while at step 9 falls back to step 9 without skipping
+    res_locked = client.get("/missions/clear-the-airway?step=10")
+    assert res_locked.status_code == 200
+    locked_html = res_locked.get_data(as_text=True)
+    assert "Step 9 of 10" in locked_html
+
+    # Test viewing step 9 normally
+    res_norm = client.get("/missions/clear-the-airway")
+    assert res_norm.status_code == 200
+    norm_html = res_norm.get_data(as_text=True)
+    assert "ย้อนดูขั้นตอนก่อนหน้า" in norm_html
+    assert "สรุปผลลัพธ์การดูดเสมหะ" in norm_html
 
     res9 = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",

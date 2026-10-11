@@ -35,6 +35,7 @@
   const activityId = gameContainer.dataset.activityId;
   let currentRevision = parseInt(gameContainer.dataset.revision || '1', 10);
   const activityType = gameContainer.dataset.activityType;
+  const isReview = gameContainer.dataset.isReview === 'true';
   function getCsrfToken() {
     return (
       document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
@@ -663,17 +664,19 @@
     });
   }
 
-  // Initialize interactive components based on activity type
-  if (activityType === 'sequence') {
-    initSequence();
-  } else if (
-    activityType === 'clinical_cues' ||
-    activityType === 'equipment_select' ||
-    activityType === 'medication_check' ||
-    activityType === 'safety_check' ||
-    activityType === 'aftercare'
-  ) {
-    initSelection();
+  // Initialize interactive components based on activity type (only in active gameplay mode)
+  if (!isReview) {
+    if (activityType === 'sequence') {
+      initSequence();
+    } else if (
+      activityType === 'clinical_cues' ||
+      activityType === 'equipment_select' ||
+      activityType === 'medication_check' ||
+      activityType === 'safety_check' ||
+      activityType === 'aftercare'
+    ) {
+      initSelection();
+    }
   }
 
   // Escape key closes modal
