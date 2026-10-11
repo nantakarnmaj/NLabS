@@ -324,21 +324,39 @@
           feedbackStatusBadge.innerHTML = '<span>🏆</span><span>ยินดีด้วย! คุณได้รับเหรียญรางวัล (BADGE AWARDED!)</span>';
         }
       } else {
+        const isAck = !!(result.is_acknowledgment || result.result_type === 'acknowledgment' || activityType === 'intro' || activityType === 'outcome');
         if (feedbackBanner) {
-          feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400';
+          feedbackBanner.className = isAck
+            ? 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-sky-400 via-teal-400 to-indigo-400'
+            : 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400';
         }
         if (feedbackIconBox) {
-          feedbackIconBox.innerHTML = `
-            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-8 ring-emerald-100 animate-bounce">
-              <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          `;
+          if (isAck) {
+            feedbackIconBox.innerHTML = `
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-sky-500/30 ring-8 ring-sky-100 animate-pulse">
+                <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            `;
+          } else {
+            feedbackIconBox.innerHTML = `
+              <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-8 ring-emerald-100 animate-bounce">
+                <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            `;
+          }
         }
         if (feedbackStatusBadge) {
-          feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs';
-          feedbackStatusBadge.innerHTML = '<span>🎉</span><span>ถูกต้องยอดเยี่ยม! (EXCELLENT!)</span>';
+          if (isAck) {
+            feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-wide bg-sky-100 text-sky-800 border border-sky-300 shadow-2xs';
+            feedbackStatusBadge.innerHTML = '<span>ℹ️</span><span>รับทราบข้อมูล (NOTED / PROCEED)</span>';
+          } else {
+            feedbackStatusBadge.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs';
+            feedbackStatusBadge.innerHTML = '<span>🎉</span><span>ถูกต้องยอดเยี่ยม! (EXCELLENT!)</span>';
+          }
         }
       }
 
@@ -355,15 +373,17 @@
         };
       }
 
-      try {
-        playFeedbackSound(true);
-      } catch (e) {
-        console.warn('Audio non-blocking note:', e);
-      }
-      try {
-        fireConfetti();
-      } catch (e) {
-        console.warn('Confetti non-blocking note:', e);
+      if (!result.is_acknowledgment && result.result_type !== 'acknowledgment' && activityType !== 'intro' && activityType !== 'outcome') {
+        try {
+          playFeedbackSound(true);
+        } catch (e) {
+          console.warn('Audio non-blocking note:', e);
+        }
+        try {
+          fireConfetti();
+        } catch (e) {
+          console.warn('Confetti non-blocking note:', e);
+        }
       }
     } else {
       if (feedbackBanner) {
@@ -561,13 +581,16 @@
       originalBtnHtml = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-75', 'cursor-wait');
+      const loadingText = activityType === 'intro'
+        ? 'กำลังเริ่มกิจกรรม...'
+        : (activityType === 'outcome' ? 'กำลังไปยังขั้นตอนถัดไป...' : 'กำลังบันทึกคำตอบ...');
       submitBtn.innerHTML = `
         <span class="inline-flex items-center gap-2">
           <svg class="animate-spin h-4 w-4 text-white shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
           </svg>
-          <span>กำลังบันทึกคำตอบ...</span>
+          <span>${loadingText}</span>
         </span>
       `;
     }
@@ -636,6 +659,13 @@
 
       if (result.patient_state) {
         updatePatientMonitor(result.patient_state);
+      }
+
+      if (activityType === 'intro' || activityType === 'outcome') {
+        // Informational introduction or outcome transition steps:
+        // Transition directly into the next step without an irrelevant "EXCELLENT!" quiz grading modal
+        window.location.reload();
+        return;
       }
 
       showFeedback(result);

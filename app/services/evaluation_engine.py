@@ -51,14 +51,15 @@ def evaluate_activity(activity: Activity, response_payload: dict[str, Any]) -> d
 def evaluate_acknowledgment(activity: Activity, response_payload: dict[str, Any]) -> dict[str, Any]:
     """Acknowledge informational screens."""
     feedback = next((f for f in activity.feedback_rules if f.trigger_type == "on_success"), None)
-    title = feedback.title if feedback else "Acknowledged"
-    message = feedback.message if feedback else "Proceeding to the next step."
+    title = feedback.title if feedback else "รับทราบข้อมูล"
+    message = feedback.message if feedback else "เข้าสู่ขั้นตอนถัดไป"
     rationale = feedback.clinical_rationale if feedback else ""
     effect = feedback.patient_effect_json if feedback else None
 
     return {
         "success": True,
         "result_type": "success",
+        "is_acknowledgment": True,
         "title": title,
         "message": message,
         "clinical_rationale": rationale,
