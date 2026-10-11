@@ -51,6 +51,17 @@ def get_ward_state(session: StudentSession | None = None) -> list[dict]:
         select(Mission).where(Mission.is_active.is_(True)).order_by(Mission.display_order.asc())
     ).scalars().all()
 
+    # If database has not been seeded yet, auto-seed missions so the ward is never empty
+    if not missions:
+        try:
+            from seed import run_all_seeds
+            run_all_seeds()
+            missions = db.session.execute(
+                select(Mission).where(Mission.is_active.is_(True)).order_by(Mission.display_order.asc())
+            ).scalars().all()
+        except Exception:
+            pass
+
     # If session is provided, find any completed missions for this session
     completed_mission_ids: set[int] = set()
     if session:

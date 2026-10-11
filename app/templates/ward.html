@@ -50,12 +50,54 @@
     </div>
   </section>
 
+  <!-- ================= PROMINENT QUICK START CTA FOR STUDENTS ================= -->
+  {% set next_url = (room501.action_url if room501 and room501.action_url else '/missions/clear-the-airway') %}
+  {% set next_room = 'Room 501: ดูดเสมหะ (Clear the Airway)' %}
+  {% if room501 and room501.display_status == 'completed' %}
+    {% if room502 and room502.display_status != 'completed' %}
+      {% set next_url = (room502.action_url if room502.action_url else '/missions/oxygen-therapy') %}
+      {% set next_room = 'Room 502: ให้ออกซิเจน (Oxygen Therapy)' %}
+    {% elif room503 and room503.display_status != 'completed' %}
+      {% set next_url = (room503.action_url if room503.action_url else '/missions/nebulization-therapy') %}
+      {% set next_room = 'Room 503: พ่นยาขยายหลอดลม (Nebulization)' %}
+    {% elif room504 and room504.can_open %}
+      {% set next_url = (room504.action_url if room504.action_url else '/missions/respiratory-emergency') %}
+      {% set next_room = 'Room 504: Final Challenge (Rescue)' %}
+    {% endif %}
+  {% endif %}
+
+  <section class="bg-gradient-to-r from-sky-600 via-[#1296DB] to-cyan-600 rounded-[24px] p-5 sm:p-6 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 border border-sky-400/40">
+    <div class="flex items-center gap-4 text-left w-full sm:w-auto">
+      <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shrink-0 shadow-inner">
+        🚀
+      </div>
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/25 text-xs font-black tracking-wide uppercase text-sky-100">
+          <span>🎯 จุดเริ่มต้นภารกิจ (Start Here)</span>
+        </div>
+        <div class="text-lg sm:text-xl font-black mt-1">
+          {{ next_room }}
+        </div>
+        <div class="text-xs sm:text-sm text-sky-100 mt-0.5">
+          คลิกปุ่มนี้เพื่อเริ่มทำภารกิจและเข้าสู่ห้องผู้ป่วยจำลองทันที
+        </div>
+      </div>
+    </div>
+    <a
+      href="{{ next_url }}"
+      class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-4 rounded-xl font-black text-[#1296DB] bg-white hover:bg-sky-50 active:scale-95 shadow-lg hover:shadow-xl transition-all text-base shrink-0 group"
+    >
+      <span>กดตรงนี้เพื่อเริ่มทำภารกิจ</span>
+      <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+    </a>
+  </section>
+
   <!-- ================= WARD PROGRESSION COMPONENT (Section D) ================= -->
   <section id="progress-flow" class="bg-white rounded-[24px] border border-[#DCEAF7] p-5 sm:p-6 shadow-xs space-y-3" aria-label="ลำดับความก้าวหน้าของภารกิจ">
     <div class="flex items-center justify-between">
       <span class="text-xs font-black text-[#14213D] uppercase tracking-wider flex items-center gap-1.5">
         <span>🗺️</span>
-        <span>เส้นทางภารกิจ (Mission Pathway)</span>
+        <span>เส้นทางภารกิจ (Mission Pathway — คลิกที่ห้องเพื่อเริ่ม)</span>
       </span>
       <span class="text-sm font-bold text-[#1296DB]">
         ความก้าวหน้า {{ completed_count }} / 4 ภารกิจ
@@ -70,48 +112,64 @@
 
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
       <!-- 501 -->
-      <div class="p-3.5 rounded-xl border {% if room501 and room501.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room501 and room501.display_status == 'in_progress' %}bg-sky-50 border-[#1296DB] ring-2 ring-sky-100{% else %}bg-white border-[#DCEAF7]{% endif %} flex items-center gap-3 transition">
-        <div class="w-9 h-9 rounded-lg {% if room501 and room501.display_status == 'completed' %}bg-emerald-500 text-white{% elif room501 and room501.display_status == 'in_progress' %}bg-[#1296DB] text-white{% else %}bg-sky-100 text-[#1296DB]{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+      <a
+        href="{{ room501.action_url if (room501 and room501.action_url) else '/missions/clear-the-airway' }}"
+        class="p-3.5 rounded-xl border {% if room501 and room501.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300 hover:border-emerald-400{% elif room501 and room501.display_status == 'in_progress' %}bg-sky-50 border-[#1296DB] ring-2 ring-sky-100 hover:bg-sky-100/70{% else %}bg-white border-[#DCEAF7] hover:border-[#1296DB] hover:bg-sky-50/50{% endif %} flex items-center gap-3 transition shadow-2xs hover:shadow-xs group cursor-pointer"
+        title="ไปที่ Room 501: ดูดเสมหะ"
+      >
+        <div class="w-9 h-9 rounded-lg {% if room501 and room501.display_status == 'completed' %}bg-emerald-500 text-white{% elif room501 and room501.display_status == 'in_progress' %}bg-[#1296DB] text-white{% else %}bg-sky-100 text-[#1296DB] group-hover:bg-[#1296DB] group-hover:text-white{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0 transition">
           {% if room501 and room501.display_status == 'completed' %}✓{% else %}501{% endif %}
         </div>
         <div class="leading-tight min-w-0">
-          <span class="font-bold text-sm text-[#14213D] block truncate">ดูดเสมหะ</span>
-          <span class="text-xs text-[#64748B]">Suction</span>
+          <span class="font-bold text-sm text-[#14213D] block truncate group-hover:text-[#1296DB] transition">ดูดเสมหะ</span>
+          <span class="text-xs text-[#64748B] flex items-center gap-1">Suction <span class="text-[#1296DB] font-bold">→</span></span>
         </div>
-      </div>
+      </a>
 
       <!-- 502 -->
-      <div class="p-3.5 rounded-xl border {% if room502 and room502.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room502 and room502.display_status == 'in_progress' %}bg-emerald-50 border-emerald-500 ring-2 ring-emerald-100{% else %}bg-white border-[#DCEAF7]{% endif %} flex items-center gap-3 transition">
-        <div class="w-9 h-9 rounded-lg {% if room502 and room502.display_status == 'completed' %}bg-emerald-500 text-white{% elif room502 and room502.display_status == 'in_progress' %}bg-emerald-600 text-white{% else %}bg-emerald-100 text-emerald-700{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+      <a
+        href="{{ room502.action_url if (room502 and room502.action_url) else '/missions/oxygen-therapy' }}"
+        class="p-3.5 rounded-xl border {% if room502 and room502.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300 hover:border-emerald-400{% elif room502 and room502.display_status == 'in_progress' %}bg-emerald-50 border-emerald-500 ring-2 ring-emerald-100 hover:bg-emerald-100/70{% else %}bg-white border-[#DCEAF7] hover:border-emerald-400 hover:bg-emerald-50/40{% endif %} flex items-center gap-3 transition shadow-2xs hover:shadow-xs group cursor-pointer"
+        title="ไปที่ Room 502: ให้ออกซิเจน"
+      >
+        <div class="w-9 h-9 rounded-lg {% if room502 and room502.display_status == 'completed' %}bg-emerald-500 text-white{% elif room502 and room502.display_status == 'in_progress' %}bg-emerald-600 text-white{% else %}bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0 transition">
           {% if room502 and room502.display_status == 'completed' %}✓{% else %}502{% endif %}
         </div>
         <div class="leading-tight min-w-0">
-          <span class="font-bold text-sm text-[#14213D] block truncate">ให้ออกซิเจน</span>
-          <span class="text-xs text-[#64748B]">Oxygen</span>
+          <span class="font-bold text-sm text-[#14213D] block truncate group-hover:text-emerald-700 transition">ให้ออกซิเจน</span>
+          <span class="text-xs text-[#64748B] flex items-center gap-1">Oxygen <span class="text-emerald-600 font-bold">→</span></span>
         </div>
-      </div>
+      </a>
 
       <!-- 503 -->
-      <div class="p-3.5 rounded-xl border {% if room503 and room503.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room503 and room503.display_status == 'in_progress' %}bg-purple-50 border-purple-500 ring-2 ring-purple-100{% else %}bg-white border-[#DCEAF7]{% endif %} flex items-center gap-3 transition">
-        <div class="w-9 h-9 rounded-lg {% if room503 and room503.display_status == 'completed' %}bg-emerald-500 text-white{% elif room503 and room503.display_status == 'in_progress' %}bg-purple-600 text-white{% else %}bg-purple-100 text-purple-700{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+      <a
+        href="{{ room503.action_url if (room503 and room503.action_url) else '/missions/nebulization-therapy' }}"
+        class="p-3.5 rounded-xl border {% if room503 and room503.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300 hover:border-emerald-400{% elif room503 and room503.display_status == 'in_progress' %}bg-purple-50 border-purple-500 ring-2 ring-purple-100 hover:bg-purple-100/70{% else %}bg-white border-[#DCEAF7] hover:border-purple-400 hover:bg-purple-50/40{% endif %} flex items-center gap-3 transition shadow-2xs hover:shadow-xs group cursor-pointer"
+        title="ไปที่ Room 503: พ่นยา"
+      >
+        <div class="w-9 h-9 rounded-lg {% if room503 and room503.display_status == 'completed' %}bg-emerald-500 text-white{% elif room503 and room503.display_status == 'in_progress' %}bg-purple-600 text-white{% else %}bg-purple-100 text-purple-700 group-hover:bg-purple-600 group-hover:text-white{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0 transition">
           {% if room503 and room503.display_status == 'completed' %}✓{% else %}503{% endif %}
         </div>
         <div class="leading-tight min-w-0">
-          <span class="font-bold text-sm text-[#14213D] block truncate">พ่นยา</span>
-          <span class="text-xs text-[#64748B]">Nebulizer</span>
+          <span class="font-bold text-sm text-[#14213D] block truncate group-hover:text-purple-700 transition">พ่นยา</span>
+          <span class="text-xs text-[#64748B] flex items-center gap-1">Nebulizer <span class="text-purple-600 font-bold">→</span></span>
         </div>
-      </div>
+      </a>
 
       <!-- 504: FINAL CHALLENGE -->
-      <div class="p-3.5 rounded-xl border {% if room504 and room504.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300{% elif room504 and room504.can_open %}bg-amber-50/80 border-amber-400 ring-2 ring-amber-100{% else %}bg-slate-50 border-slate-200{% endif %} flex items-center gap-3 transition">
-        <div class="w-9 h-9 rounded-lg {% if room504 and room504.display_status == 'completed' %}bg-emerald-500 text-white{% elif room504 and room504.can_open %}bg-amber-500 text-white{% else %}bg-slate-200 text-slate-500{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0">
+      <a
+        href="{{ room504.action_url if (room504 and room504.can_open and room504.action_url) else '#room-504' }}"
+        class="p-3.5 rounded-xl border {% if room504 and room504.display_status == 'completed' %}bg-emerald-50/60 border-emerald-300 hover:border-emerald-400{% elif room504 and room504.can_open %}bg-amber-50/80 border-amber-400 ring-2 ring-amber-100 hover:bg-amber-100/70{% else %}bg-slate-50 border-slate-200 opacity-80{% endif %} flex items-center gap-3 transition shadow-2xs hover:shadow-xs group cursor-pointer"
+        title="Room 504: Final Challenge"
+      >
+        <div class="w-9 h-9 rounded-lg {% if room504 and room504.display_status == 'completed' %}bg-emerald-500 text-white{% elif room504 and room504.can_open %}bg-amber-500 text-white{% else %}bg-slate-200 text-slate-500{% endif %} font-mono font-black text-sm flex items-center justify-center shrink-0 transition">
           {% if room504 and room504.display_status == 'completed' %}✓{% elif room504 and not room504.can_open %}🔒{% else %}504{% endif %}
         </div>
         <div class="leading-tight min-w-0">
           <span class="font-bold text-sm text-[#14213D] block truncate">FINAL CHALLENGE</span>
           <span class="text-xs text-[#64748B]">Rescue</span>
         </div>
-      </div>
+      </a>
     </div>
   </section>
 
@@ -123,7 +181,7 @@
 
       <!-- ================= CARD 1: ROOM 501 (BLUE ACCENT) ================= -->
       {% if room501 %}
-      <article class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-[#1296DB] shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+      <article id="room-501" class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-[#1296DB] shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
         <!-- Top Blue Accent Strip -->
         <div class="h-1.5 bg-[#1296DB]" aria-hidden="true"></div>
 
@@ -214,7 +272,7 @@
 
       <!-- ================= CARD 2: ROOM 502 (GREEN ACCENT) ================= -->
       {% if room502 %}
-      <article class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-emerald-400 shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+      <article id="room-502" class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-emerald-400 shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
         <!-- Top Green Accent Strip -->
         <div class="h-1.5 bg-[#00A86B]" aria-hidden="true"></div>
 
@@ -308,7 +366,7 @@
 
       <!-- ================= CARD 3: ROOM 503 (PURPLE ACCENT) ================= -->
       {% if room503 %}
-      <article class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-purple-400 shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
+      <article id="room-503" class="bg-white rounded-[22px] border border-[#DCEAF7] hover:border-purple-400 shadow-xs hover:shadow-md transition duration-200 flex flex-col justify-between overflow-hidden group">
         <!-- Top Purple Accent Strip -->
         <div class="h-1.5 bg-[#7B2CBF]" aria-hidden="true"></div>
 
@@ -404,7 +462,7 @@
 
     <!-- ================= CARD 4: ROOM 504 - FINAL CLINICAL CHALLENGE ================= -->
     {% if room504 %}
-    <article class="bg-white rounded-[24px] border {% if room504.can_open %}border-amber-300 ring-1 ring-amber-200/60 shadow-md{% else %}border-slate-200 shadow-xs{% endif %} overflow-hidden relative">
+    <article id="room-504" class="bg-white rounded-[24px] border {% if room504.can_open %}border-amber-300 ring-1 ring-amber-200/60 shadow-md{% else %}border-slate-200 shadow-xs{% endif %} overflow-hidden relative">
       <!-- Top Gold Strip -->
       <div class="h-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600" aria-hidden="true"></div>
 
