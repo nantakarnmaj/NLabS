@@ -63,6 +63,24 @@ class Activity(db.Model):
         lazy="selectin",
     )
 
+    @property
+    def initial_procedure_steps(self) -> list[ProcedureStep]:
+        """Return procedure steps scrambled for sequence activities, guaranteed not in solved order."""
+        import random
+
+        steps = list(self.procedure_steps)
+        if len(steps) <= 1:
+            return steps
+
+        seed_val = (self.id or 42) * 101 + 13
+        rng = random.Random(seed_val)
+        scrambled = list(steps)
+        for _ in range(20):
+            rng.shuffle(scrambled)
+            if [s.step_key for s in scrambled] != [s.step_key for s in steps]:
+                break
+        return scrambled
+
     def __repr__(self) -> str:
         return f"<Activity id={self.id} type={self.activity_type} title={self.title}>"
 

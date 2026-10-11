@@ -340,6 +340,16 @@
     const sequenceList = document.getElementById('sequence-list');
     if (!sequenceList) return;
 
+    function updateStepBadges() {
+      const items = sequenceList.querySelectorAll('li[data-step-key]');
+      items.forEach((item, index) => {
+        const badge = item.querySelector('.step-order-badge');
+        if (badge) {
+          badge.textContent = index + 1;
+        }
+      });
+    }
+
     // 1. Initialize SortableJS for drag-and-drop
     if (window.Sortable) {
       new window.Sortable(sequenceList, {
@@ -348,6 +358,7 @@
         chosenClass: 'bg-sky-100',
         handle: '.drag-handle',
         onEnd: function () {
+          updateStepBadges();
           announce('จัดลำดับขั้นตอนใหม่เรียบร้อยแล้ว');
         },
       });
@@ -365,6 +376,7 @@
         const prev = item.previousElementSibling;
         if (prev) {
           sequenceList.insertBefore(item, prev);
+          updateStepBadges();
           item.focus();
           announce('เลื่อนขั้นตอนขึ้นแล้ว');
         }
@@ -372,6 +384,7 @@
         const next = item.nextElementSibling;
         if (next) {
           sequenceList.insertBefore(next, item);
+          updateStepBadges();
           item.focus();
           announce('เลื่อนขั้นตอนลงแล้ว');
         }

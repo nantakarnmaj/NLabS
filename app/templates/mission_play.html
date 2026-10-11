@@ -4,7 +4,7 @@
 
 {% block head %}
 <script src="{{ url_for('static', filename='js/sortable.min.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/game.js') }}?v=20261012b" defer></script>
+<script src="{{ url_for('static', filename='js/game.js') }}?v=20261012c" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -297,7 +297,7 @@
       <div class="space-y-3">
         <p class="text-xs text-[#64748B] italic">ลากการ์ดเพื่อจัดเรียงลำดับขั้นตอน หรือใช้ปุ่มลูกศรขึ้น/ลงสำหรับการควบคุมด้วยแป้นพิมพ์</p>
         <ul id="sequence-list" class="space-y-2.5" aria-label="Procedure Steps Order">
-          {% for step in current_activity.procedure_steps %}
+          {% for step in current_activity.initial_procedure_steps %}
           <li
             class="p-4 rounded-2xl bg-white border border-[#DCEAF7] flex items-center justify-between gap-3 focus:ring-2 focus:ring-[#1296DB] focus:outline-none hover:border-sky-300 transition shadow-2xs"
             data-step-key="{{ step.step_key }}"
@@ -307,7 +307,7 @@
               <button type="button" class="drag-handle cursor-grab active:cursor-grabbing text-slate-400 hover:text-[#1296DB] p-1 font-bold text-base" title="ลากเพื่อจัดลำดับ" aria-hidden="true">
                 ⋮⋮
               </button>
-              <div class="w-6 h-6 rounded-lg bg-sky-50 text-[#1296DB] font-mono font-bold text-xs flex items-center justify-center shrink-0">
+              <div class="w-6 h-6 rounded-lg bg-sky-50 text-[#1296DB] font-mono font-bold text-xs flex items-center justify-center shrink-0 step-order-badge">
                 {{ loop.index }}
               </div>
               <span class="text-sm sm:text-base font-bold text-[#14213D]">{{ step.step_text }}</span>

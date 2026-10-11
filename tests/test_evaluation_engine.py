@@ -30,6 +30,11 @@ def test_evaluate_sequence_correct_and_inverted():
     assert res_inverted["result_type"] == "retry"
     assert "Pre-oxygenate" in res_inverted["hint"] or "gloves" in res_inverted["hint"]
 
+    # 3. Initial display order is scrambled (not already solved)
+    initial_keys = [s.step_key for s in act.initial_procedure_steps]
+    assert len(initial_keys) == 3
+    assert initial_keys != ["step_1", "step_2", "step_3"]
+
 
 def test_evaluate_selection_correct_and_hazards():
     """Selection evaluator verifies required options and identifies safety hazards."""
