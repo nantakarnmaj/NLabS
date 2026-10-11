@@ -347,7 +347,11 @@
         feedbackActionBtn.innerHTML = `<span>${nextLabel}</span> <svg class="w-5 h-5 ml-1 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
         feedbackActionBtn.className = 'w-full py-4 px-6 rounded-2xl font-black text-base text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 active:scale-[0.98] shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
         feedbackActionBtn.onclick = function () {
-          window.location.reload();
+          if (result.is_mission_completed) {
+            window.location.href = window.location.pathname;
+          } else {
+            window.location.reload();
+          }
         };
       }
 

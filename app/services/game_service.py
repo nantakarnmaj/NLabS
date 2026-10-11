@@ -67,6 +67,18 @@ def start_or_resume_run(session: StudentSession, mission_slug: str) -> tuple[Mis
     if existing_run:
         return existing_run, False
 
+    # Check for existing completed run (preserve completion showcase unless explicit replay)
+    completed_run = db.session.execute(
+        select(MissionRun).where(
+            MissionRun.session_id == session.id,
+            MissionRun.mission_id == mission.id,
+            MissionRun.status == "completed",
+        ).order_by(MissionRun.id.desc())
+    ).scalars().first()
+
+    if completed_run:
+        return completed_run, False
+
     # Find first activity
     first_activity = db.session.execute(
         select(Activity).where(
