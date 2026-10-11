@@ -280,7 +280,7 @@ def seed_oxygen_mission() -> dict[str, int]:
             "options": [
                 {
                     "option_key": "maintain_and_reassess",
-                    "label": "คงออกซิเจน 3 L/min ผ่าน Nasal cannula ต่อไปและเฝ้าระวังต่อเนื่อง (SpO₂ คงที่ที่ 94%)",
+                    "label": "คงออกซิเจน 3 L/min ผ่าน Nasal cannula ต่อไปและเฝ้าระวังต่อเนื่อง ไม่ให้ SpO₂ ลดต่ำกว่า 95%",
                     "is_correct": True,
                 },
                 {
