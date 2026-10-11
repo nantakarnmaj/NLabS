@@ -179,8 +179,8 @@ def seed_suction_mission() -> dict[str, int]:
             "instruction": "ยืนยันการปฏิบัติเพื่อความปลอดภัยที่จำเป็นก่อนดูดเสมหะเพื่อลดความเสี่ยงต่อภาวะพร่องออกซิเจน",
             "options": [
                 {"option_key": "pre_oxygenate", "label": "ให้ออกซิเจนความเข้มข้นสูง (Hyperoxygenate 100% O2) อย่างน้อย 30–60 วินาทีก่อนทำหัตถการ", "is_correct": True, "display_order": 1},
-                {"option_key": "semi_fowler", "label": "จัดผู้ป่วยนอนท่าศีรษะสูง Semi-Fowler's (30–45 องศา) หากไม่มีข้อห้าม", "is_correct": True, "display_order": 2},
-                {"option_key": "monitor_vitals", "label": "ติดเครื่องวัดออกซิเจนปลายนิ้ว (Pulse Oximeter) ต่อเนื่องและเปิดเสียงเตือนภัย", "is_correct": True, "display_order": 3},
+                {"option_key": "semi_fowler", "label": "จัดผู้ป่วยนอนท่าศีรษะสูง Semi-Fowler's (30–45 องศา)", "is_correct": True, "display_order": 2},
+                {"option_key": "monitor_vitals", "label": "สวมเครื่องวัดออกซิเจนปลายนิ้ว (Pulse Oximeter) ให้แก่ผู้ป่วย", "is_correct": True, "display_order": 3},
                 {"option_key": "routine_saline_bolus", "label": "หยดน้ำเกลือปลอดเชื้อ 5 มล. เข้าท่อเจาะคอเพื่อละลายเสมหะ", "is_correct": False, "display_order": 4},
             ],
             "feedback": [
