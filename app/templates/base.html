@@ -71,6 +71,16 @@
       <div class="flex items-center gap-2">
         {% if current_user %}
         <!-- Authenticated Institutional User -->
+        {% if current_user.is_admin() %}
+        <a
+          href="{{ url_for('admin.users') }}"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold transition shadow-2xs"
+          title="ระบบจัดการรายชื่ออาจารย์และนักศึกษา"
+        >
+          <span>⚙️</span>
+          <span>จัดการผู้ใช้</span>
+        </a>
+        {% endif %}
         <div class="flex items-center bg-white border border-[#DCEAF7] rounded-full pl-1.5 pr-3 py-1 shadow-xs hover:border-[#1296DB] transition">
           <div class="w-7 h-7 rounded-full overflow-hidden border border-sky-200 bg-sky-50 shrink-0 mr-2 flex items-center justify-center">
             <img src="{{ url_for('static', filename='images/nurse_mascot.png') }}" alt="User Avatar" class="w-full h-full object-cover object-top">
@@ -131,6 +141,20 @@
 
   <!-- Main content landmark -->
   <main id="main-content" class="flex-grow">
+    <!-- Global Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages and request.path not in ['/', '/login'] %}
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-2">
+        {% for category, message in messages %}
+        <div class="p-4 rounded-2xl text-xs sm:text-sm flex items-start space-x-3 {% if category == 'error' %}bg-red-50 text-red-800 border border-red-200{% elif category == 'success' %}bg-emerald-50 text-emerald-800 border border-emerald-200{% else %}bg-sky-50 text-sky-800 border border-sky-200{% endif %} shadow-2xs">
+          <span class="shrink-0 mt-0.5 text-base">{% if category == 'error' %}⚠️{% elif category == 'success' %}✓{% else %}ℹ️{% endif %}</span>
+          <span class="font-medium leading-relaxed">{{ message }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
   </main>
 

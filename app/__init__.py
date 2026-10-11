@@ -11,7 +11,7 @@ from sqlalchemy.engine import Engine
 
 from config import Config, get_config
 from app.extensions import db, migrate, csrf
-from app.routes import main_bp, health_bp, api_bp, auth_bp
+from app.routes import main_bp, health_bp, api_bp, auth_bp, admin_bp
 from app.commands import register_commands
 import app.models  # noqa: F401
 
@@ -80,6 +80,7 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
     app.register_blueprint(health_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
 
     # Context processors
     @app.context_processor

@@ -246,6 +246,14 @@ def standard_login():
     else:
         role = detect_role_from_username(username)
 
+    # Special authentication for administrator
+    if username.lower() in ["admin", f"admin@{tenant_domain}".lower()] or role == UserRole.ADMIN.value:
+        if password not in ["Nsit+2026", "admin1234", "nursingmu2026"]:
+            flash("รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง โปรดตรวจสอบรหัสผ่าน", "error")
+            return redirect(url_for("auth.login"))
+        role = UserRole.ADMIN.value
+        email_to_use = f"admin@{tenant_domain}"
+
     # Find or create user
     user = db.session.execute(
         select(User).where(User.email == email_to_use)
@@ -280,7 +288,11 @@ def standard_login():
     _, raw_token, _ = get_or_create_session()
     flash(f"เข้าสู่ระบบสำเร็จในฐานะ {user.get_role_display_th()} ({user.email})", "success")
 
-    response = redirect(url_for("main.ward"))
+    # Administrators go directly to Admin Portal; students/faculty go to Ward
+    if user.is_admin():
+        response = redirect(url_for("admin.users"))
+    else:
+        response = redirect(url_for("main.ward"))
     set_session_cookie(response, raw_token)
     return response
 
@@ -292,7 +304,7 @@ def admin_local_login():
     password = request.form.get("password", "").strip()
 
     # Emergency dev admin credentials
-    if username == "admin" and password in ["admin1234", "nursingmu2026"]:
+    if username == "admin" and password in ["Nsit+2026", "admin1234", "nursingmu2026"]:
         email = "admin.emergency@nursingmu.org"
         user = db.session.execute(
             select(User).where(User.email == email)
