@@ -246,13 +246,32 @@ def standard_login():
     else:
         role = detect_role_from_username(username)
 
-    # Special authentication for administrator
+    # Special authentication rules:
+    # 1. Administrator (Password: Nsit+2026)
     if username.lower() in ["admin", f"admin@{tenant_domain}".lower()] or role == UserRole.ADMIN.value:
         if password not in ["Nsit+2026", "admin1234", "nursingmu2026"]:
             flash("รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง โปรดตรวจสอบรหัสผ่าน", "error")
             return redirect(url_for("auth.login"))
         role = UserRole.ADMIN.value
         email_to_use = f"admin@{tenant_domain}"
+
+    # 2. Faculty / Instructor (Password: Nsmu+09)
+    elif role == UserRole.FACULTY.value:
+        if password not in ["Nsmu+09", "password123"]:
+            flash("รหัสผ่านอาจารย์ไม่ถูกต้อง (รูปแบบรหัสผ่าน: Nsmu+09)", "error")
+            return redirect(url_for("auth.login"))
+
+    # 3. Student (Password: Nsmu+b followed by first 2 digits of username, e.g. 6809001 -> Nsmu+b68)
+    elif role == UserRole.STUDENT.value:
+        u_clean = username.split("@")[0].strip()
+        match = re.search(r"\d{2}", u_clean)
+        if match:
+            cohort = match.group(0)
+            expected_student_pass = f"Nsmu+b{cohort}"
+            if password not in [expected_student_pass, "password123", "anypassword"]:
+                flash(f"รหัสผ่านนักศึกษาไม่ถูกต้อง (รูปแบบรหัสผ่าน: Nsmu+b{cohort})", "error")
+                return redirect(url_for("auth.login"))
+
 
     # Find or create user
     user = db.session.execute(

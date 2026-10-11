@@ -162,3 +162,44 @@ def test_logout_clears_session(client):
     assert res.status_code == 200
     html = res.get_data(as_text=True)
     assert "ออกจากระบบเรียบร้อยแล้ว" in html
+
+
+def test_faculty_and_student_custom_password_rules(client, app):
+    """Verify Faculty (Nsmu+09) and Student (Nsmu+b<cohort>) password requirements."""
+    # 1. Faculty with wrong password fails
+    res_fac_fail = client.post(
+        "/auth/login",
+        data={"username": "aj.somporn", "password": "WrongPassword"},
+        follow_redirects=True,
+    )
+    assert res_fac_fail.status_code == 200
+    assert "รหัสผ่านอาจารย์ไม่ถูกต้อง" in res_fac_fail.get_data(as_text=True)
+
+    # Faculty with correct Nsmu+09 succeeds
+    res_fac_ok = client.post(
+        "/auth/login",
+        data={"username": "aj.somporn", "password": "Nsmu+09"},
+        follow_redirects=True,
+    )
+    assert res_fac_ok.status_code == 200
+    assert "/ward" in res_fac_ok.request.path
+
+    # 2. Student 6809001 with wrong password fails
+    res_std_fail = client.post(
+        "/auth/login",
+        data={"username": "6809001", "password": "WrongPassword"},
+        follow_redirects=True,
+    )
+    assert res_std_fail.status_code == 200
+    assert "รหัสผ่านนักศึกษาไม่ถูกต้อง" in res_std_fail.get_data(as_text=True)
+    assert "Nsmu+b68" in res_std_fail.get_data(as_text=True)
+
+    # Student 6809001 with Nsmu+b68 succeeds
+    res_std_ok = client.post(
+        "/auth/login",
+        data={"username": "6809001", "password": "Nsmu+b68"},
+        follow_redirects=True,
+    )
+    assert res_std_ok.status_code == 200
+    assert "/ward" in res_std_ok.request.path
+
