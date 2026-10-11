@@ -246,11 +246,11 @@ def seed_oxygen_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 5,
             "options": [
-                {"option_key": "no_smoking_signs", "label": "ติดป้ายเตือน 'ห้ามสูบบุหรี่ / มีการใช้ออกซิเจน' และห้ามจุดประกายไฟหรือเปลวไฟในห้อง", "is_correct": True},
-                {"option_key": "sterile_water_level", "label": "ตรวจสอบระดับน้ำกลั่นปลอดเชื้อ (Sterile water) ในกระบอกความชื้นให้อยู่ระหว่างขีด Min/Max", "is_correct": True},
+                {"option_key": "no_smoking_signs", "label": "ติดป้ายเตือน 'ห้ามสูบบุหรี่' และห้ามจุดประกายไฟหรือเปลวไฟในห้อง", "is_correct": True},
+                {"option_key": "sterile_water_level", "label": "ตรวจสอบระดับน้ำกลั่นปลอดเชื้อ (Sterile water) ในกระบอกความชื้นให้มากกว่าระดับ Min", "is_correct": True},
                 {"option_key": "grounded_electrical", "label": "ตรวจสอบอุปกรณ์ไฟฟ้าข้างเตียงทั้งหมดให้มีสายดินและอยู่ในสภาพปลอดภัยไม่มีประกายไฟ", "is_correct": True},
-                {"option_key": "avoid_petroleum", "label": "หลีกเลี่ยงสารหล่อลื่นที่มีส่วนผสมของน้ำมันปิโตรเลียม (Petroleum jelly) บริเวณใบหน้าและจมูก (ให้ใช้สารหล่อลื่นที่ละลายน้ำได้)", "is_correct": True},
-                {"option_key": "vaseline_nares", "label": "ทาวาสลีน (Vaseline) ชุ่มๆ ในรูจมูกเพื่อป้องกันเยื่อบุแห้ง", "is_correct": False},
+                {"option_key": "avoid_petroleum", "label": "หลีกเลี่ยงสารหล่อลื่นที่มีส่วนผสมของน้ำมันปิโตรเลียม บริเวณใบหน้าและจมูก", "is_correct": True},
+                {"option_key": "vaseline_nares", "label": "ทาวาสลีนชุ่มๆ ในรูจมูกเพื่อป้องกันเยื่อบุแห้ง", "is_correct": False},
                 {"option_key": "oil_flowmeter", "label": "หยอดน้ำมันหล่อลื่นที่เกจ flowmeter เพื่อให้หมุนคล่องขึ้น", "is_correct": False},
             ],
             "feedback_rules": [
