@@ -33,7 +33,13 @@
   const activityId = gameContainer.dataset.activityId;
   let currentRevision = parseInt(gameContainer.dataset.revision || '1', 10);
   const activityType = gameContainer.dataset.activityType;
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  function getCsrfToken() {
+    return (
+      document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+      document.getElementById('csrf-token-fallback')?.value ||
+      ''
+    );
+  }
 
   // Announce to screen readers
   function announce(msg) {
@@ -210,21 +216,37 @@
   function showFeedback(result) {
     if (!feedbackModal) return;
 
-    feedbackTitle.textContent = result.title || (result.success ? 'การปฏิบัติถูกต้อง' : 'ข้อควรระวังทางการพยาบาล');
-    feedbackMessage.textContent = result.message || '';
+    // Immediately display modal so the user gets instant visual feedback
+    feedbackModal.classList.remove('hidden');
+    feedbackModal.classList.add('flex');
 
-    if (result.clinical_rationale) {
-      feedbackRationale.textContent = result.clinical_rationale;
-      feedbackRationale.parentElement.classList.remove('hidden');
-    } else {
-      feedbackRationale.parentElement.classList.add('hidden');
+    if (feedbackTitle) {
+      feedbackTitle.textContent = result.title || (result.success ? 'การปฏิบัติถูกต้อง' : 'ข้อควรระวังทางการพยาบาล');
+    }
+    if (feedbackMessage) {
+      feedbackMessage.textContent = result.message || '';
     }
 
-    if (result.hint && !result.success) {
-      feedbackHint.textContent = result.hint;
-      feedbackHintContainer.classList.remove('hidden');
-    } else {
-      feedbackHintContainer.classList.add('hidden');
+    if (feedbackRationale) {
+      feedbackRationale.textContent = result.clinical_rationale || '';
+      if (feedbackRationale.parentElement) {
+        if (result.clinical_rationale) {
+          feedbackRationale.parentElement.classList.remove('hidden');
+        } else {
+          feedbackRationale.parentElement.classList.add('hidden');
+        }
+      }
+    }
+
+    if (feedbackHint) {
+      feedbackHint.textContent = result.hint || '';
+    }
+    if (feedbackHintContainer) {
+      if (result.hint && !result.success) {
+        feedbackHintContainer.classList.remove('hidden');
+      } else {
+        feedbackHintContainer.classList.add('hidden');
+      }
     }
 
     if (result.success) {
@@ -245,15 +267,25 @@
         feedbackStatusBadge.innerHTML = '<span>🎉</span><span>ถูกต้องยอดเยี่ยม! (EXCELLENT!)</span>';
       }
 
-      const nextLabel = result.is_mission_completed ? 'ดูการสะท้อนคิดปิดภารกิจ (View Debrief)' : 'ไปยังขั้นตอนถัดไป (Next Step)';
-      feedbackActionBtn.innerHTML = `<span>${nextLabel}</span> <svg class="w-5 h-5 ml-1 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
-      feedbackActionBtn.className = 'w-full py-4 px-6 rounded-2xl font-black text-base text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 active:scale-[0.98] shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
-      feedbackActionBtn.onclick = function () {
-        window.location.reload();
-      };
+      if (feedbackActionBtn) {
+        const nextLabel = result.is_mission_completed ? 'ดูการสะท้อนคิดปิดภารกิจ (View Debrief)' : 'ไปยังขั้นตอนถัดไป (Next Step)';
+        feedbackActionBtn.innerHTML = `<span>${nextLabel}</span> <svg class="w-5 h-5 ml-1 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>`;
+        feedbackActionBtn.className = 'w-full py-4 px-6 rounded-2xl font-black text-base text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 active:scale-[0.98] shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
+        feedbackActionBtn.onclick = function () {
+          window.location.reload();
+        };
+      }
 
-      playFeedbackSound(true);
-      fireConfetti();
+      try {
+        playFeedbackSound(true);
+      } catch (e) {
+        console.warn('Audio non-blocking note:', e);
+      }
+      try {
+        fireConfetti();
+      } catch (e) {
+        console.warn('Confetti non-blocking note:', e);
+      }
     } else {
       if (feedbackBanner) {
         feedbackBanner.className = 'absolute top-0 inset-x-0 h-2.5 bg-gradient-to-r from-amber-500 via-orange-400 to-rose-400';
@@ -272,18 +304,29 @@
         feedbackStatusBadge.innerHTML = '<span>⚠️</span><span>ข้อควรระวังความปลอดภัย (SAFETY ALERT)</span>';
       }
 
-      feedbackActionBtn.innerHTML = '<span>ลองใหม่อีกครั้ง (Try Again Safely)</span>';
-      feedbackActionBtn.className = 'w-full py-3.5 px-6 rounded-2xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
-      feedbackActionBtn.onclick = function () {
-        closeFeedback();
-      };
+      if (feedbackActionBtn) {
+        if (result.reload_on_dismiss) {
+          feedbackActionBtn.innerHTML = '<span>โหลดข้อมูลขั้นตอนล่าสุด (Refresh Step)</span>';
+          feedbackActionBtn.onclick = function () {
+            window.location.reload();
+          };
+        } else {
+          feedbackActionBtn.innerHTML = '<span>ลองใหม่อีกครั้ง (Try Again Safely)</span>';
+          feedbackActionBtn.onclick = function () {
+            closeFeedback();
+          };
+        }
+        feedbackActionBtn.className = 'w-full py-3.5 px-6 rounded-2xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer touch-target';
+      }
 
-      playFeedbackSound(false);
+      try {
+        playFeedbackSound(false);
+      } catch (e) {
+        console.warn('Audio non-blocking note:', e);
+      }
     }
 
-    feedbackModal.classList.remove('hidden');
-    feedbackModal.classList.add('flex');
-    announce(result.title + '. ' + result.message);
+    announce((result.title || '') + '. ' + (result.message || ''));
   }
 
   function closeFeedback() {
@@ -389,19 +432,33 @@
   // Handle Activity Submission
   async function submitPayload(payload) {
     const submitBtn = document.getElementById('submit-btn');
+    let originalBtnHtml = '';
     if (submitBtn) {
+      originalBtnHtml = submitBtn.innerHTML;
       submitBtn.disabled = true;
-      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      submitBtn.classList.add('opacity-75', 'cursor-wait');
+      submitBtn.innerHTML = `
+        <span class="inline-flex items-center gap-2">
+          <svg class="animate-spin h-4 w-4 text-white shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span>กำลังบันทึกคำตอบ...</span>
+        </span>
+      `;
     }
 
     const idempotencyKey = generateIdempotencyKey();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s safety timeout
 
     try {
       const response = await fetch(`/api/runs/${runId}/activities/${activityId}/submit`, {
         method: 'POST',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken || '',
+          'X-CSRFToken': getCsrfToken(),
         },
         body: JSON.stringify({
           payload: payload,
@@ -410,18 +467,40 @@
         }),
       });
 
-      const result = await response.json();
+      clearTimeout(timeoutId);
+
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonErr) {
+        throw new Error('เซิร์ฟเวอร์ตอบกลับด้วยรูปแบบที่ไม่ถูกต้อง (HTTP ' + response.status + ')');
+      }
 
       if (result.error) {
         if (result.error.code === 'stale_state') {
-          alert('ข้อมูลในหน้านี้มีการเปลี่ยนแปลง กำลังโหลดข้อมูลล่าสุด...');
-          window.location.reload();
+          showFeedback({
+            success: false,
+            reload_on_dismiss: true,
+            title: 'ข้อมูลในหน้านี้มีการเปลี่ยนแปลง',
+            message: 'เซิร์ฟเวอร์มีข้อมูลสถานะที่ใหม่กว่า กำลังโหลดหน้าปัจจุบัน...',
+            hint: 'กดปุ่มด้านล่างเพื่อรีเฟรชข้อมูลขั้นตอนล่าสุด',
+          });
+          return;
+        }
+        if (result.error.code === 'out_of_order') {
+          showFeedback({
+            success: false,
+            reload_on_dismiss: true,
+            title: 'ลำดับขั้นตอนไม่ตรงกับสถานะปัจจุบัน',
+            message: result.error.message || 'โปรดทำขั้นตอนก่อนหน้าให้เสร็จสิ้นก่อน',
+            hint: 'กดปุ่มด้านล่างเพื่อไปยังขั้นตอนที่ถูกต้อง',
+          });
           return;
         }
         showFeedback({
           success: false,
           title: 'ไม่สามารถดำเนินการต่อได้',
-          message: result.error.message,
+          message: result.error.message || 'เกิดข้อผิดพลาดในการตรวจสอบคำตอบ',
           hint: 'โปรดตรวจสอบข้อมูลและลองใหม่อีกครั้ง',
         });
         return;
@@ -437,17 +516,24 @@
 
       showFeedback(result);
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('Submission error:', err);
+      const isTimeout = err.name === 'AbortError';
       showFeedback({
         success: false,
-        title: 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
-        message: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์จำลองสถานการณ์ได้ โปรดลองอีกครั้ง',
-        hint: 'โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ',
+        title: isTimeout ? 'การเชื่อมต่อหมดเวลา (Timeout)' : 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
+        message: isTimeout
+          ? 'เซิร์ฟเวอร์ใช้เวลาตอบสนองนานเกินไป โปรดกดลองใหม่อีกครั้ง'
+          : (err.message || 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์จำลองสถานการณ์ได้ โปรดลองอีกครั้ง'),
+        hint: 'โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณ หรือกดลองใหม่อีกครั้ง',
       });
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.remove('opacity-75', 'opacity-50', 'cursor-wait', 'cursor-not-allowed');
+        if (originalBtnHtml) {
+          submitBtn.innerHTML = originalBtnHtml;
+        }
       }
     }
   }

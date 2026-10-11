@@ -4,7 +4,7 @@
 
 {% block head %}
 <script src="{{ url_for('static', filename='js/sortable.min.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/game.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/game.js') }}?v=20261012b" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -192,6 +192,7 @@
     data-activity-type="{{ current_activity.activity_type }}"
     class="space-y-5"
   >
+    <input type="hidden" id="csrf-token-fallback" value="{{ csrf_token() }}">
     
     <!-- 3. ACTIVITY PROGRESS COMPONENT (Section G) -->
     {% set pct_complete = ((current_activity.display_order / total_activities) * 100)|round|int %}

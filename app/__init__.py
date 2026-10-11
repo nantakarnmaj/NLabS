@@ -89,9 +89,20 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
         return {"current_user": get_current_user()}
 
     # Error handlers
+    def _is_api_request() -> bool:
+        return request.path.startswith("/api/") or request.is_json
+
     @app.errorhandler(CSRFError)
     def handle_csrf_error(error: CSRFError):
         app.logger.warning("CSRF validation failure on %s: %s", request.path, error.description)
+        if _is_api_request():
+            from flask import jsonify
+            return jsonify({
+                "error": {
+                    "code": "csrf_error",
+                    "message": "Session or CSRF token verification failed. Please reload the page.",
+                }
+            }), 400
         return render_template(
             "errors/400.html",
             title="Session Verification Required",
@@ -101,6 +112,14 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
 
     @app.errorhandler(400)
     def handle_bad_request(error):
+        if _is_api_request():
+            from flask import jsonify
+            return jsonify({
+                "error": {
+                    "code": "bad_request",
+                    "message": getattr(error, "description", "The request was invalid."),
+                }
+            }), 400
         return render_template(
             "errors/400.html",
             title="Bad Request",
@@ -110,6 +129,14 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
 
     @app.errorhandler(403)
     def handle_forbidden(error):
+        if _is_api_request():
+            from flask import jsonify
+            return jsonify({
+                "error": {
+                    "code": "forbidden",
+                    "message": getattr(error, "description", "You do not have access to this resource."),
+                }
+            }), 403
         return render_template(
             "errors/403.html",
             title="Access Restricted",
@@ -119,6 +146,14 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
 
     @app.errorhandler(404)
     def handle_not_found(error):
+        if _is_api_request():
+            from flask import jsonify
+            return jsonify({
+                "error": {
+                    "code": "not_found",
+                    "message": getattr(error, "description", "The requested resource was not found."),
+                }
+            }), 404
         return render_template(
             "errors/404.html",
             title="Page Not Found",
@@ -129,6 +164,14 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
     @app.errorhandler(500)
     def handle_server_error(error):
         app.logger.error("Internal server error: %s", error)
+        if _is_api_request():
+            from flask import jsonify
+            return jsonify({
+                "error": {
+                    "code": "server_error",
+                    "message": "A temporary internal system error occurred. Please try again.",
+                }
+            }), 500
         return render_template(
             "errors/500.html",
             title="Ward System Error",
