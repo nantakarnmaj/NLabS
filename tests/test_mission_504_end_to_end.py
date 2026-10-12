@@ -53,7 +53,7 @@ def _complete_room_502(client, app, run_id: int):
             "case_mild_postop": "nasal_cannula",
             "case_copd_precise": "venturi_mask",
             "case_severe_hypoxemia": "nrb_mask",
-            "case_mouth_breather": "simple_mask",
+            "case_tracheostomy": "tracheostomy_collar",
         }},
         {"chosen_key": "check_patient_and_tubing"},
         {"selected_keys": ["ear_padding", "nares_water_lube", "reassure_anxiety", "document_care"]},

@@ -133,7 +133,7 @@ def test_room_502_full_playthrough_and_badge_award(client, app):
             "case_mild_postop": "nasal_cannula",
             "case_copd_precise": "nrb_mask",  # wrong
             "case_severe_hypoxemia": "nrb_mask",
-            "case_mouth_breather": "simple_mask",
+            "case_tracheostomy": "tracheostomy_collar",
         }}},
     )
     assert res7_wrong.status_code == 200
@@ -147,7 +147,7 @@ def test_room_502_full_playthrough_and_badge_award(client, app):
             "case_mild_postop": "nasal_cannula",
             "case_copd_precise": "venturi_mask",
             "case_severe_hypoxemia": "nrb_mask",
-            "case_mouth_breather": "simple_mask",
+            "case_tracheostomy": "tracheostomy_collar",
         }}},
     )
     assert res7_correct.status_code == 200

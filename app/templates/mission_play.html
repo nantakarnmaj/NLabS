@@ -627,7 +627,7 @@
             </div>
             <div class="shrink-0 w-full md:w-64 p-3 rounded-xl bg-white border border-emerald-300 text-sm font-bold text-emerald-900 shadow-2xs">
               {% for opt in current_activity.content_json.target_options %}
-                {% if opt.key == match.correct_key %}
+                {% if opt.key == match.correct_key or opt.key == match.correct_target_key %}
                   ✓ {{ opt.label }}
                 {% endif %}
               {% endfor %}
