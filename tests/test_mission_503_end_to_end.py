@@ -134,14 +134,14 @@ def test_room_503_full_playthrough_and_badge_award(client, app):
     assert res6.status_code == 200
     assert res6.json["success"] is True
 
-    # 9. Step 7: Decision (Coaching Inhalation Technique)
+    # 9. Step 7: Decision (Nebulization End-point & Sputtering Management)
     with app.app_context():
         run = db.session.get(MissionRun, run_id)
         act_id = run.current_activity_id
 
     res7 = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",
-        json={"payload": {"chosen_key": "slow_deep_mouth_breath_hold"}},
+        json={"payload": {"chosen_key": "tap_cup_and_finish_mist"}},
     )
     assert res7.status_code == 200
     assert res7.json["success"] is True

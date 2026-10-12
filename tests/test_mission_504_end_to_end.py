@@ -82,7 +82,7 @@ def _complete_room_503(client, app, run_id: int):
         {"ordered_keys": ["step_inspect_parts", "step_instill_salbutamol", "step_seal_cup", "step_attach_mouthpiece", "step_connect_tubing_source"]},
         {"selected_keys": ["high_fowlers_position", "flow_rate_6_to_8_lpm", "keep_cup_vertical"]},
         {"selected_keys": ["check_tubing_and_cup_orientation", "check_liquid_below_baffle"]},
-        {"chosen_key": "slow_deep_mouth_breath_hold"},
+        {"chosen_key": "tap_cup_and_finish_mist"},
         {"chosen_key": "reassure_and_monitor_expected_saba_effects"},
         {"selected_keys": ["reauscultate_bilateral_lungs", "rinse_mouth_spit", "rinse_and_air_dry_cup", "document_response"]},
         {"reflection_text": "I learned to calibrate flow rate to 6-8 L/min."},
