@@ -350,54 +350,53 @@
           {{ current_activity.title }}
         </h1>
         {% if current_activity.content_json and current_activity.content_json.is_emergency %}
-        <!-- EYE-CATCHING EMERGENCY INSTRUCTION BOX WITH ILLUSTRATION & LARGE TEXT -->
-        <div class="mt-4 rounded-2xl border-2 border-red-500 bg-gradient-to-br from-red-50 via-white to-amber-50/70 p-4 sm:p-6 shadow-md space-y-4 relative overflow-hidden">
+        <!-- EYE-CATCHING EMERGENCY / CLINICAL EVENT BOX WITH ILLUSTRATION & LARGE TEXT -->
+        {% set theme_color = current_activity.content_json.theme_color or 'red' %}
+        <div class="mt-4 rounded-2xl border-2 {{ 'border-amber-500 bg-gradient-to-br from-amber-50 via-white to-orange-50/70' if theme_color == 'amber' else 'border-red-500 bg-gradient-to-br from-red-50 via-white to-amber-50/70' }} p-4 sm:p-6 shadow-md space-y-4 relative overflow-hidden">
           <!-- Top Alert Beacon Strip -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-red-200">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b {{ 'border-amber-200' if theme_color == 'amber' else 'border-red-200' }}">
             <div class="flex items-center gap-2.5">
               <span class="relative flex h-3.5 w-3.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-600"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ 'bg-amber-400' if theme_color == 'amber' else 'bg-red-400' }} opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3.5 w-3.5 {{ 'bg-amber-600' if theme_color == 'amber' else 'bg-red-600' }}"></span>
               </span>
-              <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-red-700 font-mono">
-                🚨 {{ current_activity.content_json.alarm_badge or 'CRITICAL BEDSIDE ALARM' }}
+              <span class="text-xs sm:text-sm font-black tracking-wider uppercase {{ 'text-amber-800' if theme_color == 'amber' else 'text-red-700' }} font-mono">
+                🚨 {{ current_activity.content_json.alarm_badge or 'CLINICAL ALERT / สัญญาณเตือนข้างเตียง' }}
               </span>
             </div>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white text-xs sm:text-sm font-black font-mono shadow-xs animate-pulse">
-              {{ current_activity.content_json.alarm_code or '⚠️ ALARM: SPO2 LOW LIMIT (< 90%)' }}
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full {{ 'bg-amber-500 text-slate-950' if theme_color == 'amber' else 'bg-red-600 text-white' }} text-xs sm:text-sm font-black font-mono shadow-xs animate-pulse">
+              {{ current_activity.content_json.alarm_code or '⚠️ PATIENT MONITOR ALERT' }}
             </span>
           </div>
 
           <!-- Content: Illustration + Large Bold Text & Telemetry -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center">
-            <!-- Medical Bedside Alarm Illustration -->
-            <div class="md:col-span-5 rounded-2xl overflow-hidden border-2 border-red-300 shadow-md bg-slate-900 relative group">
+            <!-- Medical Bedside Illustration -->
+            <div class="md:col-span-5 rounded-2xl overflow-hidden border-2 {{ 'border-amber-300' if theme_color == 'amber' else 'border-red-300' }} shadow-md bg-slate-900 relative group">
+              {% set img_path = current_activity.content_json.image_url or ('images/scenarios/' ~ current_activity.content_json.image_filename if current_activity.content_json.image_filename else 'images/scenarios/anong_desaturation_alarm.jpg') %}
               <img
-                src="{{ url_for('static', filename='images/scenarios/anong_desaturation_alarm.jpg') }}"
-                alt="คุณอนงค์ ภาวะออกซิเจนตกเฉียบพลัน SpO2 88%"
+                src="{{ url_for('static', filename=img_path) }}"
+                alt="{{ current_activity.content_json.image_alt or current_activity.title }}"
                 class="w-full h-52 sm:h-60 md:h-68 object-cover object-center transition duration-500 hover:scale-105"
               >
               <div class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-xs text-white text-xs font-mono flex items-center justify-between">
-                <span class="text-red-400 font-bold flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> SpO₂ 88%
+                <span class="{{ 'text-amber-300' if theme_color == 'amber' else 'text-red-400' }} font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full {{ 'bg-amber-400' if theme_color == 'amber' else 'bg-red-500' }} animate-ping"></span> {{ current_activity.content_json.image_overlay_text or 'Monitor Alarm Active' }}
                 </span>
-                <span class="text-slate-300 text-2xs">Monitor Alarm Active</span>
+                <span class="text-slate-300 text-2xs">Bedside Telemetry</span>
               </div>
             </div>
 
             <!-- Urgent Message & Action Prompt -->
             <div class="md:col-span-7 space-y-3.5">
               <!-- Urgent Message Box with Larger Typography -->
-              <div class="p-4 sm:p-5 rounded-2xl bg-white border-2 border-red-200 shadow-2xs space-y-2">
-                <div class="text-xs font-black uppercase tracking-wider text-red-600 flex items-center gap-1.5">
-                  <span>⚠️</span><span>เหตุการณ์ฉุกเฉินข้างเตียง (Bedside Emergency)</span>
+              <div class="p-4 sm:p-5 rounded-2xl bg-white border-2 {{ 'border-amber-200' if theme_color == 'amber' else 'border-red-200' }} shadow-2xs space-y-2">
+                <div class="text-xs font-black uppercase tracking-wider {{ 'text-amber-700' if theme_color == 'amber' else 'text-red-600' }} flex items-center gap-1.5">
+                  <span>⚠️</span><span>{{ current_activity.content_json.event_header or 'การเปลี่ยนแปลงทางคลินิก (Bedside Clinical Event)' }}</span>
                 </div>
-                <p class="text-base sm:text-lg lg:text-xl font-bold text-slate-900 leading-snug sm:leading-relaxed">
-                  สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้นฉุกเฉิน: ค่า O2 saturation (SpO2) ของคุณอนงค์ตกฮวบจาก
-                  <span class="text-emerald-700 font-black px-1.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200">95%</span>
-                  เหลือเพียง
-                  <span class="text-red-600 font-black text-xl sm:text-2xl px-2 py-0.5 rounded-md bg-red-50 border border-red-300 underline decoration-red-500">88%</span>
-                </p>
+                <div class="text-base sm:text-lg lg:text-xl font-bold text-slate-900 leading-snug sm:leading-relaxed">
+                  {{ current_activity.content_json.urgent_message | safe if current_activity.content_json.urgent_message else current_activity.instruction }}
+                </div>
                 {% if current_activity.content_json.scenario_description %}
                 <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 border-t border-slate-100">
                   {{ current_activity.content_json.scenario_description }}
@@ -408,39 +407,39 @@
               <!-- Telemetry Snapshot Cards -->
               {% if current_activity.content_json.telemetry %}
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
-                <div class="bg-slate-900 text-white p-2 rounded-xl border border-red-500/60 shadow-inner flex flex-col justify-between">
+                <div class="bg-slate-900 text-white p-2 rounded-xl border {{ 'border-amber-500/60' if current_activity.content_json.telemetry.spo2_alert else 'border-slate-700' }} shadow-inner flex flex-col justify-between">
                   <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">SpO2</span>
-                  <div class="text-xl sm:text-2xl font-black text-red-400 animate-pulse my-0.5">
+                  <div class="text-xl sm:text-2xl font-black {{ 'text-red-400 animate-pulse' if current_activity.content_json.telemetry.spo2_alert else 'text-emerald-400' }} my-0.5">
                     {{ current_activity.content_json.telemetry.spo2 }}
                   </div>
-                  <span class="text-2xs text-red-300 font-semibold">{{ current_activity.content_json.telemetry.spo2_trend }}</span>
+                  <span class="text-2xs text-slate-300 font-semibold">{{ current_activity.content_json.telemetry.spo2_trend or 'Normal' }}</span>
                 </div>
-                <div class="bg-slate-900 text-white p-2 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+                <div class="bg-slate-900 text-white p-2 rounded-xl border {{ 'border-amber-500/80 ring-1 ring-amber-400/50' if current_activity.content_json.telemetry.hr_alert else 'border-slate-700' }} shadow-inner flex flex-col justify-between">
                   <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">ชีพจร (HR)</span>
-                  <div class="text-xl sm:text-2xl font-black text-amber-400 my-0.5">
+                  <div class="text-xl sm:text-2xl font-black {{ 'text-amber-400 animate-pulse' if current_activity.content_json.telemetry.hr_alert else 'text-emerald-400' }} my-0.5">
                     {{ current_activity.content_json.telemetry.hr }}
                   </div>
-                  <span class="text-2xs text-slate-400">Tachycardia</span>
+                  <span class="text-2xs text-amber-300 font-semibold">{{ current_activity.content_json.telemetry.hr_trend or 'Tachycardia' }}</span>
                 </div>
                 <div class="bg-slate-900 text-white p-2 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
                   <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">หายใจ (RR)</span>
-                  <div class="text-xl sm:text-2xl font-black text-amber-300 my-0.5">
+                  <div class="text-xl sm:text-2xl font-black {{ 'text-amber-300' if current_activity.content_json.telemetry.rr_alert else 'text-emerald-300' }} my-0.5">
                     {{ current_activity.content_json.telemetry.rr }}
                   </div>
-                  <span class="text-2xs text-slate-400">Tachypnea</span>
+                  <span class="text-2xs text-slate-400">{{ current_activity.content_json.telemetry.rr_trend or 'Eupnea' }}</span>
                 </div>
                 <div class="bg-slate-900 text-white p-2 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
                   <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">ผู้ป่วย</span>
                   <div class="text-xs font-bold text-slate-100 my-auto py-0.5">
                     {{ current_activity.content_json.telemetry.patient_status }}
                   </div>
-                  <span class="text-2xs text-amber-300 font-semibold">เฝ้าระวังด่วน</span>
+                  <span class="text-2xs {{ 'text-amber-300 font-semibold' if current_activity.content_json.telemetry.status_alert else 'text-slate-400' }}">{{ current_activity.content_json.telemetry.status_sub or 'เฝ้าระวัง' }}</span>
                 </div>
               </div>
               {% endif %}
 
               <!-- Question Callout -->
-              <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm flex items-start gap-3">
+              <div class="p-3.5 sm:p-4 rounded-2xl {{ 'bg-gradient-to-r from-amber-600 to-orange-600' if theme_color == 'amber' else 'bg-gradient-to-r from-red-600 to-rose-600' }} text-white shadow-sm flex items-start gap-3">
                 <span class="text-xl shrink-0">⚡</span>
                 <p class="text-sm sm:text-base font-black leading-snug">
                   {{ current_activity.content_json.challenge_question or 'ในฐานะพยาบาลผู้รับผิดชอบ การปฏิบัติการพยาบาลที่ต้องทำเป็น "ลำดับแรก (First Action)" คืออะไร?' }}
