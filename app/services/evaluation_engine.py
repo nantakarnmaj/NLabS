@@ -38,6 +38,8 @@ def evaluate_activity(activity: Activity, response_payload: dict[str, Any]) -> d
     elif act_type == "sequence":
         return evaluate_sequence(activity, response_payload)
     elif act_type in ("decision", "troubleshooting"):
+        if (activity.options and len([o for o in activity.options if o.is_correct]) > 1) or "selected_keys" in response_payload:
+            return evaluate_selection(activity, response_payload)
         return evaluate_decision(activity, response_payload)
     elif act_type == "matching":
         return evaluate_matching(activity, response_payload)

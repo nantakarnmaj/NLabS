@@ -704,7 +704,7 @@
         const stepItems = document.querySelectorAll('#sequence-list li[data-step-key]');
         const keys = Array.from(stepItems).map((el) => el.dataset.stepKey);
         payload = { ordered_keys: keys };
-      } else if (activityType === 'decision' || activityType === 'troubleshooting') {
+      } else if ((activityType === 'decision' || activityType === 'troubleshooting') && document.querySelector('input[name="choice"]')) {
         const selectedRadio = document.querySelector('input[name="choice"]:checked');
         if (!selectedRadio) {
           alert('กรุณาเลือกคำตอบเพื่อดำเนินการต่อ');
@@ -753,7 +753,8 @@
       activityType === 'equipment_select' ||
       activityType === 'medication_check' ||
       activityType === 'safety_check' ||
-      activityType === 'aftercare'
+      activityType === 'aftercare' ||
+      document.querySelectorAll('.selection-card').length > 0
     ) {
       initSelection();
     }

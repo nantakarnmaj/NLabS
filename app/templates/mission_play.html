@@ -484,7 +484,7 @@
       </div>
 
       <!-- Activity Type 2: Multi-Select Activities (Section I) -->
-      {% elif current_activity.activity_type in ['clinical_cues', 'equipment_select', 'medication_check', 'safety_check', 'aftercare'] %}
+      {% elif current_activity.activity_type in ['clinical_cues', 'equipment_select', 'medication_check', 'safety_check', 'aftercare'] or (current_activity.options and current_activity.options|selectattr('is_correct')|list|length > 1) %}
       {% if current_activity.activity_type == 'medication_check' and current_activity.content_json and current_activity.content_json.doctor_order %}
       <!-- Doctor's Order & 10 Rights Header Card -->
       <div class="mb-5 rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/50 p-4 sm:p-5 shadow-xs space-y-3.5">

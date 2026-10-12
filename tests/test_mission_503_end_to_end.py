@@ -129,7 +129,7 @@ def test_room_503_full_playthrough_and_badge_award(client, app):
 
     res6 = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",
-        json={"payload": {"chosen_key": "check_tubing_and_cup_orientation"}},
+        json={"payload": {"selected_keys": ["check_tubing_and_cup_orientation", "check_liquid_below_baffle"]}},
     )
     assert res6.status_code == 200
     assert res6.json["success"] is True
