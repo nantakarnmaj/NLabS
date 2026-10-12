@@ -349,7 +349,107 @@
         <h1 id="activity-heading" class="text-xl sm:text-2xl font-black text-[#14213D] tracking-tight">
           {{ current_activity.title }}
         </h1>
-        {% if current_activity.instruction %}
+        {% if current_activity.content_json and current_activity.content_json.is_emergency %}
+        <!-- EYE-CATCHING EMERGENCY INSTRUCTION BOX WITH ILLUSTRATION & LARGE TEXT -->
+        <div class="mt-4 rounded-2xl border-2 border-red-500 bg-gradient-to-br from-red-50 via-white to-amber-50/70 p-4 sm:p-6 shadow-md space-y-4 relative overflow-hidden">
+          <!-- Top Alert Beacon Strip -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-red-200">
+            <div class="flex items-center gap-2.5">
+              <span class="relative flex h-3.5 w-3.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-600"></span>
+              </span>
+              <span class="text-xs sm:text-sm font-black tracking-wider uppercase text-red-700 font-mono">
+                🚨 {{ current_activity.content_json.alarm_badge or 'CRITICAL BEDSIDE ALARM' }}
+              </span>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white text-xs sm:text-sm font-black font-mono shadow-xs animate-pulse">
+              {{ current_activity.content_json.alarm_code or '⚠️ ALARM: SPO2 LOW LIMIT (< 90%)' }}
+            </span>
+          </div>
+
+          <!-- Content: Illustration + Large Bold Text & Telemetry -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center">
+            <!-- Medical Bedside Alarm Illustration -->
+            <div class="md:col-span-5 rounded-2xl overflow-hidden border-2 border-red-300 shadow-md bg-slate-900 relative group">
+              <img
+                src="{{ url_for('static', filename='images/scenarios/anong_desaturation_alarm.jpg') }}"
+                alt="คุณอนงค์ ภาวะออกซิเจนตกเฉียบพลัน SpO2 88%"
+                class="w-full h-52 sm:h-60 md:h-68 object-cover object-center transition duration-500 hover:scale-105"
+              >
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-xs text-white text-xs font-mono flex items-center justify-between">
+                <span class="text-red-400 font-bold flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> SpO₂ 88%
+                </span>
+                <span class="text-slate-300 text-2xs">Monitor Alarm Active</span>
+              </div>
+            </div>
+
+            <!-- Urgent Message & Action Prompt -->
+            <div class="md:col-span-7 space-y-3.5">
+              <!-- Urgent Message Box with Larger Typography -->
+              <div class="p-4 sm:p-5 rounded-2xl bg-white border-2 border-red-200 shadow-2xs space-y-2">
+                <div class="text-xs font-black uppercase tracking-wider text-red-600 flex items-center gap-1.5">
+                  <span>⚠️</span><span>เหตุการณ์ฉุกเฉินข้างเตียง (Bedside Emergency)</span>
+                </div>
+                <p class="text-base sm:text-lg lg:text-xl font-bold text-slate-900 leading-snug sm:leading-relaxed">
+                  สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้นฉุกเฉิน: ค่า O2 saturation (SpO2) ของคุณอนงค์ตกฮวบจาก
+                  <span class="text-emerald-700 font-black px-1.5 py-0.5 rounded-md bg-emerald-50 border border-emerald-200">95%</span>
+                  เหลือเพียง
+                  <span class="text-red-600 font-black text-xl sm:text-2xl px-2 py-0.5 rounded-md bg-red-50 border border-red-300 underline decoration-red-500">88%</span>
+                </p>
+                {% if current_activity.content_json.scenario_description %}
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 border-t border-slate-100">
+                  {{ current_activity.content_json.scenario_description }}
+                </p>
+                {% endif %}
+              </div>
+
+              <!-- Telemetry Snapshot Cards -->
+              {% if current_activity.content_json.telemetry %}
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
+                <div class="bg-slate-900 text-white p-2 rounded-xl border border-red-500/60 shadow-inner flex flex-col justify-between">
+                  <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">SpO2</span>
+                  <div class="text-xl sm:text-2xl font-black text-red-400 animate-pulse my-0.5">
+                    {{ current_activity.content_json.telemetry.spo2 }}
+                  </div>
+                  <span class="text-2xs text-red-300 font-semibold">{{ current_activity.content_json.telemetry.spo2_trend }}</span>
+                </div>
+                <div class="bg-slate-900 text-white p-2 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+                  <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">ชีพจร (HR)</span>
+                  <div class="text-xl sm:text-2xl font-black text-amber-400 my-0.5">
+                    {{ current_activity.content_json.telemetry.hr }}
+                  </div>
+                  <span class="text-2xs text-slate-400">Tachycardia</span>
+                </div>
+                <div class="bg-slate-900 text-white p-2 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+                  <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">หายใจ (RR)</span>
+                  <div class="text-xl sm:text-2xl font-black text-amber-300 my-0.5">
+                    {{ current_activity.content_json.telemetry.rr }}
+                  </div>
+                  <span class="text-2xs text-slate-400">Tachypnea</span>
+                </div>
+                <div class="bg-slate-900 text-white p-2 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+                  <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">ผู้ป่วย</span>
+                  <div class="text-xs font-bold text-slate-100 my-auto py-0.5">
+                    {{ current_activity.content_json.telemetry.patient_status }}
+                  </div>
+                  <span class="text-2xs text-amber-300 font-semibold">เฝ้าระวังด่วน</span>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Question Callout -->
+              <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm flex items-start gap-3">
+                <span class="text-xl shrink-0">⚡</span>
+                <p class="text-sm sm:text-base font-black leading-snug">
+                  {{ current_activity.content_json.challenge_question or 'ในฐานะพยาบาลผู้รับผิดชอบ การปฏิบัติการพยาบาลที่ต้องทำเป็น "ลำดับแรก (First Action)" คืออะไร?' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% elif current_activity.instruction %}
         <p class="text-sm text-[#64748B] mt-1.5 leading-relaxed">{{ current_activity.instruction }}</p>
         {% endif %}
       </div>
@@ -521,77 +621,10 @@
       <!-- Activity Type 4: Decision & Troubleshooting -->
       {% elif current_activity.activity_type in ['decision', 'troubleshooting'] %}
 
-      {% if current_activity.content_json and current_activity.content_json.is_emergency %}
-      <!-- EMERGENCY CLINICAL CHALLENGE COCKPIT -->
-      <div class="rounded-2xl border-2 border-red-500/80 bg-gradient-to-br from-red-50/80 via-white to-amber-50/50 p-4 sm:p-5 shadow-sm space-y-4 relative overflow-hidden mb-5">
-        <!-- Flashing Alert Header Strip -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-red-200/80 pb-3">
-          <div class="flex items-center gap-2.5">
-            <span class="relative flex h-3.5 w-3.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-600"></span>
-            </span>
-            <span class="text-xs font-black tracking-wider uppercase text-red-700 font-mono">
-              🚨 {{ current_activity.content_json.alarm_badge or 'CRITICAL BEDSIDE ALARM' }}
-            </span>
-          </div>
-          {% if current_activity.content_json.alarm_code %}
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white text-xs font-bold font-mono tracking-wide shadow-xs animate-pulse">
-            {{ current_activity.content_json.alarm_code }}
-          </div>
-          {% endif %}
-        </div>
-
-        <!-- Telemetry Snapshot Cards (Emergency Dark Cockpit) -->
-        {% if current_activity.content_json.telemetry %}
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
-          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-red-500/60 shadow-inner flex flex-col justify-between">
-            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">O2 Sat (SpO2)</span>
-            <div class="text-2xl sm:text-3xl font-black text-red-400 my-0.5 animate-pulse">
-              {{ current_activity.content_json.telemetry.spo2 }}
-            </div>
-            <span class="text-2xs text-red-300 font-semibold">{{ current_activity.content_json.telemetry.spo2_trend }}</span>
-          </div>
-          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
-            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">ชีพจร (HR)</span>
-            <div class="text-2xl sm:text-3xl font-black text-amber-400 my-0.5">
-              {{ current_activity.content_json.telemetry.hr }}
-            </div>
-            <span class="text-2xs text-slate-400">Tachycardia</span>
-          </div>
-          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
-            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">การหายใจ (RR)</span>
-            <div class="text-2xl sm:text-3xl font-black text-amber-300 my-0.5">
-              {{ current_activity.content_json.telemetry.rr }}
-            </div>
-            <span class="text-2xs text-slate-400">Tachypnea</span>
-          </div>
-          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
-            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">สภาพผู้ป่วย</span>
-            <div class="text-xs sm:text-sm font-bold text-slate-100 my-auto py-1">
-              {{ current_activity.content_json.telemetry.patient_status }}
-            </div>
-            <span class="text-2xs text-amber-300">เฝ้าระวังด่วน</span>
-          </div>
-        </div>
-        {% endif %}
-
-        <!-- Narrative Situation -->
-        {% if current_activity.content_json.scenario_description %}
-        <div class="p-3.5 rounded-xl bg-white border border-red-200/90 text-sm text-slate-800 leading-relaxed shadow-2xs">
-          <p class="font-medium text-[#14213D]">{{ current_activity.content_json.scenario_description }}</p>
-        </div>
-        {% endif %}
-
-        <!-- Prompt Question -->
-        {% if current_activity.content_json.challenge_question %}
-        <div class="flex items-center gap-2 text-xs sm:text-sm font-black text-red-900 bg-red-100/70 p-2.5 rounded-xl border border-red-200">
-          <span>⚡</span>
-          <span>{{ current_activity.content_json.challenge_question }}</span>
-        </div>
-        {% endif %}
+      <div class="space-y-1 mb-3 pt-1">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">การตัดสินใจทางการพยาบาล (Clinical Decision Action):</span>
+        <p class="text-xs text-slate-500">เลือกการปฏิบัติการพยาบาลที่คุณตัดสินใจดำเนินการเป็นลำดับแรก</p>
       </div>
-      {% endif %}
 
       {% if is_review_mode %}
       <div class="space-y-2.5">
