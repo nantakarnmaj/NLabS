@@ -322,7 +322,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     {
                         "prompt_key": "case_mild_postop",
                         "prompt_label": "กรณีที่ 1: ผู้ป่วยหลังผ่าตัดอาการคงที่ มีภาวะพร่องออกซิเจนเล็กน้อย",
-                        "prompt_text": "ผู้ป่วยอายุ 54 ปี หลังผ่าตัด O2 saturation (SpO2) 92% ในอากาศห้อง รู้สึกตัวดี พูดคุยได้ ต้องการดื่มน้ำ",
+                        "prompt_text": "ผู้ป่วยอายุ 54 ปี หลังผ่าตัด O2 saturation (SpO2) Room air 92% รู้สึกตัวดี พูดคุยได้ ต้องการดื่มน้ำ",
                         "correct_target_key": "nasal_cannula",
                         "target_label": "สายให้ออกซิเจนทางจมูก Nasal Cannula (1–6 L/min)",
                         "rationale": "Nasal cannula ให้ออกซิเจนแบบ low-flow (24–44% FiO2) สุขสบาย สามารถรับประทานอาหารและพูดคุยได้",
@@ -331,7 +331,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     {
                         "prompt_key": "case_copd_precise",
                         "prompt_label": "กรณีที่ 2: ผู้ป่วยโรคถุงลมโป่งพองกำเริบเฉียบพลัน (COPD Exacerbation)",
-                        "prompt_text": "ผู้ป่วยอายุ 68 ปี โรค COPD กำเริบเฉียบพลัน ต้องการออกซิเจนความเข้มข้นคงที่แน่นอน (FiO2 28%) เพื่อหลีกเลี่ยงภาวะคั่งก๊าซ CO2",
+                        "prompt_text": "ผู้ป่วยอายุ 68 ปี โรค COPD กำเริบเฉียบพลัน ต้องการออกซิเจนความเข้มข้นคงที่แน่นอน เพื่อหลีกเลี่ยงภาวะคั่งก๊าซ CO2",
                         "correct_target_key": "venturi_mask",
                         "target_label": "หน้ากากเวนจูรี่ Venturi Mask (FiO₂ คงที่ 24–50%)",
                         "rationale": "Venturi mask ใช้ตัวต่อปรับอากาศตามรหัสสีเพื่อให้ FiO2 คงที่แม่นยำ ไม่แปรผันตามรูปแบบการหายใจของผู้ป่วย",
@@ -340,7 +340,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     {
                         "prompt_key": "case_severe_hypoxemia",
                         "prompt_label": "กรณีที่ 3: ภาวะพร่องออกซิเจนรุนแรงเฉียบพลัน (Acute Severe Hypoxemic Distress)",
-                        "prompt_text": "ผู้ป่วยอายุ 45 ปี สูดควันไฟในเหตุเพลิงไหม้ หายใจลำบากวิกฤต ค่า O2 saturation (SpO2) 81% ในอากาศห้อง",
+                        "prompt_text": "ผู้ป่วยอายุ 45 ปี สูดควันไฟในเหตุเพลิงไหม้ หายใจลำบาก อาการวิกฤต ค่า O2 saturation (SpO2) Room air 81%",
                         "correct_target_key": "nrb_mask",
                         "target_label": "หน้ากากแบบมีถุงสำรองไม่ไหลย้อน Non-Rebreather Mask (10–15 L/min)",
                         "rationale": "Non-rebreather mask สามารถให้ออกซิเจนความเข้มข้นสูง (FiO2 60–90%) ผ่านถุง Reservoir bag สำหรับการกู้ชีพในภาวะฉุกเฉินวิกฤต",
