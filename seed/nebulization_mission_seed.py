@@ -158,18 +158,17 @@ def seed_nebulization_mission() -> dict[str, int]:
             "display_order": 3,
             "options": [
                 {"option_key": "right_patient_mali", "label": "ตรวจสอบชื่อ-นามสกุล และดูป้ายข้อมือของคุณมะลิให้ตรงกับคำสั่งการรักษา", "is_correct": True},
-                {"option_key": "right_dose_2_5mg", "label": "ตรวจสอบขนาดยา 2.5 มก. ในหลอดยูนิตโดสปลอดเชื้อขนาด 2.5 มล. ตามคำสั่งแพทย์", "is_correct": True},
-                {"option_key": "administer_iv_push", "label": "เปลี่ยนวิถีทางยาเป็นการฉีดเข้าทางหลอดเลือดดำ (IV Push) โดยตรงเพื่อให้ออกฤทธิ์เร็วขึ้น", "is_correct": False},
-                {"option_key": "right_time_stat", "label": "ยืนยันเวลาการให้ยาทันที (Stat dose) ตามความเร่งด่วนของอาการหอบเหนื่อย", "is_correct": True},
-                {"option_key": "check_expiry_and_clarity", "label": "ตรวจสอบวันหมดอายุบนหลอดยา สภาพหลอดยา และความใสไม่มีสีของสารละลาย", "is_correct": True},
-                {"option_key": "dilute_with_distilled_water", "label": "เจือจางหลอดยาด้วยน้ำกลั่น 5 มล. ก่อนนำไปพ่น", "is_correct": False},
-                {"option_key": "right_route_inhalation", "label": "ยืนยันวิถีทางการให้ยาเป็นการสูดดมพ่นละอองผ่านเครื่องพ่นยา (Pneumatic Jet Nebulizer)", "is_correct": True},
-                {"option_key": "right_education_patient", "label": "อธิบายขั้นตอนการสูดพ่นละอองยา เฝ้าระวังผลข้างเคียง (ใจสั่น มือสั่น) และเปิดโอกาสให้ผู้ป่วยซักถาม", "is_correct": True},
-                {"option_key": "skip_wristband_verification", "label": "ละเว้นการตรวจสอบป้ายข้อมือผู้ป่วยเพื่อความรวดเร็วเนื่องจากเป็นยาฉุกเฉิน (Stat dose)", "is_correct": False},
                 {"option_key": "right_drug_salbutamol", "label": "ยืนยันชื่อยา Salbutamol (Ventolin) ว่าเป็นยาขยายหลอดลมกลุ่มออกฤทธิ์เร็ว (SABA)", "is_correct": True},
+                {"option_key": "right_dose_2_5mg", "label": "ตรวจสอบขนาดยา 2.5 มก. ในหลอดยูนิตโดสปลอดเชื้อขนาด 2.5 มล. ตามคำสั่งแพทย์", "is_correct": True},
+                {"option_key": "dilute_with_distilled_water", "label": "เจือจางหลอดยาด้วยน้ำกลั่น 5 มล. ก่อนนำไปพ่น", "is_correct": False},
+                {"option_key": "right_time_stat", "label": "ยืนยันเวลาการให้ยาทันที (Stat dose) ตามความเร่งด่วนของอาการหอบเหนื่อย", "is_correct": True},
                 {"option_key": "right_reason_indication", "label": "ตรวจสอบข้อบ่งชี้ของยาสำหรับบรรเทาหลอดลมหดเกร็งเฉียบพลันและเสียง Wheezing", "is_correct": True},
-                {"option_key": "right_documentation", "label": "เตรียมบันทึกชื่อยา ขนาดยา วิถีทาง เวลา และการตอบสนองของผู้ป่วยในบันทึกทางการพยาบาลทันทีหลังพ่นยา", "is_correct": True},
+                {"option_key": "administer_iv_push", "label": "เปลี่ยนวิถีทางยาเป็นการฉีดเข้าทางหลอดเลือดดำ (IV Push) โดยตรงเพื่อให้ออกฤทธิ์เร็วขึ้น", "is_correct": False},
+                {"option_key": "right_route_inhalation", "label": "ยืนยันวิถีทางการให้ยาเป็นการสูดดมพ่นละอองผ่านเครื่องพ่นยา (Pneumatic Jet Nebulizer)", "is_correct": True},
+                {"option_key": "check_expiry_and_clarity", "label": "ตรวจสอบวันหมดอายุบนหลอดยา สภาพหลอดยา และความใสไม่มีสีของสารละลาย", "is_correct": True},
                 {"option_key": "right_assessment_evaluation", "label": "ซักประวัติแพ้ยา ประเมินเสียงปอดและชีพจรก่อนให้ และเตรียมประเมินผลการตอบสนองหลังพ่นยา", "is_correct": True},
+                {"option_key": "right_education_patient", "label": "อธิบายขั้นตอนการสูดพ่นละอองยา เฝ้าระวังผลข้างเคียง (ใจสั่น มือสั่น) และเปิดโอกาสให้ผู้ป่วยซักถาม", "is_correct": True},
+                {"option_key": "right_documentation", "label": "เตรียมบันทึกชื่อยา ขนาดยา วิถีทาง เวลา และการตอบสนองของผู้ป่วยในบันทึกทางการพยาบาลทันทีหลังพ่นยา", "is_correct": True},
             ],
             "feedback_rules": [
                 {
@@ -193,14 +192,6 @@ def seed_nebulization_mission() -> dict[str, int]:
                     "title": "อันตรายจากการให้ยาผิดวิถีทาง (Wrong Route Hazard)",
                     "message": "ห้ามนำยาพ่น Salbutamol Respule มาฉีดเข้าหลอดเลือดดำ (IV)! สารละลายสำหรับพ่นไม่ได้เตรียมมาสำหรับการฉีด IV และคำสั่งแพทย์ระบุชัดเจนว่าให้สูดดมทางเครื่องพ่นยา (Nebulizer)",
                     "hint": "ตรวจสอบวิถีทางยา (Right Route) ให้ตรงกับคำสั่งการรักษาเสมอ",
-                },
-                {
-                    "trigger_type": "on_hazard",
-                    "trigger_key": "skip_wristband_verification",
-                    "feedback_type": "critical",
-                    "title": "อันตรายจากการระบุตัวผู้ป่วยผิดคน (Patient Misidentification Hazard)",
-                    "message": "ห้ามละเว้นการตรวจสอบป้ายข้อมือและระบุตัวผู้ป่วยเด็ดขาด! แม้จะเป็นคำสั่ง Stat หรือภาวะเร่งด่วน การระบุตัวผู้ป่วยถูกต้อง (Right Patient) ยังคงเป็นความปลอดภัยขั้นพื้นฐานสูงสุดเพื่อป้องกันการให้ยาผิดคน",
-                    "hint": "ตรวจสอบป้ายข้อมือและถามชื่อ-นามสกุลผู้ป่วยทุกครั้งก่อนบริหารยาเสมอ",
                 },
             ],
         },
@@ -586,6 +577,27 @@ def seed_nebulization_mission() -> dict[str, int]:
                 existing_fb.clinical_rationale = fb_data.get("clinical_rationale")
                 existing_fb.hint = fb_data.get("hint")
                 existing_fb.patient_effect_json = fb_data.get("patient_effect_json")
+
+        # Clean up orphaned options not present in current seed data
+        current_opt_keys = {opt["option_key"] for opt in act_data.get("options", [])}
+        existing_all_opts = db.session.execute(
+            select(ActivityOption).where(ActivityOption.activity_id == activity.id)
+        ).scalars().all()
+        for opt in existing_all_opts:
+            if opt.option_key not in current_opt_keys:
+                db.session.delete(opt)
+
+        # Clean up orphaned feedback rules not present in current seed data
+        current_fb_pairs = {
+            (fb.get("trigger_type") or ("on_selection" if fb.get("trigger_key") else "on_success"), fb.get("trigger_key"))
+            for fb in act_data.get("feedback_rules", [])
+        }
+        existing_all_fbs = db.session.execute(
+            select(Feedback).where(Feedback.activity_id == activity.id)
+        ).scalars().all()
+        for fb in existing_all_fbs:
+            if (fb.trigger_type, fb.trigger_key) not in current_fb_pairs:
+                db.session.delete(fb)
 
     # 3. Seed Nebulizer Navigator Badge
     badge = db.session.execute(
