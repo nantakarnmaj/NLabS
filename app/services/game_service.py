@@ -348,19 +348,36 @@ def submit_activity(
                     select(Badge).where(Badge.mission_id == run.mission_id)
                 ).scalar_one_or_none()
 
-                if badge:
-                    badge_file_map = {
-                        "oxygen": "oxygen-guardian.svg",
-                        "airway": "airway-explorer.svg",
-                        "nebulizer": "nebulizer-navigator.svg",
-                        "rescue": "respiratory-ready.svg",
+                mission = db.session.get(Mission, run.mission_id)
+                if not badge and mission:
+                    badge_slug_map = {
+                        501: "airway-explorer",
+                        502: "oxygen-guardian",
+                        503: "nebulizer-navigator",
+                        504: "respiratory-ready",
                     }
-                    badge_img_name = badge_file_map.get(badge.icon, "airway-explorer.svg")
+                    slug = badge_slug_map.get(mission.room_number)
+                    if slug:
+                        badge = db.session.execute(
+                            select(Badge).where(Badge.slug == slug)
+                        ).scalar_one_or_none()
+                        if badge and not badge.mission_id:
+                            badge.mission_id = run.mission_id
+
+                badge_file_map = {
+                    "oxygen": "oxygen-guardian.svg",
+                    "airway": "airway-explorer.svg",
+                    "nebulizer": "nebulizer-navigator.svg",
+                    "rescue": "respiratory-ready.svg",
+                }
+
+                if badge:
+                    badge_img_name = badge_file_map.get(badge.icon, "nebulizer-navigator.svg" if mission and mission.room_number == 503 else "airway-explorer.svg")
                     badge_info = {
                         "name": badge.name,
                         "description": badge.description,
                         "icon": badge.icon,
-                        "image_url": f"/static/images/badges/{badge_img_name}",
+                        "image_url": f"/static/images/badges/{badge_img_name}?v=20261012",
                     }
 
                     existing_session_badge = db.session.execute(
@@ -379,6 +396,20 @@ def submit_activity(
                         )
                         db.session.add(awarded_badge)
                     badge_awarded = badge_info
+                elif mission:
+                    room_badge_fallback = {
+                        501: ("ผู้พิชิตทางเดินหายใจ (Airway Explorer)", "airway", "airway-explorer.svg"),
+                        502: ("ผู้พิทักษ์ออกซิเจน (Oxygen Guardian)", "oxygen", "oxygen-guardian.svg"),
+                        503: ("ยอดนักพ่นยา (Nebulizer Navigator)", "nebulizer", "nebulizer-navigator.svg"),
+                        504: ("พร้อมรับมือภาวะวิกฤต (Respiratory Ready)", "rescue", "respiratory-ready.svg"),
+                    }
+                    fb = room_badge_fallback.get(mission.room_number, ("ยอดนักพ่นยา (Nebulizer Navigator)", "nebulizer", "nebulizer-navigator.svg"))
+                    badge_awarded = {
+                        "name": fb[0],
+                        "description": "ตราสัญลักษณ์เกียรติยศประจำภารกิจ",
+                        "icon": fb[1],
+                        "image_url": f"/static/images/badges/{fb[2]}?v=20261012",
+                    }
 
         db.session.commit()
 

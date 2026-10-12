@@ -248,6 +248,25 @@ def mission_view(slug: str):
             select(Badge).where(Badge.mission_id == mission.id)
         ).scalar_one_or_none()
 
+        if not badge:
+            badge_slug_map = {
+                501: "airway-explorer",
+                502: "oxygen-guardian",
+                503: "nebulizer-navigator",
+                504: "respiratory-ready",
+            }
+            slug = badge_slug_map.get(mission.room_number)
+            if slug:
+                badge = db.session.execute(
+                    select(Badge).where(Badge.slug == slug)
+                ).scalar_one_or_none()
+                if badge and not badge.mission_id:
+                    badge.mission_id = mission.id
+                    try:
+                        db.session.commit()
+                    except Exception:
+                        db.session.rollback()
+
         response = make_response(
             render_template(
                 "mission_play.html",

@@ -600,13 +600,13 @@
       <div class="p-4 rounded-2xl {% if badge.is_unlocked %}bg-white border border-sky-300 ring-1 ring-sky-100 shadow-xs{% else %}bg-slate-50/70 border border-slate-200/80 opacity-70{% endif %} flex items-start space-x-3 transition">
         <div class="w-12 h-12 rounded-xl {% if badge.is_unlocked %}bg-sky-50 border border-sky-200{% else %}bg-slate-100 border border-slate-200 filter grayscale opacity-50{% endif %} p-1.5 flex items-center justify-center shrink-0" aria-hidden="true">
           {% if badge.icon == 'oxygen' or '502' in badge.room_number|string %}
-          <img src="{{ url_for('static', filename='images/badges/oxygen-guardian.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          <img src="{{ url_for('static', filename='images/badges/oxygen-guardian.svg') }}?v=20261012" alt="{{ badge.name }}" class="w-full h-full object-contain">
           {% elif badge.icon == 'airway' or '501' in badge.room_number|string %}
-          <img src="{{ url_for('static', filename='images/badges/airway-explorer.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          <img src="{{ url_for('static', filename='images/badges/airway-explorer.svg') }}?v=20261012" alt="{{ badge.name }}" class="w-full h-full object-contain">
           {% elif badge.icon == 'nebulizer' or '503' in badge.room_number|string %}
-          <img src="{{ url_for('static', filename='images/badges/nebulizer-navigator.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          <img src="{{ url_for('static', filename='images/badges/nebulizer-navigator.svg') }}?v=20261012" alt="{{ badge.name }}" class="w-full h-full object-contain">
           {% elif badge.icon == 'rescue' or '504' in badge.room_number|string %}
-          <img src="{{ url_for('static', filename='images/badges/respiratory-ready.svg') }}" alt="{{ badge.name }}" class="w-full h-full object-contain">
+          <img src="{{ url_for('static', filename='images/badges/respiratory-ready.svg') }}?v=20261012" alt="{{ badge.name }}" class="w-full h-full object-contain">
           {% else %}
           <span class="text-xl">🎖️</span>
           {% endif %}
