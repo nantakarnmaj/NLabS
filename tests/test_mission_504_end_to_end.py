@@ -51,7 +51,7 @@ def _complete_room_502(client, app, run_id: int):
         {"chosen_key": "maintain_and_reassess"},
         {"pairs": {
             "case_mild_postop": "nasal_cannula",
-            "case_copd_precise": "venturi_mask",
+            "case_copd_precise": "nasal_cannula_copd",
             "case_severe_hypoxemia": "nrb_mask",
             "case_tracheostomy": "tracheostomy_collar",
         }},

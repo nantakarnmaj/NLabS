@@ -145,7 +145,7 @@ def test_room_502_full_playthrough_and_badge_award(client, app):
         f"/api/runs/{run_id}/activities/{act_id}/submit",
         json={"payload": {"pairs": {
             "case_mild_postop": "nasal_cannula",
-            "case_copd_precise": "venturi_mask",
+            "case_copd_precise": "nasal_cannula_copd",
             "case_severe_hypoxemia": "nrb_mask",
             "case_tracheostomy": "tracheostomy_collar",
         }}},
