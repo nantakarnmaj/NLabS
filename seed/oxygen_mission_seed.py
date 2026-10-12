@@ -234,7 +234,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     "title": "การเตรียมและให้ออกซิเจนราบรื่นถูกต้อง (Smooth Administration & Delivery)",
                     "message": "ติดตั้งและให้ออกซิเจนเรียบร้อย! คุณอนงค์เริ่มได้รับออกซิเจนอย่างสบายและมีประสิทธิภาพ",
                     "clinical_rationale": "การจัดวางง่ามสายและทดสอบลมไหลช่วยให้ออกซิเจนส่งถึงผู้ป่วยอย่างต่อเนื่องและสุขสบาย",
-                    "patient_effect_json": {"spo2_delta": 3, "distress_delta": -1},
+                    "patient_effect_json": {"spo2_set": 95, "hr_set": 82, "rr_set": 18, "distress_set": 0},
                 }
             ],
         },
@@ -298,9 +298,9 @@ def seed_oxygen_mission() -> dict[str, int]:
                 {
                     "trigger_type": "on_success",
                     "title": "บรรลุเป้าหมายการให้ออกซิเจน (Target Oxygenation Achieved)",
-                    "message": "สัญญาณชีพของคุณอนงค์เริ่มคงที่: SpO2 94%, หายใจ 20 ครั้ง/นาที, ชีพจร 86 ครั้ง/นาที อาการหายใจเหนื่อยทุเลาลง",
-                    "clinical_rationale": "เป้าหมายค่าความอิ่มตัวออกซิเจนในผู้ป่วยผู้ใหญ่ส่วนใหญ่คือ 94–98% การปรับขนาดให้อยู่ในช่วงนี้ช่วยป้องกันทั้งภาวะพร่องออกซิเจนและอันตรายจากออกซิเจนเกิน (Hyperoxia)",
-                    "patient_effect_json": {"spo2_set": 94, "rr_set": 20, "hr_set": 86, "distress_set": 1},
+                    "message": "สัญญาณชีพของคุณอนงค์คงที่และตอบสนองได้ดี: SpO2 95%, หายใจ 18 ครั้ง/นาที, ชีพจร 82 ครั้ง/นาที อาการหายใจเหนื่อยทุเลาลง",
+                    "clinical_rationale": "เป้าหมายค่าความอิ่มตัวออกซิเจนในผู้ป่วยผู้ใหญ่ส่วนใหญ่คือ 94–98% การคงขนาด 3 L/min ช่วยรักษาระดับออกซิเจนให้อยู่ในเกณฑ์ปลอดภัยและป้องกันภาวะออกซิเจนเกิน (Hyperoxia)",
+                    "patient_effect_json": {"spo2_set": 95, "rr_set": 18, "hr_set": 82, "distress_set": 0},
                 },
                 {
                     "trigger_type": "on_hazard",
@@ -370,6 +370,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     "title": "เชี่ยวชาญระบบการให้ออกซิเจน (Mastery of Oxygen Delivery Systems)",
                     "message": "ยอดเยี่ยมมาก! คุณจับคู่สถานการณ์ทางคลินิกของผู้ป่วยแต่ละรายกับอุปกรณ์ให้ออกซิเจนได้อย่างถูกต้องสมบูรณ์แบบ",
                     "clinical_rationale": "การเลือกอุปกรณ์ตามความแม่นยำของ FiO2 รูปแบบการหายใจ และความเร่งด่วนทางคลินิกช่วยให้การรักษาปลอดภัยและตรงจุด",
+                    "patient_effect_json": {"spo2_set": 88, "hr_set": 104, "rr_set": 26, "distress_set": 2},
                 }
             ],
         },
@@ -377,7 +378,7 @@ def seed_oxygen_mission() -> dict[str, int]:
         {
             "activity_type": "decision",
             "title": "สถานการณ์ท้าทาย: ภาวะออกซิเจนตกเฉียบพลัน (Sudden Desaturation Challenge)",
-            "instruction": "สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้น: ค่า SpO₂ ของคุณอนงค์ลดลงฮวบจาก 94% เหลือ 88% การปฏิบัติลำดับแรกของคุณคืออะไร?",
+            "instruction": "สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้น: ค่า SpO₂ ของคุณอนงค์ลดลงฮวบจาก 95% เหลือ 88% การปฏิบัติลำดับแรกของคุณคืออะไร?",
             "content_json": {},
             "display_order": 8,
             "options": [
@@ -403,7 +404,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     "title": "การแก้ไขปัญหาอย่างเป็นระบบ (Systematic Troubleshooting)",
                     "message": "คุณพบว่าคุณอนงค์พลิกตะแคงตัวทำให้ง่ามสายออกซิเจนเลื่อนหลุดจากรูจมูก เมื่อจัดสายเข้าที่เดิม ค่า SpO2 ก็กลับขึ้นมาเป็น 95% ทันที",
                     "clinical_rationale": "ต้องตรวจประเมินผู้ป่วยและอุปกรณ์ก่อนเสมอ ก่อนที่จะตัดสินใจยกระดับการรักษาที่รุนแรงเกินจำเป็น",
-                    "patient_effect_json": {"spo2_set": 95, "distress_delta": -1},
+                    "patient_effect_json": {"spo2_set": 95, "hr_set": 82, "rr_set": 18, "distress_set": 0},
                 },
                 {
                     "trigger_type": "on_hazard",
@@ -435,6 +436,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                     "title": "การดูแลแบบองค์รวมครอบคลุม (Comprehensive Patient-Centered Care)",
                     "message": "การดูแลยอดเยี่ยมมาก ผิวหนังของคุณอนงค์ได้รับการปกป้อง ความวิตกกังวลลดลง และการบันทึกข้อมูลครบถ้วนสมบูรณ์",
                     "clinical_rationale": "แผลกดทับบริเวณหลังใบหูจากสายออกซิเจนเป็นภาวะแทรกซ้อนในโรงพยาบาลที่พบบ่อยแต่ป้องกันได้",
+                    "patient_effect_json": {"spo2_set": 95, "hr_set": 80, "rr_set": 18, "distress_set": 0},
                 },
                 {
                     "trigger_type": "on_hazard",
@@ -466,7 +468,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                         "rr_set": 18,
                         "hr_set": 80,
                         "distress_set": 0,
-                        "consciousness": "comfortable_resting",
+                        "consciousness_set": "alert",
                     },
                 }
             ],

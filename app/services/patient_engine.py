@@ -21,8 +21,22 @@ BOUNDS: dict[str, tuple[int | float, int | float]] = {
 
 ALLOWED_ENUMS: dict[str, set[str]] = {
     "secretions": {"none", "minimal", "moderate", "copious"},
-    "breath_sound": {"clear", "rhonchi", "stridor", "wheezing", "diminished", "coarse_rhonchi"},
-    "consciousness": {"alert", "lethargic", "restless", "obtunded", "confused"},
+    "breath_sound": {
+        "clear",
+        "rhonchi",
+        "stridor",
+        "wheezing",
+        "diminished",
+        "coarse_rhonchi",
+        "expiratory_wheezing",
+        "bilateral_basal_crackles",
+        "bilateral_wheezes_and_rhonchi",
+        "bilateral_expiratory_wheezes",
+        "bilateral_clear_improved",
+        "clear_bilateral",
+        "clear_vesicular",
+    },
+    "consciousness": {"alert", "lethargic", "restless", "obtunded", "confused", "alert_anxious"},
 }
 
 
@@ -50,9 +64,14 @@ def normalize_state(raw_state: dict) -> dict:
             state[var] = clamp(state[var], low, high)
 
     # Validate enums
+    enum_fallbacks = {
+        "breath_sound": "clear",
+        "secretions": "minimal",
+        "consciousness": "alert",
+    }
     for var, allowed in ALLOWED_ENUMS.items():
         if var in state and state[var] not in allowed:
-            state[var] = next(iter(allowed))
+            state[var] = enum_fallbacks.get(var, "clear")
 
     return state
 

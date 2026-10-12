@@ -99,6 +99,17 @@ def test_room_502_full_playthrough_and_badge_award(client, app):
     assert res5.json["success"] is True
 
     # 8. Step 6: Troubleshooting (Watch the Monitor Trend)
+    # Verify patient improved on monitor after receiving oxygen in Step 4
+    play_res_step6 = client.get("/missions/support-the-breath")
+    assert play_res_step6.status_code == 200
+    html_s6 = play_res_step6.get_data(as_text=True)
+    assert "95%" in html_s6
+    assert "82 bpm" in html_s6
+    assert "18 /min" in html_s6
+    assert "คงที่ / สงบ" in html_s6
+    assert "เสียงกรอบแกรบ" in html_s6
+    assert "Stridor" not in html_s6
+
     with app.app_context():
         run = db.session.get(MissionRun, run_id)
         act_id = run.current_activity_id
