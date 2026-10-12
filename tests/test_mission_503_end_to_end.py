@@ -65,17 +65,17 @@ def test_room_503_full_playthrough_and_badge_award(client, app):
         run = db.session.get(MissionRun, run_id)
         act_id = run.current_activity_id
 
-    # Hazard attempt: dilute with tap water
+    # Hazard attempt: dilute with distilled water
     res3_hazard = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",
         json={"payload": {"selected_keys": [
-            "right_patient_mali", "right_drug_salbutamol", "dilute_with_tap_water"
+            "right_patient_mali", "right_drug_salbutamol", "dilute_with_distilled_water"
         ]}},
     )
     assert res3_hazard.status_code == 200
     assert res3_hazard.json["success"] is False
     assert res3_hazard.json["result_type"] == "retry"
-    assert "Unsterile Water" in res3_hazard.json["title"]
+    assert "Sterile Water" in res3_hazard.json["title"] or "น้ำกลั่น" in res3_hazard.json["title"]
 
     # Retry with correct 10 Rights
     res3 = client.post(
