@@ -290,7 +290,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                 },
                 {
                     "option_key": "stop_oxygen_abruptly",
-                    "label": "หยุดให้ออกซิเจนทันทีเพราะ SpO₂ แตะ 94% แล้ว",
+                    "label": "หยุดให้ออกซิเจนทันทีเพราะ SpO₂ แตะ 95% แล้ว",
                     "is_correct": False,
                 },
             ],
