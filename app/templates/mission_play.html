@@ -485,6 +485,60 @@
 
       <!-- Activity Type 2: Multi-Select Activities (Section I) -->
       {% elif current_activity.activity_type in ['clinical_cues', 'equipment_select', 'medication_check', 'safety_check', 'aftercare'] %}
+      {% if current_activity.activity_type == 'medication_check' and current_activity.content_json and current_activity.content_json.doctor_order %}
+      <!-- Doctor's Order & 10 Rights Header Card -->
+      <div class="mb-5 rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/50 p-4 sm:p-5 shadow-xs space-y-3.5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-indigo-100">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📋</span>
+            <div>
+              <span class="text-xs sm:text-sm font-black text-indigo-900 uppercase tracking-wider font-mono">
+                Doctor's Order Sheet & Medication Administration Record (MAR)
+              </span>
+              <p class="text-xs text-indigo-700">ใบคำสั่งการรักษาและบันทึกการบริหารยาทางคลินิก</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-600 text-white text-xs font-bold font-mono self-start sm:self-auto shadow-2xs">
+            🛡️ 10 Rights Safety Check
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs sm:text-sm">
+          <div class="p-2.5 rounded-xl bg-white border border-indigo-100 shadow-2xs space-y-0.5">
+            <span class="text-2xs font-bold uppercase tracking-wider text-slate-400">ผู้ป่วย (Patient)</span>
+            <div class="font-bold text-slate-800">{{ current_activity.content_json.doctor_order.patient_name }} ({{ current_activity.content_json.doctor_order.age }})</div>
+            <div class="text-2xs text-slate-500 font-mono">HN: {{ current_activity.content_json.doctor_order.hn }} | {{ current_activity.content_json.doctor_order.ward_bed }}</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-white border border-indigo-100 shadow-2xs space-y-0.5">
+            <span class="text-2xs font-bold uppercase tracking-wider text-slate-400">การวินิจฉัย (Diagnosis)</span>
+            <div class="font-bold text-slate-800">{{ current_activity.content_json.doctor_order.diagnosis }}</div>
+            <div class="text-2xs text-emerald-700 font-medium">แพ้ยา: {{ current_activity.content_json.doctor_order.allergy }}</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-white border border-indigo-100 shadow-2xs space-y-0.5 sm:col-span-2 lg:col-span-1">
+            <span class="text-2xs font-bold uppercase tracking-wider text-slate-400">ข้อบ่งชี้ (Indication)</span>
+            <div class="font-bold text-slate-800">{{ current_activity.content_json.doctor_order.indication }}</div>
+          </div>
+        </div>
+
+        <!-- Highlighted Medication Order -->
+        <div class="p-3 sm:p-3.5 rounded-xl bg-indigo-900 text-white shadow-xs space-y-1">
+          <div class="flex items-center justify-between text-2xs font-mono uppercase tracking-wider text-indigo-200">
+            <span>คำสั่งแพทย์ (Physician's Rx Order)</span>
+            <span class="px-2 py-0.5 rounded-md bg-amber-400 text-slate-900 font-black">STAT DOSE</span>
+          </div>
+          <div class="text-sm sm:text-base font-black font-mono tracking-tight text-amber-200">
+            {{ current_activity.content_json.doctor_order.rx_order }}
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs sm:text-sm text-indigo-900 bg-indigo-50/80 p-2.5 rounded-xl border border-indigo-100">
+          <span class="text-base shrink-0">💡</span>
+          <span class="font-medium">
+            โปรดตรวจสอบและเลือกหลักความปลอดภัยตาม <strong>หลัก 10 Rights ในการบริหารยา</strong> ให้ถูกต้องครบถ้วนทั้ง 10 ประการ ก่อนนำยาไปพ่นให้ผู้ป่วย
+          </span>
+        </div>
+      </div>
+      {% endif %}
       {% if is_review_mode %}
       <div class="space-y-2.5">
         {% for option in current_activity.options %}

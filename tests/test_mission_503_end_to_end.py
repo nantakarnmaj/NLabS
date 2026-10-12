@@ -60,7 +60,7 @@ def test_room_503_full_playthrough_and_badge_award(client, app):
     assert res2.status_code == 200
     assert res2.json["success"] is True
 
-    # 5. Step 3: Medication Check (6 Rights) - Test Hazard first, then retry
+    # 5. Step 3: Medication Check (10 Rights) - Test Hazard first, then retry
     with app.app_context():
         run = db.session.get(MissionRun, run_id)
         act_id = run.current_activity_id
@@ -77,12 +77,14 @@ def test_room_503_full_playthrough_and_badge_award(client, app):
     assert res3_hazard.json["result_type"] == "retry"
     assert "Unsterile Water" in res3_hazard.json["title"]
 
-    # Retry with correct 6 Rights
+    # Retry with correct 10 Rights
     res3 = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",
         json={"payload": {"selected_keys": [
             "right_patient_mali", "right_drug_salbutamol", "right_dose_2_5mg",
-            "right_route_inhalation", "check_expiry_and_clarity"
+            "right_route_inhalation", "right_time_stat", "check_expiry_and_clarity",
+            "right_reason_indication", "right_assessment_evaluation",
+            "right_education_patient", "right_documentation"
         ]}},
     )
     assert res3.status_code == 200
@@ -187,7 +189,7 @@ def test_room_503_full_playthrough_and_badge_award(client, app):
 
     res10 = client.post(
         f"/api/runs/{run_id}/activities/{act_id}/submit",
-        json={"payload": {"reflection_text": "I learned to verify the 6 rights of medication, calibrate gas flow to 6-8 L/min, instruct slow mouth breathing, and monitor beta-2 adverse effects with reassurance."}},
+        json={"payload": {"reflection_text": "I learned to verify the 10 rights of medication, calibrate gas flow to 6-8 L/min, instruct slow mouth breathing, and monitor beta-2 adverse effects with reassurance."}},
     )
     assert res10.status_code == 200
     assert res10.json["success"] is True

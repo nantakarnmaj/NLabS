@@ -73,7 +73,12 @@ def _complete_room_503(client, app, run_id: int):
     steps_payloads = [
         {"acknowledged": True},
         {"selected_keys": ["expiratory_wheezing", "chest_tightness", "tachypnea_rr24", "mild_hypoxemia_93"]},
-        {"selected_keys": ["right_patient_mali", "right_drug_salbutamol", "right_dose_2_5mg", "right_route_inhalation", "check_expiry_and_clarity"]},
+        {"selected_keys": [
+            "right_patient_mali", "right_drug_salbutamol", "right_dose_2_5mg",
+            "right_route_inhalation", "right_time_stat", "check_expiry_and_clarity",
+            "right_reason_indication", "right_assessment_evaluation",
+            "right_education_patient", "right_documentation"
+        ]},
         {"ordered_keys": ["step_inspect_parts", "step_instill_salbutamol", "step_seal_cup", "step_attach_mouthpiece", "step_connect_tubing_source"]},
         {"selected_keys": ["high_fowlers_position", "flow_rate_6_to_8_lpm", "keep_cup_vertical"]},
         {"chosen_key": "check_tubing_and_cup_orientation"},
