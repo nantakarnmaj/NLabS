@@ -110,7 +110,7 @@ def seed_oxygen_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 2,
             "options": [
-                {"option_key": "spo2_88", "label": "Room Air SpO₂ 88%", "is_correct": True},
+                {"option_key": "spo2_88", "label": "Room Air O2 saturation (SpO2) 88%", "is_correct": True},
                 {"option_key": "tachypnea_rr28", "label": "อัตราการหายใจ 28 ครั้ง/นาที", "is_correct": True},
                 {"option_key": "tachycardia_hr104", "label": "ชีพจร 104 ครั้ง/นาที", "is_correct": True},
                 {"option_key": "dyspnea_anxiety", "label": "รู้สึกเหนื่อย หายใจไม่อิ่ม วิตกกังวลกระสับกระส่าย", "is_correct": True},
@@ -280,17 +280,17 @@ def seed_oxygen_mission() -> dict[str, int]:
             "options": [
                 {
                     "option_key": "maintain_and_reassess",
-                    "label": "คงออกซิเจน 3 L/min ผ่าน Nasal cannula ต่อไปและเฝ้าระวังต่อเนื่อง ไม่ให้ SpO₂ ลดต่ำกว่า 95%",
+                    "label": "คงออกซิเจน 3 L/min ผ่าน Nasal cannula ต่อไปและเฝ้าระวังต่อเนื่อง ไม่ให้ O2 saturation (SpO2) ลดต่ำกว่า 95%",
                     "is_correct": True,
                 },
                 {
                     "option_key": "crank_to_10l",
-                    "label": "เพิ่มอัตราออกซิเจน Nasal cannula เป็น 10 L/min เพื่อให้ SpO₂ แตะ 100% เร็วขึ้น",
+                    "label": "เพิ่มอัตราออกซิเจน Nasal cannula เป็น 10 L/min เพื่อให้ O2 saturation (SpO2) แตะ 100% เร็วขึ้น",
                     "is_correct": False,
                 },
                 {
                     "option_key": "stop_oxygen_abruptly",
-                    "label": "หยุดให้ออกซิเจนทันทีเพราะ SpO₂ แตะ 95% แล้ว",
+                    "label": "หยุดให้ออกซิเจนทันทีเพราะ O2 saturation (SpO2) แตะ 95% แล้ว",
                     "is_correct": False,
                 },
             ],
@@ -378,7 +378,7 @@ def seed_oxygen_mission() -> dict[str, int]:
         {
             "activity_type": "decision",
             "title": "สถานการณ์ท้าทาย: ภาวะออกซิเจนตกเฉียบพลัน (Sudden Desaturation Challenge)",
-            "instruction": "สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้น: ค่า SpO₂ ของคุณอนงค์ลดลงฮวบจาก 95% เหลือ 88% การปฏิบัติลำดับแรกของคุณคืออะไร?",
+            "instruction": "สัญญาณเตือนบนเครื่องวัดออกซิเจนดังขึ้น: ค่า O2 saturation (SpO2) ของคุณอนงค์ลดลงฮวบจาก 95% เหลือ 88% การปฏิบัติลำดับแรกของคุณคืออะไร?",
             "content_json": {},
             "display_order": 8,
             "options": [
@@ -427,7 +427,7 @@ def seed_oxygen_mission() -> dict[str, int]:
                 {"option_key": "ear_padding", "label": "ใส่แผ่นรองนุ่มๆ เหนือใบหูทั้งสองข้างเพื่อป้องกันแผลกดทับจากสายออกซิเจน", "is_correct": True},
                 {"option_key": "nares_water_lube", "label": "ตรวจดูรูจมูกและทาสารหล่อลื่นสูตรน้ำหากเยื่อบุจมูกแห้ง", "is_correct": True},
                 {"option_key": "reassure_anxiety", "label": "อธิบายให้คุณอนงค์ทราบว่าระดับออกซิเจนอยู่ในเกณฑ์ปลอดภัยแล้วเพื่อคลายความวิตกกังวล", "is_correct": True},
-                {"option_key": "document_care", "label": "บันทึกทางการพยาบาล: อัตราออกซิเจน (3 L/min NC), ค่า SpO₂ (95%), อัตราหายใจ (18 ครั้ง/นาที) และสภาพผิวหนัง", "is_correct": True},
+                {"option_key": "document_care", "label": "บันทึกทางการพยาบาล: อัตราออกซิเจน (3 L/min NC), ค่า O2 saturation (SpO2) 95%, อัตราหายใจ (18 ครั้ง/นาที) และสภาพผิวหนัง", "is_correct": True},
                 {"option_key": "tape_prongs_tight", "label": "ใช้พลาสเตอร์เหนียวปิดตรึงสายออกซิเจนแน่นหนาแนบกับแก้มและใบหู", "is_correct": False},
             ],
             "feedback_rules": [

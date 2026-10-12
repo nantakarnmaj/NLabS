@@ -73,7 +73,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-center">
       <!-- SpO2 -->
       <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner flex flex-col justify-between">
-        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">SpO₂</div>
+        <div class="text-[11px] sm:text-xs font-bold text-slate-300 tracking-wider">O2 saturation (SpO2)</div>
         <div id="monitor-spo2" class="text-2xl sm:text-3xl font-black font-mono my-0.5 {% if ps.spo2 < 90 %}text-red-400{% elif ps.spo2 < 94 %}text-amber-400{% else %}text-emerald-400{% endif %}">
           {{ ps.spo2 }}%
         </div>
@@ -698,7 +698,7 @@
 
             <div class="space-y-3 text-sm">
               <div class="flex items-center justify-between py-1.5 border-b border-amber-100/60">
-                <span class="text-slate-600 font-medium">ความอิ่มตัวออกซิเจน (SpO2)</span>
+                <span class="text-slate-600 font-medium">O2 saturation (SpO2)</span>
                 <span class="font-bold font-mono text-red-600 text-base">{{ current_activity.content_json.before.spo2 }}%</span>
               </div>
               <div class="flex items-center justify-between py-1.5 border-b border-amber-100/60">
@@ -732,7 +732,7 @@
 
             <div class="space-y-3 text-sm">
               <div class="flex items-center justify-between py-1.5 border-b border-emerald-100/60">
-                <span class="text-slate-600 font-medium">ความอิ่มตัวออกซิเจน (SpO2)</span>
+                <span class="text-slate-600 font-medium">O2 saturation (SpO2)</span>
                 <span class="font-bold font-mono text-emerald-600 text-base">{{ current_activity.content_json.after.spo2 }}%</span>
               </div>
               <div class="flex items-center justify-between py-1.5 border-b border-emerald-100/60">
@@ -765,7 +765,7 @@
             <span>เกณฑ์ประเมินความสำเร็จในการดูแลทางเดินหายใจ (Clinical Criteria):</span>
           </div>
           <ul class="list-disc list-inside text-sm text-slate-700 space-y-1.5 ml-1 leading-relaxed">
-            <li>ค่าความอิ่มตัวออกซิเจนในเลือด (SpO2) ปรับเพิ่มขึ้นสู่ระดับเป้าหมายที่ปลอดภัย (&ge; 95%)</li>
+            <li>ค่า O2 saturation (SpO2) ปรับเพิ่มขึ้นสู่ระดับเป้าหมายที่ปลอดภัย (&ge; 95%)</li>
             <li>อัตราการหายใจลดลงสู่เกณฑ์ปกติ (12–20 ครั้ง/นาที) และอาการเหนื่อยหอบบรรเทาลง</li>
             <li>การฟังเสียงปอดซ้ำพบว่าเสียงเสมหะลดลง/หายไป และได้ยินเสียงลมเข้าปอดชัดเจนทั้งสองข้าง (Bilateral Clear Breath Sounds)</li>
           </ul>
