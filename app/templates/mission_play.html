@@ -520,6 +520,79 @@
 
       <!-- Activity Type 4: Decision & Troubleshooting -->
       {% elif current_activity.activity_type in ['decision', 'troubleshooting'] %}
+
+      {% if current_activity.content_json and current_activity.content_json.is_emergency %}
+      <!-- EMERGENCY CLINICAL CHALLENGE COCKPIT -->
+      <div class="rounded-2xl border-2 border-red-500/80 bg-gradient-to-br from-red-50/80 via-white to-amber-50/50 p-4 sm:p-5 shadow-sm space-y-4 relative overflow-hidden mb-5">
+        <!-- Flashing Alert Header Strip -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-red-200/80 pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="relative flex h-3.5 w-3.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-600"></span>
+            </span>
+            <span class="text-xs font-black tracking-wider uppercase text-red-700 font-mono">
+              🚨 {{ current_activity.content_json.alarm_badge or 'CRITICAL BEDSIDE ALARM' }}
+            </span>
+          </div>
+          {% if current_activity.content_json.alarm_code %}
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white text-xs font-bold font-mono tracking-wide shadow-xs animate-pulse">
+            {{ current_activity.content_json.alarm_code }}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Telemetry Snapshot Cards (Emergency Dark Cockpit) -->
+        {% if current_activity.content_json.telemetry %}
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
+          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-red-500/60 shadow-inner flex flex-col justify-between">
+            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">O2 Sat (SpO2)</span>
+            <div class="text-2xl sm:text-3xl font-black text-red-400 my-0.5 animate-pulse">
+              {{ current_activity.content_json.telemetry.spo2 }}
+            </div>
+            <span class="text-2xs text-red-300 font-semibold">{{ current_activity.content_json.telemetry.spo2_trend }}</span>
+          </div>
+          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">ชีพจร (HR)</span>
+            <div class="text-2xl sm:text-3xl font-black text-amber-400 my-0.5">
+              {{ current_activity.content_json.telemetry.hr }}
+            </div>
+            <span class="text-2xs text-slate-400">Tachycardia</span>
+          </div>
+          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">การหายใจ (RR)</span>
+            <div class="text-2xl sm:text-3xl font-black text-amber-300 my-0.5">
+              {{ current_activity.content_json.telemetry.rr }}
+            </div>
+            <span class="text-2xs text-slate-400">Tachypnea</span>
+          </div>
+          <div class="bg-slate-900 text-white p-2.5 rounded-xl border border-slate-700 shadow-inner flex flex-col justify-between">
+            <span class="text-2xs text-slate-300 uppercase tracking-wider font-sans font-bold">สภาพผู้ป่วย</span>
+            <div class="text-xs sm:text-sm font-bold text-slate-100 my-auto py-1">
+              {{ current_activity.content_json.telemetry.patient_status }}
+            </div>
+            <span class="text-2xs text-amber-300">เฝ้าระวังด่วน</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Narrative Situation -->
+        {% if current_activity.content_json.scenario_description %}
+        <div class="p-3.5 rounded-xl bg-white border border-red-200/90 text-sm text-slate-800 leading-relaxed shadow-2xs">
+          <p class="font-medium text-[#14213D]">{{ current_activity.content_json.scenario_description }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Prompt Question -->
+        {% if current_activity.content_json.challenge_question %}
+        <div class="flex items-center gap-2 text-xs sm:text-sm font-black text-red-900 bg-red-100/70 p-2.5 rounded-xl border border-red-200">
+          <span>⚡</span>
+          <span>{{ current_activity.content_json.challenge_question }}</span>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
       {% if is_review_mode %}
       <div class="space-y-2.5">
         {% for option in current_activity.options %}
