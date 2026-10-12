@@ -754,9 +754,13 @@
       activityType === 'medication_check' ||
       activityType === 'safety_check' ||
       activityType === 'aftercare' ||
+      activityType === 'troubleshooting' ||
+      activityType === 'decision' ||
       document.querySelectorAll('.selection-card').length > 0
     ) {
-      initSelection();
+      if (document.querySelectorAll('.selection-card').length > 0) {
+        initSelection();
+      }
     }
   }
 
