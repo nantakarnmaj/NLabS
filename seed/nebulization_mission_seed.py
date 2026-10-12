@@ -292,18 +292,23 @@ def seed_nebulization_mission() -> dict[str, int]:
             "display_order": 6,
             "options": [
                 {
+                    "option_key": "crank_to_15l",
+                    "label": "เร่งเกจวัดอัตราการไหลขึ้นไปสูงสุด 15 L/min เพื่อให้ยาออกมากขึ้น",
+                    "is_correct": False,
+                },
+                {
                     "option_key": "check_tubing_and_cup_orientation",
                     "label": "ตรวจการเชื่อมต่อของสายนำก๊าซที่เกจและก้นกระเปาะว่าหลวมหรือไม่ ตรวจดูว่ามีแกน baffle ด้านในหรือไม่ และตรวจว่ากระเปาะตั้งตรงหรือไม่",
                     "is_correct": True,
                 },
                 {
-                    "option_key": "give_oral_tablet",
-                    "label": "ทิ้งชุดพ่นยานี้แล้วเปลี่ยนไปให้ยารับประทาน Salbutamol ชนิดเม็ดแทน",
+                    "option_key": "check_liquid_below_baffle",
+                    "label": "ตรวจดูว่ายาพ่นอยู่ในตำแหน่งใต้แกน baffle หรือไม่",
                     "is_correct": False,
                 },
                 {
-                    "option_key": "crank_to_15l",
-                    "label": "เร่งเกจวัดอัตราการไหลขึ้นไปสูงสุด 15 L/min ทันทีโดยไม่ตรวจดูข้อต่อ",
+                    "option_key": "give_oral_tablet",
+                    "label": "ทิ้งชุดพ่นยานี้แล้วเปลี่ยนไปให้ยารับประทาน Salbutamol ชนิดเม็ดแทน",
                     "is_correct": False,
                 },
             ],
@@ -314,6 +319,22 @@ def seed_nebulization_mission() -> dict[str, int]:
                     "message": "คุณตรวจพบว่าสายนำก๊าซเสียบเข้ากับช่องเกจไม่แน่น เมื่อกดเสียบให้แน่นหนา ละอองฝอยยาก็พุ่งออกมาอย่างสม่ำเสมอทันที!",
                     "clinical_rationale": "ข้อต่อที่หลวมทำให้ก๊าซรั่วออกก่อนที่จะสร้างแรงดันสุญญากาศแบบ venturi ภายในกระเปาะยา",
                     "patient_effect_json": {"distress_delta": -1},
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "crank_to_15l",
+                    "feedback_type": "caution",
+                    "title": "อันตรายจากการเพิ่มอัตราการไหลสูงเกินไป (Excessive Gas Flow Hazard)",
+                    "message": "การเร่งเกจวัดอัตราการไหลขึ้นไป 15 L/min ไม่ได้แก้ปัญหาสายหลวมหรือกระเปาะเอียง และอัตราการไหลที่สูงเกิน 8 L/min จะทำให้ละอองยามีขนาดเล็กเกินไป พ่นยาหมดเร็วเกินควร และยาพุ่งกระทบผนังคอหอยมากกว่าลงสู่ปอด",
+                    "hint": "อัตราการไหลที่เหมาะสมสำหรับ Jet Nebulizer คือ 6–8 L/min ให้ตรวจดูข้อต่อสายนำก๊าซและแกน baffle ก่อน",
+                },
+                {
+                    "trigger_type": "on_hazard",
+                    "trigger_key": "check_liquid_below_baffle",
+                    "feedback_type": "guidance",
+                    "title": "การประเมินยังไม่ตรงจุดเริ่มต้นของปัญหา (Incomplete Troubleshooting)",
+                    "message": "แกน Baffle เป็นเดือยที่อยู่เหนือหัวพ่นเจ็ทเพื่อกระจายละอองยา ไม่ใช่จุดกำหนดระดับยา หากไม่มีละอองยาออกมาเลย ต้องตรวจดูสายนำก๊าซว่าต่อแน่นหรือไม่ มีแกน Baffle ใส่ไว้หรือไม่ และกระเปาะตั้งตรงหรือไม่เป็นลำดับแรก",
+                    "hint": "ตรวจการเชื่อมต่อของสายนำก๊าซที่เกจและก้นกระเปาะยาให้แน่นหนา",
                 },
                 {
                     "trigger_type": "on_hazard",
