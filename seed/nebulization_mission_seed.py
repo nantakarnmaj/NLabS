@@ -113,11 +113,11 @@ def seed_nebulization_mission() -> dict[str, int]:
             "display_order": 2,
             "options": [
                 {"option_key": "expiratory_wheezing", "label": "ฟังปอดได้ยินเสียงหวีดช่วงหายใจออกทั้งสองข้าง (Bilateral expiratory wheezing)", "is_correct": True},
+                {"option_key": "high_fever_39c", "label": "มีไข้สูง 39.5°C", "is_correct": False},
                 {"option_key": "chest_tightness", "label": "รู้สึกแน่นหน้าอก หายใจไม่อิ่ม และเหนื่อยหอบ", "is_correct": True},
+                {"option_key": "bounding_peripheral_pulses", "label": "ชีพจรส่วนปลายเต้นแรงผิดปกติ (+4)", "is_correct": False},
                 {"option_key": "tachypnea_rr24", "label": "หายใจเร็ว (อัตราการหายใจ 24 ครั้ง/นาที ร่วมกับช่วงหายใจออกยาวนานขึ้น)", "is_correct": True},
                 {"option_key": "mild_hypoxemia_93", "label": "SpO₂ 93% ในอากาศห้อง บ่งชี้ถึงภาวะการระบายอากาศและการไหลเวียนเลือดไม่สมดุล (V/Q mismatch)", "is_correct": True},
-                {"option_key": "high_fever_39c", "label": "มีไข้สูง 39.5°C", "is_correct": False},
-                {"option_key": "bounding_peripheral_pulses", "label": "ชีพจรส่วนปลายเต้นแรงผิดปกติ (+4)", "is_correct": False},
             ],
             "feedback_rules": [
                 {
@@ -252,10 +252,10 @@ def seed_nebulization_mission() -> dict[str, int]:
             "display_order": 5,
             "options": [
                 {"option_key": "high_fowlers_position", "label": "จัดคุณมะลินั่งในท่าศีรษะสูง High Fowler's (นั่งตัวตรง 60–90°)", "is_correct": True},
-                {"option_key": "flow_rate_6_to_8_lpm", "label": "ปรับอัตราการไหลของออกซิเจน/อากาศที่เกจ flowmeter ที่ 6–8 L/min เพื่อสร้างละอองฝอยละเอียด (1–5 µm)", "is_correct": True},
-                {"option_key": "keep_cup_vertical", "label": "แนะนำให้ผู้ป่วยถือก้นกระเปาะพ่นยาให้ตั้งตรงตลอดระยะเวลาการพ่นยา", "is_correct": True},
                 {"option_key": "flow_rate_2_lpm", "label": "ตั้งอัตราการไหลเพียง 2 L/min เพื่อประหยัดออกซิเจน", "is_correct": False},
+                {"option_key": "keep_cup_vertical", "label": "แนะนำให้ผู้ป่วยถือก้นกระเปาะพ่นยาให้ตั้งตรงตลอดระยะเวลาการพ่นยา", "is_correct": True},
                 {"option_key": "supine_flat_bed", "label": "จัดผู้ป่วยนอนราบศีรษะราบ 0° ขณะพ่นยา", "is_correct": False},
+                {"option_key": "flow_rate_6_to_8_lpm", "label": "ปรับอัตราการไหลของออกซิเจน/อากาศที่เกจ flowmeter ที่ 6–8 L/min เพื่อสร้างละอองฝอยละเอียด (1–5 µm)", "is_correct": True},
             ],
             "feedback_rules": [
                 {
@@ -418,10 +418,10 @@ def seed_nebulization_mission() -> dict[str, int]:
             "display_order": 9,
             "options": [
                 {"option_key": "reauscultate_bilateral_lungs", "label": "ฟังเสียงหายใจในปอดทั้งสองข้างเพื่อประเมินการตอบสนองต่อยาขยายหลอดลม", "is_correct": True},
+                {"option_key": "soak_cup_in_bleach", "label": "แช่กระเปาะพ่นยาในน้ำยาฟอกขาว (Bleach) เข้มข้นหลังใช้งาน", "is_correct": False},
                 {"option_key": "rinse_mouth_spit", "label": "ให้ผู้ป่วยบ้วนปากด้วยน้ำสะอาดแล้วบ้วนทิ้งเพื่อลดการดูดซึมยาตกค้างในช่องปาก", "is_correct": True},
                 {"option_key": "rinse_and_air_dry_cup", "label": "ถอดแยกชิ้นส่วนกระเปาะยา ล้างด้วยน้ำกลั่น/น้ำปลอดเชื้อ และคว่ำผึ่งลมบนผ้าสะอาด", "is_correct": True},
                 {"option_key": "document_response", "label": "บันทึกสัญญาณชีพ เสียงปอดก่อนและหลังพ่นยา ขนาดยาที่ให้ และการตอบสนองของผู้ป่วย", "is_correct": True},
-                {"option_key": "soak_cup_in_bleach", "label": "แช่กระเปาะพ่นยาในน้ำยาฟอกขาว (Bleach) เข้มข้นหลังใช้งาน", "is_correct": False},
             ],
             "feedback_rules": [
                 {
