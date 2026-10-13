@@ -133,27 +133,33 @@
 
           <div class="space-y-2.5" id="picture-cards-container">
             {% for item in active_basket.equipment_items %}
-            <div
-              class="pic-card group p-2.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 active:scale-98 transition-all cursor-pointer shadow-2xs select-none relative overflow-hidden"
+            <button
+              type="button"
+              class="pic-card group w-full text-left p-2.5 sm:p-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer shadow-xs select-none relative overflow-hidden focus:outline-none"
               data-item-id="{{ item.id }}"
               onclick="selectPictureCard('{{ item.id }}')"
             >
-              <div class="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
+              <div class="pointer-events-none select-none relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
                 <img
-                  src="{{ url_for('static', filename=item.image) }}?v=20261013f"
+                  src="{{ url_for('static', filename=item.image) }}?v=20261013g"
                   alt="{{ item.name_th }}"
-                  class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-200"
+                  class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-200 pointer-events-none select-none"
+                  draggable="false"
                   loading="lazy"
                 >
-                <div class="pic-selected-badge hidden absolute inset-0 bg-sky-600/20 backdrop-blur-2xs border-2 border-sky-500 flex items-center justify-center">
-                  <span class="px-3 py-1 rounded-full bg-sky-600 text-white font-bold text-xs shadow-xs animate-pulse">เลือกรูปนี้แล้ว 👆</span>
+                <div class="pic-selected-badge hidden pointer-events-none absolute inset-0 bg-sky-600/15 backdrop-blur-2xs flex flex-col items-center justify-center gap-1.5 p-2">
+                  <div class="px-3 py-1.5 rounded-full bg-[#0284c7] text-white font-black text-xs shadow-md flex items-center gap-1 animate-pulse">
+                    <span>✓</span>
+                    <span>เลือกรูปนี้แล้ว</span>
+                  </div>
+                  <span class="text-3xs font-bold text-sky-900 bg-white/90 px-2 py-0.5 rounded-md shadow-2xs">👉 แตะชื่อที่ตรงกันทางขวา</span>
                 </div>
-                <div class="pic-paired-badge hidden absolute inset-0 bg-emerald-600/80 backdrop-blur-2xs flex flex-col items-center justify-center text-white">
+                <div class="pic-paired-badge hidden pointer-events-none absolute inset-0 bg-emerald-600/85 backdrop-blur-2xs flex flex-col items-center justify-center text-white">
                   <span class="text-2xl">✓</span>
                   <span class="text-xs font-bold">จับคู่ถูกต้อง</span>
                 </div>
               </div>
-            </div>
+            </button>
             {% endfor %}
           </div>
         </div>
@@ -169,21 +175,25 @@
 
           <div class="space-y-2.5" id="name-cards-container">
             {% for item in shuffled_name_items %}
-            <div
-              class="name-card p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 active:scale-98 transition-all cursor-pointer shadow-2xs select-none flex flex-col justify-center min-h-[96px]"
+            <button
+              type="button"
+              class="name-card group w-full text-left p-3 sm:p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer shadow-xs select-none flex flex-col justify-center min-h-[96px] focus:outline-none relative overflow-hidden"
               data-item-id="{{ item.id }}"
               onclick="selectNameCard('{{ item.id }}')"
             >
-              <div class="font-bold text-sm text-[#14213D] leading-snug pointer-events-none">
+              <div class="font-bold text-sm text-[#14213D] leading-snug pointer-events-none select-none">
                 {{ item.name_th }}
               </div>
-              <div class="text-xs text-[#1296DB] font-mono mt-0.5 pointer-events-none">
+              <div class="text-xs text-[#1296DB] font-mono mt-0.5 pointer-events-none select-none">
                 {{ item.name_en }}
               </div>
-              <div class="name-paired-status hidden mt-2 text-2xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md inline-flex items-center gap-1 self-start">
+              <div class="name-selected-status hidden pointer-events-none mt-2 text-2xs font-bold text-sky-800 bg-sky-100 px-2.5 py-0.5 rounded-md inline-flex items-center gap-1 self-start animate-pulse">
+                <span>✓ เลือกชื่อนี้แล้ว</span>
+              </div>
+              <div class="name-paired-status hidden pointer-events-none mt-2 text-2xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md inline-flex items-center gap-1 self-start">
                 <span>✓ จับคู่สำเร็จ</span>
               </div>
-            </div>
+            </button>
             {% endfor %}
           </div>
         </div>
@@ -334,41 +344,84 @@
   function selectPictureCard(itemId) {
     if (pairedItemIds.has(itemId)) return;
 
+    // Toggle off if tapping the already selected picture
+    if (selectedPictureId === itemId) {
+      clearSelection('picture');
+      updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
+      return;
+    }
+
     // Deselect previous picture
     document.querySelectorAll('.pic-card').forEach(card => {
       card.classList.remove('is-selected');
+      card.removeAttribute('data-selected');
     });
 
     selectedPictureId = itemId;
     const card = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
     if (card) {
       card.classList.add('is-selected');
+      card.setAttribute('data-selected', 'true');
     }
 
     const item = catalogData[itemId];
-    updateStatusHint(`📸 คุณเลือกรูป: <strong>${item ? item.name_th : itemId}</strong> แล้ว → <span class="text-[#0284c7] font-bold">ต่อไปให้แตะที่ป้ายชื่อทางขวา</span>`);
-    checkMatchAttempt();
+    const itemName = item ? item.name_th : itemId;
+
+    if (!selectedNameId) {
+      updateStatusHint(`📸 คุณเลือกรูป: <strong class="text-sky-700">${itemName}</strong> แล้ว (กรอบสีฟ้าค้าง) 👉 <span class="text-[#0284c7] font-bold">แตะเลือกชื่ออุปกรณ์ทางขวา</span> ที่ตรงกัน`);
+    } else {
+      checkMatchAttempt();
+    }
   }
 
   function selectNameCard(itemId) {
     if (pairedItemIds.has(itemId)) return;
 
+    // Toggle off if tapping the already selected name
+    if (selectedNameId === itemId) {
+      clearSelection('name');
+      updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
+      return;
+    }
+
     // Deselect previous name card
     document.querySelectorAll('.name-card').forEach(card => {
       card.classList.remove('is-selected');
+      card.removeAttribute('data-selected');
     });
 
     selectedNameId = itemId;
     const card = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
     if (card) {
       card.classList.add('is-selected');
+      card.setAttribute('data-selected', 'true');
     }
 
     const item = catalogData[itemId];
+    const itemName = item ? item.name_th : itemId;
+
     if (!selectedPictureId) {
-      updateStatusHint(`🏷️ คุณเลือกชื่อ: <strong>${item ? item.name_th : itemId}</strong> แล้ว → <span class="text-[#0284c7] font-bold">ต่อไปให้แตะรูปภาพทางซ้าย</span>`);
+      updateStatusHint(`🏷️ คุณเลือกชื่อ: <strong class="text-sky-700">${itemName}</strong> แล้ว (กรอบสีฟ้าค้าง) 👉 <span class="text-[#0284c7] font-bold">แตะเลือกรูปถ่ายทางซ้าย</span> ที่ตรงกัน`);
+    } else {
+      checkMatchAttempt();
     }
-    checkMatchAttempt();
+  }
+
+  function clearSelection(type) {
+    if (type === 'picture' || !type) {
+      selectedPictureId = null;
+      document.querySelectorAll('.pic-card').forEach(card => {
+        card.classList.remove('is-selected');
+        card.removeAttribute('data-selected');
+      });
+    }
+    if (type === 'name' || !type) {
+      selectedNameId = null;
+      document.querySelectorAll('.name-card').forEach(card => {
+        card.classList.remove('is-selected');
+        card.removeAttribute('data-selected');
+      });
+    }
   }
 
   function checkMatchAttempt() {
@@ -391,6 +444,7 @@
     const picCard = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
     if (picCard) {
       picCard.classList.remove('is-selected');
+      picCard.removeAttribute('data-selected');
       picCard.classList.add('is-paired');
     }
 
@@ -398,6 +452,7 @@
     const nameCard = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
     if (nameCard) {
       nameCard.classList.remove('is-selected');
+      nameCard.removeAttribute('data-selected');
       nameCard.classList.add('is-paired');
     }
 
@@ -407,31 +462,57 @@
     // Reset current selection
     selectedPictureId = null;
     selectedNameId = null;
+
+    updateRemainingCounters();
     updateStatusHint(`✨ ยอดเยี่ยม! จับคู่ <strong>${item.name_th}</strong> สำเร็จ! กดหยิบใส่ตะกร้าได้เลย`);
   }
 
   function handleFailedMatch() {
-    const hint = document.getElementById('pairing-status-hint');
-    if (hint) {
-      hint.innerHTML = `<span class="text-rose-600 font-bold">❌ ยังไม่ถูกต้อง</span> ลองสังเกตรูปร่างหรือชื่ออุปกรณ์ใหม่อีกครั้ง`;
-    }
+    const wrongPicId = selectedPictureId;
+    const wrongNameId = selectedNameId;
 
-    // Shake and flash red
-    const nameCard = document.querySelector(`.name-card[data-item-id="${selectedNameId}"]`);
+    const picCard = document.querySelector(`.pic-card[data-item-id="${wrongPicId}"]`);
+    const nameCard = document.querySelector(`.name-card[data-item-id="${wrongNameId}"]`);
+
+    updateStatusHint(`<span class="text-rose-600 font-bold">❌ ยังไม่ถูกต้อง</span> รูปร่างของรูปภาพและชื่ออุปกรณ์ยังไม่ตรงกัน ลองใหม่อีกครั้งครับ`);
+
+    // Shake and flash red on BOTH cards
+    if (picCard) {
+      picCard.classList.add('animate-shake');
+      picCard.style.borderColor = '#f43f5e';
+      picCard.style.boxShadow = '0 0 0 4px rgba(244, 63, 94, 0.45)';
+    }
     if (nameCard) {
       nameCard.classList.add('animate-shake');
       nameCard.style.borderColor = '#f43f5e';
-      nameCard.style.boxShadow = '0 0 0 4px rgba(244, 63, 94, 0.4)';
-      setTimeout(() => {
-        nameCard.classList.remove('animate-shake');
-        nameCard.style.borderColor = '#e2e8f0';
-        nameCard.style.backgroundColor = '#ffffff';
-        nameCard.style.boxShadow = 'none';
-        nameCard.style.transform = 'none';
-      }, 700);
+      nameCard.style.boxShadow = '0 0 0 4px rgba(244, 63, 94, 0.45)';
     }
 
-    selectedNameId = null;
+    setTimeout(() => {
+      if (picCard) {
+        picCard.classList.remove('animate-shake', 'is-selected');
+        picCard.removeAttribute('data-selected');
+        picCard.style.borderColor = '';
+        picCard.style.boxShadow = '';
+      }
+      if (nameCard) {
+        nameCard.classList.remove('animate-shake', 'is-selected');
+        nameCard.removeAttribute('data-selected');
+        nameCard.style.borderColor = '';
+        nameCard.style.boxShadow = '';
+      }
+      selectedPictureId = null;
+      selectedNameId = null;
+    }, 700);
+  }
+
+  function updateRemainingCounters() {
+    const totalItems = document.querySelectorAll('.pic-card').length;
+    const remaining = totalItems - pairedItemIds.size;
+    const picLabel = document.getElementById('pic-remaining-label');
+    const nameLabel = document.getElementById('name-remaining-label');
+    if (picLabel) picLabel.textContent = `เหลือ ${remaining} ภาพ`;
+    if (nameLabel) nameLabel.textContent = `เหลือ ${remaining} รายการ`;
   }
 
   function addToStagingShelf(item) {
@@ -614,32 +695,54 @@
     animation: shake 0.5s ease-in-out;
   }
 
+  /* Touch and interaction optimizations */
+  .pic-card, .name-card {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   /* Infallible selection highlight styles */
-  .pic-card.is-selected {
+  .pic-card.is-selected,
+  .pic-card[data-selected="true"] {
     border-color: #0284c7 !important;
     background-color: #f0f9ff !important;
-    box-shadow: 0 0 0 4px #38bdf8, 0 4px 14px rgba(2, 132, 199, 0.35) !important;
-    transform: scale(1.02) !important;
+    box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
+    transform: translateY(-2px) !important;
+    z-index: 10;
   }
-  .pic-card.is-selected .pic-selected-badge {
+  .pic-card.is-selected .pic-selected-badge,
+  .pic-card[data-selected="true"] .pic-selected-badge {
     display: flex !important;
   }
 
-  .name-card.is-selected {
+  .name-card.is-selected,
+  .name-card[data-selected="true"] {
     border-color: #0284c7 !important;
     background-color: #f0f9ff !important;
-    box-shadow: 0 0 0 4px #38bdf8, 0 4px 14px rgba(2, 132, 199, 0.35) !important;
-    transform: scale(1.02) !important;
+    box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
+    transform: translateY(-2px) !important;
+    z-index: 10;
+  }
+  .name-card.is-selected .name-selected-status,
+  .name-card[data-selected="true"] .name-selected-status {
+    display: inline-flex !important;
   }
 
+  /* Paired State */
   .pic-card.is-paired, .name-card.is-paired {
     border-color: #10b981 !important;
     background-color: #ecfdf5 !important;
     pointer-events: none !important;
-    opacity: 0.8 !important;
+    cursor: default !important;
+    opacity: 0.75 !important;
+    box-shadow: none !important;
+    transform: none !important;
   }
   .pic-card.is-paired .pic-paired-badge, .name-card.is-paired .name-paired-status {
     display: flex !important;
+  }
+  .pic-card.is-paired .pic-selected-badge, .name-card.is-paired .name-selected-status {
+    display: none !important;
   }
 </style>
 {% endblock %}
