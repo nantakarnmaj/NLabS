@@ -4,7 +4,7 @@
 
 {% block head %}
 <script src="{{ url_for('static', filename='js/sortable.min.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/game.js') }}?v=20261013_sec_v4" defer></script>
+<script src="{{ url_for('static', filename='js/game.js') }}?v=20261013_rhonchi_v5" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -101,9 +101,9 @@
       <!-- Breath Sounds & Secretions -->
       <div class="bg-[#0F172A] p-3 rounded-xl border border-slate-700/80 shadow-inner text-left flex flex-col justify-between">
         <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">ทางเดินหายใจ / เสมหะ</div>
-        <div id="monitor-breath-sound" class="text-sm font-bold text-slate-100 mt-0.5 truncate">
+        <div id="monitor-breath-sound" class="text-sm font-bold text-slate-100 mt-0.5 truncate" title="ฟังปอดได้ยินเสียง Rhonchi">
           {% set bs = (ps.breath_sound or '')|string %}
-          {% if bs == 'coarse_rhonchi' or 'เดือด' in bs or 'rhonchi' in bs|lower or 'เสมหะมาก' in bs %}เสมหะมาก (Rhonchi)
+          {% if bs == 'coarse_rhonchi' or 'เดือด' in bs or 'rhonchi' in bs|lower or 'เสมหะมาก' in bs %}ฟังปอดได้ยินเสียง Rhonchi
           {% elif bs == 'expiratory_wheezing' %}เสียงหวีด (Expiratory Wheezes)
           {% elif bs == 'bilateral_wheezes_and_rhonchi' %}เสียงหวีด & เสมหะ (Wheezes & Rhonchi)
           {% elif bs == 'bilateral_basal_crackles' %}เสียงกรอบแกรบ (Basal Crackles)

@@ -31,8 +31,8 @@
   function enforceClinicalTerminology() {
     if (monitorBreathSound) {
       const current = monitorBreathSound.textContent || '';
-      if (current.includes('เดือด') || current.toLowerCase().includes('coarse rhonchi')) {
-        monitorBreathSound.textContent = 'เสมหะมาก (Rhonchi)';
+      if (current.includes('เดือด') || current.includes('เสมหะมาก') || current.toLowerCase().includes('coarse rhonchi')) {
+        monitorBreathSound.textContent = 'ฟังปอดได้ยินเสียง Rhonchi';
       }
     }
     if (monitorSecretions) {
@@ -128,8 +128,8 @@
     if (monitorBreathSound && vitals.breath_sound !== undefined) {
       const bsRaw = String(vitals.breath_sound || '');
       const bsMap = {
-        'coarse_rhonchi': 'เสมหะมาก (Rhonchi)',
-        'rhonchi': 'เสมหะมาก (Rhonchi)',
+        'coarse_rhonchi': 'ฟังปอดได้ยินเสียง Rhonchi',
+        'rhonchi': 'ฟังปอดได้ยินเสียง Rhonchi',
         'expiratory_wheezing': 'เสียงหวีด (Expiratory Wheezes)',
         'bilateral_wheezes_and_rhonchi': 'เสียงหวีด & เสมหะ (Wheezes & Rhonchi)',
         'bilateral_basal_crackles': 'เสียงกรอบแกรบ (Basal Crackles)',
@@ -139,7 +139,7 @@
       let text = bsMap[vitals.breath_sound];
       if (!text) {
         if (bsRaw.includes('เดือด') || bsRaw.toLowerCase().includes('rhonchi') || bsRaw.includes('เสมหะมาก')) {
-          text = 'เสมหะมาก (Rhonchi)';
+          text = 'ฟังปอดได้ยินเสียง Rhonchi';
         } else if (bsRaw.toLowerCase().includes('clear')) {
           text = 'เสียงปอดโปร่งดี (Clear)';
         } else {
