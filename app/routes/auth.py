@@ -258,7 +258,7 @@ def standard_login():
     # 2. Faculty / Instructor (Password: Nsmu+09)
     elif role == UserRole.FACULTY.value:
         if password not in ["Nsmu+09", "password123"]:
-            flash("รหัสผ่านอาจารย์ไม่ถูกต้อง (รูปแบบรหัสผ่าน: Nsmu+09)", "error")
+            flash("รหัสผ่านอาจารย์ไม่ถูกต้อง โปรดตรวจสอบรหัสผ่าน", "error")
             return redirect(url_for("auth.login"))
 
     # 3. Student (Password: Nsmu+b followed by first 2 digits of username, e.g. 6809001 -> Nsmu+b68)
@@ -269,7 +269,7 @@ def standard_login():
             cohort = match.group(0)
             expected_student_pass = f"Nsmu+b{cohort}"
             if password not in [expected_student_pass, "password123", "anypassword"]:
-                flash(f"รหัสผ่านนักศึกษาไม่ถูกต้อง (รูปแบบรหัสผ่าน: Nsmu+b{cohort})", "error")
+                flash("รหัสผ่านนักศึกษาไม่ถูกต้อง โปรดตรวจสอบรหัสผ่าน", "error")
                 return redirect(url_for("auth.login"))
 
 

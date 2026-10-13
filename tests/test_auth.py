@@ -192,7 +192,7 @@ def test_faculty_and_student_custom_password_rules(client, app):
     )
     assert res_std_fail.status_code == 200
     assert "รหัสผ่านนักศึกษาไม่ถูกต้อง" in res_std_fail.get_data(as_text=True)
-    assert "Nsmu+b68" in res_std_fail.get_data(as_text=True)
+    assert "Nsmu+b68" not in res_std_fail.get_data(as_text=True)
 
     # Student 6809001 with Nsmu+b68 succeeds
     res_std_ok = client.post(
