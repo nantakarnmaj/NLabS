@@ -274,24 +274,18 @@ def standard_login():
             flash("รหัสผ่านอาจารย์ไม่ถูกต้อง โปรดตรวจสอบรหัสผ่าน", "error")
             return redirect(url_for("auth.login"))
 
-    # 3. Student (Password: Nsmu+b followed by first 2 digits of username, e.g. 6809001 -> Nsmu+b68)
+    # 3. Student (Password: NSMU+b followed by first 2 digits of username, e.g. 6809001 -> NSMU+b68)
     elif role == UserRole.STUDENT.value:
         u_clean = username.split("@")[0].strip()
         match = re.search(r"\d{2}", u_clean)
         cohort = match.group(0) if match else "68"
-        expected_student_pass = f"Nsmu+b{cohort}"
+        expected_student_pass = f"NSMU+b{cohort}"
         student_allowed = {
-            expected_student_pass.lower(),
             f"nsmu+b{cohort}".lower(),
-            "nsmu+b",
             "password123",
             "anypassword",
-            "123456",
-            "password",
-            u_clean.lower(),
-            "nsmu+09",
         }
-        if pass_lower not in student_allowed and password.strip() not in [expected_student_pass, "Nsmu+b"]:
+        if pass_lower not in student_allowed and password.strip() not in [expected_student_pass, f"Nsmu+b{cohort}"]:
             flash("รหัสผ่านนักศึกษาไม่ถูกต้อง โปรดตรวจสอบรหัสผ่าน", "error")
             return redirect(url_for("auth.login"))
 
