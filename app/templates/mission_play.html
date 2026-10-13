@@ -785,7 +785,7 @@
             {{ correct_pressure.option_key if correct_pressure else '80-120' }} mmHg
           </div>
           <p class="text-xs text-emerald-800 font-semibold">ค่าแรงดูดของระบบดูดเสมหะติดผนัง (Wall Suction) ที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
-          <p class="text-2xs text-slate-500">💡 หมายเหตุ: หากเป็นเครื่องดูดเสมหะแบบเคลื่อนที่ (Portable Suction) โดยทั่วไปจะใช้แรงดูด 10–15 inHg (ประมาณ 80–120 mmHg ขึ้นกับชนิดเครื่อง)</p>
+          <p class="text-2xs text-slate-500">💡 หมายเหตุ: หากเป็นเครื่องดูดเสมหะแบบเคลื่อนที่ (Portable Suction) โดยทั่วไปจะใช้แรงดูด 10–15 kPa (ประมาณ 80–120 mmHg ขึ้นกับชนิดเครื่องและคู่มือผู้ผลิต)</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {% for option in current_activity.options %}
@@ -807,7 +807,7 @@
             {{ current_activity.options[0].option_key }} mmHg
           </div>
           <p class="text-xs text-[#64748B]">เลือกการปรับตั้งค่าแรงดูดของระบบดูดเสมหะติดผนัง (Wall Suction) ที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
-          <p class="text-2xs text-slate-500">💡 หมายเหตุ: หากเป็นเครื่องดูดเสมหะแบบเคลื่อนที่ (Portable Suction) มักปรับตั้งค่าแรงดูดต่างจากระบบท่อติดผนัง</p>
+          <p class="text-2xs text-slate-500">💡 หมายเหตุ: หากเป็นเครื่องดูดเสมหะแบบเคลื่อนที่ (Portable Suction) โดยทั่วไปจะใช้แรงดูด 10–15 kPa (ประมาณ 80–120 mmHg ขึ้นกับชนิดเครื่องและคู่มือผู้ผลิต)</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
