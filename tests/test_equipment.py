@@ -13,7 +13,7 @@ def test_equipment_station_page_renders_successfully(client):
     html = res.get_data(as_text=True)
 
     assert "ห้องเตรียมอุปกรณ์หัตถการ" in html
-    assert "ตะกร้าที่ 1: หัตถการให้ออกซิเจน" in html
+    assert "ตะกร้าที่ 1: หัตถการดูดเสมหะ" in html
     assert "ตะกร้าเตรียมอุปกรณ์หัตถการ" in html
     assert "รูปถ่ายอุปกรณ์จริง" in html
 

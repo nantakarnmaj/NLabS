@@ -26,9 +26,9 @@ equipment_bp = Blueprint("equipment", __name__, url_prefix="/equipment-station")
 def station_index():
     """Render the clinical equipment matching and basket preparation station."""
     session = get_current_session()
-    basket_id = request.args.get("basket", "oxygen").lower()
+    basket_id = request.args.get("basket", "suction").lower()
     if basket_id not in PROCEDURE_BASKETS:
-        basket_id = "oxygen"
+        basket_id = "suction"
 
     import random
 

@@ -41,7 +41,7 @@
       <div class="flex items-start justify-between gap-2 mb-2">
         <div class="flex items-center gap-2">
           <span class="text-xl">
-            {% if b_id == 'oxygen' %}🫁{% elif b_id == 'nebulization' %}💨{% else %}🔬{% endif %}
+            {% if b_id == 'suction' %}🔬{% elif b_id == 'oxygen' %}🫁{% else %}💨{% endif %}
           </span>
           <span class="font-mono font-bold text-xs uppercase px-2 py-0.5 rounded-md" style="{% if is_active %}background-color: rgba(255,255,255,0.25) !important; color: #ffffff !important;{% else %}background-color: #E0F2FE !important; color: #0369A1 !important;{% endif %}">
             {{ b_data.room_name }}
@@ -308,7 +308,7 @@
         ปรับแต่งตะกร้าอีกครั้ง
       </button>
 
-      {% set next_basket = 'nebulization' if active_basket_id == 'oxygen' else ('suction' if active_basket_id == 'nebulization' else 'oxygen') %}
+      {% set next_basket = 'oxygen' if active_basket_id == 'suction' else ('nebulization' if active_basket_id == 'oxygen' else 'suction') %}
       <a
         id="btn-next-basket"
         href="{{ url_for('equipment.station_index', basket=next_basket) }}"

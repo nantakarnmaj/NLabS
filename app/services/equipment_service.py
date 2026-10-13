@@ -127,11 +127,34 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
     },
 }
 
-# Procedure Basket Configurations
+# Procedure Basket Configurations (Ordered by Room: 501 -> 502 -> 503)
 PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
+    "suction": {
+        "id": "suction",
+        "title": "ตะกร้าที่ 1: หัตถการดูดเสมหะ (Airway Suctioning)",
+        "room_ref": "501",
+        "room_name": "Room 501 (คุณสมชาย)",
+        "badge_name": "Suction Pack Master",
+        "description": "จัดเตรียมอุปกรณ์ดูดเสมหะผ่าน Suction Wall (ถุงมือและสายอยู่ใน Suction Set แล้ว ไม่ต้องยกเครื่องดูดเสมหะ)",
+        "target_procedure": "การดูดเสมหะทางท่อหลอดลมคอผ่าน Wall Suction (Tracheostomy Tube Suctioning)",
+        "required_item_ids": [
+            "suction_set",
+            "sterile_water",
+            "gauze_pads",
+            "pulse_oximeter",
+            "stethoscope",
+        ],
+        "distractor_item_ids": [
+            "suction_machine",
+            "suction_bottle",
+            "nasal_cannula",
+            "nebulizer_chamber",
+        ],
+        "clinical_tips": "การดูดเสมหะผ่าน Wall Suction มีเครื่องและขวดรองรับเสมหะข้างเตียงแล้ว ถุงมือสเตอร์ไรด์บรรจุใน Suction Set แล้ว สิ่งที่ต้องจัดใส่ตะกร้าคือ ชุดดูดเสมหะ (Suction Set), น้ำกลั่นสเตอร์ไรด์ล้างสาย, ผ้าก๊อซ, Pulse Oximeter และ Stethoscope เพื่อประเมินเสียงปอดและ SpO2",
+    },
     "oxygen": {
         "id": "oxygen",
-        "title": "ตะกร้าที่ 1: หัตถการให้ออกซิเจน (Oxygen Therapy)",
+        "title": "ตะกร้าที่ 2: หัตถการให้ออกซิเจน (Oxygen Therapy)",
         "room_ref": "502",
         "room_name": "Room 502 (คุณมาลี)",
         "badge_name": "Oxygen Pack Master",
@@ -153,7 +176,7 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
     },
     "nebulization": {
         "id": "nebulization",
-        "title": "ตะกร้าที่ 2: หัตถการพ่นยาละอองฝอย (Nebulization Therapy)",
+        "title": "ตะกร้าที่ 3: หัตถการพ่นยาละอองฝอย (Nebulization Therapy)",
         "room_ref": "503",
         "room_name": "Room 503 (คุณมะลิ)",
         "badge_name": "Nebulizer Pack Master",
@@ -174,29 +197,6 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
             "simple_mask",
         ],
         "clinical_tips": "การพ่นยาละอองฝอยผ่าน Oxygen wall ต้องใช้ Oxygen Flowmeter ปรับอัตราไหล 6-8 ลิตร/นาที ต่อสายตรงเข้ากระเปาะพ่นยา (ไม่ผ่านกระบอกน้ำให้ความชื้น) และประเมินเสียงปอดและ SpO2 ทั้งก่อน-หลังพ่นยาเสมอ",
-    },
-    "suction": {
-        "id": "suction",
-        "title": "ตะกร้าที่ 3: หัตถการดูดเสมหะ (Airway Suctioning)",
-        "room_ref": "501",
-        "room_name": "Room 501 (คุณสมชาย)",
-        "badge_name": "Suction Pack Master",
-        "description": "จัดเตรียมอุปกรณ์ดูดเสมหะผ่าน Suction Wall (ถุงมือและสายอยู่ใน Suction Set แล้ว ไม่ต้องยกเครื่องดูดเสมหะ)",
-        "target_procedure": "การดูดเสมหะทางท่อหลอดลมคอผ่าน Wall Suction (Tracheostomy Tube Suctioning)",
-        "required_item_ids": [
-            "suction_set",
-            "sterile_water",
-            "gauze_pads",
-            "pulse_oximeter",
-            "stethoscope",
-        ],
-        "distractor_item_ids": [
-            "suction_machine",
-            "suction_bottle",
-            "nasal_cannula",
-            "nebulizer_chamber",
-        ],
-        "clinical_tips": "การดูดเสมหะผ่าน Wall Suction มีเครื่องและขวดรองรับเสมหะข้างเตียงแล้ว ถุงมือสเตอร์ไรด์บรรจุใน Suction Set แล้ว สิ่งที่ต้องจัดใส่ตะกร้าคือ ชุดดูดเสมหะ (Suction Set), น้ำกลั่นสเตอร์ไรด์ล้างสาย, ผ้าก๊อซ, Pulse Oximeter และ Stethoscope เพื่อประเมินเสียงปอดและ SpO2",
     },
 }
 
