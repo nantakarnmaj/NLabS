@@ -66,7 +66,7 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "id": "nebulizer_chamber",
         "name_th": "กระเปาะพ่นยาละอองฝอย",
         "name_en": "Nebulizer Chamber / Cup",
-        "image": "images/equipment/jet_nebulizer.png",
+        "image": "images/equipment/nebulizer_chamber.png",
         "description": "กระเปาะบรรจุยาพ่นขยายหลอดลมพร้อมแผ่นกระจายละอองฝอย เพื่อสร้างละอองอนุภาคขนาดเล็กเข้าสู่ปอด",
     },
     "nebulizer_mask": {
