@@ -112,11 +112,11 @@ def seed_rescue_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 2,
             "options": [
-                {"option_key": "severe_hypoxemia_87", "label": "ภาวะพร่องออกซิเจนรุนแรง (SpO₂ 87% ในอากาศห้อง ร่วมกับริมฝีปากเขียวคล้ำ)", "is_correct": True},
+                {"option_key": "severe_hypoxemia_87", "label": "ภาวะพร่องออกซิเจนรุนแรง (SpO₂ Room air 87% ร่วมกับริมฝีปากเขียวคล้ำ)", "is_correct": True},
                 {"option_key": "tachypnea_and_retractions", "label": "หายใจเร็วมาก (30 ครั้ง/นาที) หายใจใช้กล้ามเนื้อช่วย และนั่งในท่า Tripod", "is_correct": True},
                 {"option_key": "copious_secretions_weak_cough", "label": "เสมหะเหนียวข้นปริมาณมากในลำคอ ร่วมกับแรงไออ่อนแรงและเหนื่อยล้า", "is_correct": True},
-                {"option_key": "bilateral_wheezes_and_rhonchi", "label": "ฟังปอดได้ยินทั้งเสียงหวีด (Wheezes) และเสียงเสมหะเดือด (Rhonchi) ทั้งสองข้าง", "is_correct": True},
-                {"option_key": "clear_vesicular_breath_sounds", "label": "เสียงหายใจโปร่งปกติ (Clear vesicular sounds) ทั่วทั้งสองข้างของปอด", "is_correct": False},
+                {"option_key": "bilateral_wheezes_and_rhonchi", "label": "ฟังปอดได้ยินทั้งเสียงหวีด Wheezes และเสียง Rhonchi ทั้งสองข้าง", "is_correct": True},
+                {"option_key": "clear_vesicular_breath_sounds", "label": "เสียงหายใจปกติ ทั่วทั้งสองข้างของปอด", "is_correct": False},
                 {"option_key": "adequate_spontaneous_clearance", "label": "ผู้ป่วยสามารถไอขับเสมหะออกได้เองอย่างมีประสิทธิภาพและสุขสบาย", "is_correct": False},
             ],
             "feedback_rules": [
