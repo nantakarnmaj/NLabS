@@ -87,7 +87,7 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "id": "medication_vial",
         "name_th": "ยาพ่นขยายหลอดลมตามคำสั่งแพทย์",
         "name_en": "Bronchodilator Nebule (Ventolin/Berodual)",
-        "image": "images/equipment/medication_vial.svg",
+        "image": "images/equipment/bronchodilator_nebule.jpg",
         "description": "ยาพ่นขยายหลอดลมหลอดพลาสติกเดี่ยว (Single dose) ตรวจสอบตามหลัก 10 Rights ก่อนเปิดใช้",
     },
     "stethoscope": {
