@@ -38,7 +38,7 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "id": "o2_flowmeter",
         "name_th": "เกจปรับอัตราไหลของออกซิเจน",
         "name_en": "Oxygen Flowmeter",
-        "image": "images/equipment/ward_o2_meter.png",
+        "image": "images/equipment/o2_flowmeter.png",
         "description": "มาตรวัดควบคุมอัตราการไหลของก๊าซออกซิเจน (หน่วยเป็นลิตรต่อนาที: L/min)",
     },
     "humidifier_bottle": {
