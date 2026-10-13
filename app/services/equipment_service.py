@@ -194,7 +194,6 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
             "air_compressor",
             "suction_machine",
             "humidifier_bottle",
-            "simple_mask",
         ],
         "clinical_tips": "การพ่นยาละอองฝอยผ่าน Oxygen wall ต้องใช้ Oxygen Flowmeter ปรับอัตราไหล 6-8 ลิตร/นาที ต่อสายตรงเข้ากระเปาะพ่นยา (ไม่ผ่านกระบอกน้ำให้ความชื้น) และประเมินเสียงปอดและ SpO2 ทั้งก่อน-หลังพ่นยาเสมอ",
     },
