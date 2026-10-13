@@ -135,13 +135,13 @@
             {% for item in active_basket.equipment_items %}
             <button
               type="button"
-              class="pic-card group w-full text-left p-2.5 sm:p-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer shadow-xs select-none relative overflow-hidden focus:outline-none"
+              class="pic-card group w-full text-left p-2.5 sm:p-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 hover:ring-2 hover:ring-sky-200 hover:shadow-md transition-all cursor-pointer shadow-xs select-none relative overflow-hidden focus:outline-none"
               data-item-id="{{ item.id }}"
               onclick="selectPictureCard('{{ item.id }}')"
             >
               <div class="pointer-events-none select-none relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
                 <img
-                  src="{{ url_for('static', filename=item.image) }}?v=20261013g"
+                  src="{{ url_for('static', filename=item.image) }}?v=20261014a"
                   alt="{{ item.name_th }}"
                   class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-200 pointer-events-none select-none"
                   draggable="false"
@@ -154,9 +154,10 @@
                   </div>
                   <span class="text-3xs font-bold text-sky-900 bg-white/90 px-2 py-0.5 rounded-md shadow-2xs">👉 แตะชื่อที่ตรงกันทางขวา</span>
                 </div>
-                <div class="pic-paired-badge hidden pointer-events-none absolute inset-0 bg-emerald-600/85 backdrop-blur-2xs flex flex-col items-center justify-center text-white">
+                <div class="pic-paired-badge hidden pointer-events-none absolute inset-0 bg-emerald-600/90 backdrop-blur-2xs flex flex-col items-center justify-center text-white p-2 text-center gap-1">
                   <span class="text-2xl">✓</span>
-                  <span class="text-xs font-bold">จับคู่ถูกต้อง</span>
+                  <span class="text-xs font-black">จับคู่ถูกต้อง!</span>
+                  <span class="text-3xs bg-white text-emerald-800 font-bold px-2 py-0.5 rounded-full shadow-2xs">🧺 บรรจุในตะกร้าแล้ว</span>
                 </div>
               </div>
             </button>
@@ -177,7 +178,7 @@
             {% for item in shuffled_name_items %}
             <button
               type="button"
-              class="name-card group w-full text-left p-3 sm:p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-slate-300 hover:shadow-md transition-all cursor-pointer shadow-xs select-none flex flex-col justify-center min-h-[96px] focus:outline-none relative overflow-hidden"
+              class="name-card group w-full text-left p-3 sm:p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 hover:ring-2 hover:ring-sky-200 hover:shadow-md transition-all cursor-pointer shadow-xs select-none flex flex-col justify-center min-h-[96px] focus:outline-none relative overflow-hidden"
               data-item-id="{{ item.id }}"
               onclick="selectNameCard('{{ item.id }}')"
             >
@@ -188,10 +189,10 @@
                 {{ item.name_en }}
               </div>
               <div class="name-selected-status hidden pointer-events-none mt-2 text-2xs font-bold text-sky-800 bg-sky-100 px-2.5 py-0.5 rounded-md inline-flex items-center gap-1 self-start animate-pulse">
-                <span>✓ เลือกชื่อนี้แล้ว</span>
+                <span>✓ เลือกชื่อนี้แล้ว 👉 แตะรูปทางซ้าย</span>
               </div>
-              <div class="name-paired-status hidden pointer-events-none mt-2 text-2xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md inline-flex items-center gap-1 self-start">
-                <span>✓ จับคู่สำเร็จ</span>
+              <div class="name-paired-status hidden pointer-events-none mt-2 text-2xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-md inline-flex items-center gap-1 self-start">
+                <span>✓ จับคู่สำเร็จ (อยู่ในตะกร้า 🧺)</span>
               </div>
             </button>
             {% endfor %}
@@ -342,7 +343,10 @@
   let packedInBasketIds = new Set();
 
   function selectPictureCard(itemId) {
-    if (pairedItemIds.has(itemId)) return;
+    if (pairedItemIds.has(itemId)) {
+      toggleBasketPacking(itemId);
+      return;
+    }
 
     // Toggle off if tapping the already selected picture
     if (selectedPictureId === itemId) {
@@ -368,14 +372,17 @@
     const itemName = item ? item.name_th : itemId;
 
     if (!selectedNameId) {
-      updateStatusHint(`📸 คุณเลือกรูป: <strong class="text-sky-700">${itemName}</strong> แล้ว (กรอบสีฟ้าค้าง) 👉 <span class="text-[#0284c7] font-bold">แตะเลือกชื่ออุปกรณ์ทางขวา</span> ที่ตรงกัน`);
+      updateStatusHint(`📸 คุณเลือกรูป: <strong class="text-sky-700">${itemName}</strong> แล้ว (กรอบสีฟ้า) 👉 <span class="text-[#0284c7] font-bold">แตะเลือกชื่ออุปกรณ์ทางขวา</span> ที่ตรงกัน`);
     } else {
       checkMatchAttempt();
     }
   }
 
   function selectNameCard(itemId) {
-    if (pairedItemIds.has(itemId)) return;
+    if (pairedItemIds.has(itemId)) {
+      toggleBasketPacking(itemId);
+      return;
+    }
 
     // Toggle off if tapping the already selected name
     if (selectedNameId === itemId) {
@@ -401,9 +408,47 @@
     const itemName = item ? item.name_th : itemId;
 
     if (!selectedPictureId) {
-      updateStatusHint(`🏷️ คุณเลือกชื่อ: <strong class="text-sky-700">${itemName}</strong> แล้ว (กรอบสีฟ้าค้าง) 👉 <span class="text-[#0284c7] font-bold">แตะเลือกรูปถ่ายทางซ้าย</span> ที่ตรงกัน`);
+      updateStatusHint(`🏷️ คุณเลือกชื่อ: <strong class="text-sky-700">${itemName}</strong> แล้ว (กรอบสีฟ้า) 👉 <span class="text-[#0284c7] font-bold">แตะเลือกรูปถ่ายทางซ้าย</span> ที่ตรงกัน`);
     } else {
       checkMatchAttempt();
+    }
+  }
+
+  function toggleBasketPacking(itemId) {
+    const item = catalogData[itemId];
+    const itemName = item ? item.name_th : itemId;
+    if (packedInBasketIds.has(itemId)) {
+      removeFromBasket(itemId);
+      updateStatusHint(`🧺 นำ <strong>${itemName}</strong> ออกจากตะกร้าหัตถการแล้ว (แตะที่การ์ดอีกครั้งเพื่อนำกลับใส่ตะกร้า)`);
+    } else {
+      packItemIntoBasket(itemId);
+      updateStatusHint(`🧺 นำ <strong>${itemName}</strong> ใส่ตะกร้าหัตถการเรียบร้อยแล้ว!`);
+    }
+    updatePairedCardBadges(itemId);
+  }
+
+  function updatePairedCardBadges(itemId) {
+    const isPacked = packedInBasketIds.has(itemId);
+    const picCard = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
+    const nameCard = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
+    
+    if (picCard) {
+      const badge = picCard.querySelector('.pic-paired-badge');
+      if (badge) {
+        badge.innerHTML = `
+          <span class="text-2xl">${isPacked ? '✓' : '📦'}</span>
+          <span class="text-xs font-black">จับคู่ถูกต้อง!</span>
+          <span class="text-3xs ${isPacked ? 'bg-white text-emerald-800' : 'bg-amber-100 text-amber-900'} font-bold px-2 py-0.5 rounded-full shadow-2xs">
+            ${isPacked ? '🧺 บรรจุในตะกร้าแล้ว' : '📦 อยู่นอกตะกร้า (แตะใส่)'}
+          </span>
+        `;
+      }
+    }
+    if (nameCard) {
+      const status = nameCard.querySelector('.name-paired-status');
+      if (status) {
+        status.innerHTML = `<span>✓ จับคู่สำเร็จ (${isPacked ? 'อยู่ในตะกร้า 🧺' : 'อยู่นอกตะกร้า 📦'})</span>`;
+      }
     }
   }
 
@@ -456,15 +501,16 @@
       nameCard.classList.add('is-paired');
     }
 
-    // Add to Staging Shelf (Ready to pack)
-    addToStagingShelf(item);
+    // Auto-pack directly into procedure basket!
+    packItemIntoBasket(itemId);
+    updatePairedCardBadges(itemId);
 
     // Reset current selection
     selectedPictureId = null;
     selectedNameId = null;
 
     updateRemainingCounters();
-    updateStatusHint(`✨ ยอดเยี่ยม! จับคู่ <strong>${item.name_th}</strong> สำเร็จ! กดหยิบใส่ตะกร้าได้เลย`);
+    updateStatusHint(`🎉 <strong class="text-emerald-700">ยอดเยี่ยม! จับคู่ ${item.name_th} ถูกต้อง!</strong> บรรจุใส่ตะกร้าหัตถการเรียบร้อยแล้ว 🧺`);
   }
 
   function handleFailedMatch() {
@@ -473,15 +519,11 @@
 
     const picCard = document.querySelector(`.pic-card[data-item-id="${wrongPicId}"]`);
     const nameCard = document.querySelector(`.name-card[data-item-id="${wrongNameId}"]`);
+    const picItem = catalogData[wrongPicId];
 
-    updateStatusHint(`<span class="text-rose-600 font-bold">❌ ยังไม่ถูกต้อง</span> รูปร่างของรูปภาพและชื่ออุปกรณ์ยังไม่ตรงกัน ลองใหม่อีกครั้งครับ`);
+    updateStatusHint(`❌ <span class="text-rose-600 font-bold">ยังไม่ตรงกัน:</span> คุณกำลังเลือกรูป <strong>${picItem ? picItem.name_th : ''}</strong> (กรอบฟ้า) 👉 แตะเลือกชื่ออุปกรณ์ที่ตรงกันอีกครั้ง`);
 
-    // Shake and flash red on BOTH cards
-    if (picCard) {
-      picCard.classList.add('animate-shake');
-      picCard.style.borderColor = '#f43f5e';
-      picCard.style.boxShadow = '0 0 0 4px rgba(244, 63, 94, 0.45)';
-    }
+    // Shake and flash red ONLY on the wrong name card!
     if (nameCard) {
       nameCard.classList.add('animate-shake');
       nameCard.style.borderColor = '#f43f5e';
@@ -489,21 +531,15 @@
     }
 
     setTimeout(() => {
-      if (picCard) {
-        picCard.classList.remove('animate-shake', 'is-selected');
-        picCard.removeAttribute('data-selected');
-        picCard.style.borderColor = '';
-        picCard.style.boxShadow = '';
-      }
       if (nameCard) {
         nameCard.classList.remove('animate-shake', 'is-selected');
         nameCard.removeAttribute('data-selected');
         nameCard.style.borderColor = '';
         nameCard.style.boxShadow = '';
       }
-      selectedPictureId = null;
+      // Keep selectedPictureId active so picture stays selected in blue!
       selectedNameId = null;
-    }, 700);
+    }, 600);
   }
 
   function updateRemainingCounters() {
@@ -600,6 +636,7 @@
     // Return to staging
     addToStagingShelf(item);
     updateBasketCounters();
+    updatePairedCardBadges(itemId);
   }
 
   function updateBasketCounters() {
@@ -732,11 +769,13 @@
   .pic-card.is-paired, .name-card.is-paired {
     border-color: #10b981 !important;
     background-color: #ecfdf5 !important;
-    pointer-events: none !important;
-    cursor: default !important;
-    opacity: 0.75 !important;
-    box-shadow: none !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 0 3px #10b981 !important;
     transform: none !important;
+  }
+  .pic-card.is-paired:hover, .name-card.is-paired:hover {
+    box-shadow: 0 0 0 4px #059669, 0 6px 16px rgba(16, 185, 129, 0.3) !important;
   }
   .pic-card.is-paired .pic-paired-badge, .name-card.is-paired .name-paired-status {
     display: flex !important;
