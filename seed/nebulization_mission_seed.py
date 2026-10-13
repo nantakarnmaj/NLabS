@@ -84,7 +84,7 @@ def seed_nebulization_mission() -> dict[str, int]:
         {
             "activity_type": "intro",
             "title": "พบคุณมะลิ (Meet Ms. Mali) & ข้อมูลผู้ป่วย",
-            "instruction": "ทบทวนข้อมูลผู้ป่วย บริบททางคลินิก และสัญญาณชีพระดับฐานบนจอมอนิเตอร์ข้างเตียง",
+            "instruction": "ทบทวนข้อมูลผู้ป่วย บริบททางคลินิก และสัญญาณชีพบนจอมอนิเตอร์ข้างเตียง",
             "content_json": {
                 "patient_name": "นางมะลิ (Ms. Mali, 55 ปี)",
                 "context": (

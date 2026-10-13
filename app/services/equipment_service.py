@@ -142,7 +142,7 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
         "room_ref": "502",
         "room_name": "Room 502 (คุณมาลี)",
         "badge_name": "Oxygen Pack Master",
-        "description": "จัดเตรียมอุปกรณ์สำหรับการให้ออกซิเจนทางจมูก (Nasal Cannula) และประเมินสัญญาณชีพให้พร้อมใช้งาน",
+        "description": "จัดเตรียมอุปกรณ์สำหรับการให้ออกซิเจนทางจมูก (Nasal Cannula) และประเมินสัญญาณชีพ",
         "target_procedure": "การให้ออกซิเจนทางจมูก (Nasal Cannula) อัตรา 2-4 ลิตร/นาที",
         "required_item_ids": [
             "nasal_cannula",

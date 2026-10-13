@@ -86,7 +86,7 @@ def seed_suction_mission() -> dict[str, int]:
             "display_order": 1,
             "activity_type": "intro",
             "title": "พบคุณสมชาย (Meet Mr. Somchai) & ข้อมูลผู้ป่วย",
-            "instruction": "ทักทายผู้ป่วย แนะนำตนเอง อธิบายวัตถุประสงค์ของการดูดเสมหะให้ผู้ป่วยทราบ และประเมินสัญญาณชีพระดับฐาน",
+            "instruction": "ทักทายผู้ป่วย แนะนำตนเอง อธิบายวัตถุประสงค์ของการดูดเสมหะให้ผู้ป่วยทราบ และประเมินสัญญาณชีพ",
             "content_json": {
                 "patient_name": "นายสมชาย (Mr. Somchai)",
                 "age": 68,

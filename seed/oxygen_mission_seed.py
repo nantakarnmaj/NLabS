@@ -83,7 +83,7 @@ def seed_oxygen_mission() -> dict[str, int]:
         {
             "activity_type": "intro",
             "title": "พบคุณอนงค์ (Meet Ms. Anong) & ข้อมูลผู้ป่วย",
-            "instruction": "ทบทวนข้อมูลผู้ป่วย บริบททางคลินิก และสัญญาณชีพระดับฐานบนจอมอนิเตอร์ข้างเตียง",
+            "instruction": "ทบทวนข้อมูลผู้ป่วย บริบททางคลินิก และสัญญาณชีพบนจอมอนิเตอร์ข้างเตียง",
             "content_json": {
                 "patient_name": "นางอนงค์ (Ms. Anong, 62 ปี)",
                 "context": (
