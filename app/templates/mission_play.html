@@ -779,12 +779,13 @@
       {% if is_review_mode %}
       <div class="space-y-4">
         <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
-          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดูดของเครื่องดูดเสมหะ (Suction Gauge)</span>
+          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดูดของระบบท่อสุญญากาศติดผนัง (Wall Suction Gauge)</span>
           {% set correct_pressure = current_activity.options | selectattr('is_correct', 'equalto', true) | first %}
           <div class="text-3xl sm:text-4xl font-black font-mono text-emerald-600">
             {{ correct_pressure.option_key if correct_pressure else '80-120' }} mmHg
           </div>
-          <p class="text-xs text-emerald-800 font-semibold">ค่าแรงดูดของเครื่องดูดเสมหะที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
+          <p class="text-xs text-emerald-800 font-semibold">ค่าแรงดูดของระบบดูดเสมหะติดผนัง (Wall Suction) ที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
+          <p class="text-2xs text-slate-500">💡 หมายเหตุ: หากเป็นเครื่องดูดเสมหะแบบเคลื่อนที่ (Portable Suction) โดยทั่วไปจะใช้แรงดูด 10–15 inHg (ประมาณ 80–120 mmHg ขึ้นกับชนิดเครื่อง)</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {% for option in current_activity.options %}
@@ -801,11 +802,12 @@
       {% else %}
       <div class="space-y-4">
         <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
-          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดูดของเครื่องดูดเสมหะ (Suction Gauge)</span>
+          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดูดของระบบท่อสุญญากาศติดผนัง (Wall Suction Gauge)</span>
           <div class="text-3xl sm:text-4xl font-black font-mono text-[#1296DB]" id="pressure-display">
             {{ current_activity.options[0].option_key }} mmHg
           </div>
-          <p class="text-xs text-[#64748B]">เลือกการปรับตั้งค่าแรงดูดที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
+          <p class="text-xs text-[#64748B]">เลือกการปรับตั้งค่าแรงดูดของระบบดูดเสมหะติดผนัง (Wall Suction) ที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
+          <p class="text-2xs text-slate-500">💡 หมายเหตุ: หากเป็นเครื่องดูดเสมหะแบบเคลื่อนที่ (Portable Suction) มักปรับตั้งค่าแรงดูดต่างจากระบบท่อติดผนัง</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
