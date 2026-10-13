@@ -109,7 +109,7 @@
 
     if (monitorBreathSound && vitals.breath_sound !== undefined) {
       const bsMap = {
-        'coarse_rhonchi': 'เสมหะเดือด (Coarse Rhonchi)',
+        'coarse_rhonchi': 'เสมหะมาก (Rhonchi)',
         'expiratory_wheezing': 'เสียงหวีด (Expiratory Wheezes)',
         'bilateral_wheezes_and_rhonchi': 'เสียงหวีด & เสมหะ (Wheezes & Rhonchi)',
         'bilateral_basal_crackles': 'เสียงกรอบแกรบ (Basal Crackles)',
