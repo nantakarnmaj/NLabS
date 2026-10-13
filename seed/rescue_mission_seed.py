@@ -363,7 +363,7 @@ def seed_rescue_mission() -> dict[str, int]:
                 "image_overlay_text": "SpO₂ 85% | HR 122 bpm",
                 "event_header": "ภาวะวิกฤตเฉียบพลันข้างเตียง (Acute Bedside Deterioration)",
                 "urgent_message": "พ่นยาไปได้ 3 นาที สัญญาณเตือนบนมอนิเตอร์ดังขึ้นฉุกเฉิน: ค่า O2 saturation (SpO2) ร่วงลงเหลือ <span class='text-red-600 font-black text-xl sm:text-2xl px-2 py-0.5 rounded-md bg-red-50 border border-red-300 underline decoration-red-500'>85%</span> ชีพจรพุ่งขึ้นเป็น <span class='text-amber-600 font-black text-xl px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-300'>122 ครั้ง/นาที</span> และคุณประเสริฐเริ่มมีอาการกระสับกระส่าย มือพยายามเอื้อมดึงหน้ากากออก!",
-                "scenario_description": "คุณประเสริฐมีอาการหายใจหอบลึก อัตราการหายใจ 32 ครั้ง/นาที ตาเบิกกว้างด้วยความกลัว สมองเริ่มขาดออกซิเจน (Air hunger) และเสมหะที่เหนียวข้นอาจหลุดมาขวางกั้นทางเดินหายใจ",
+                "scenario_description": "คุณประเสริฐมีอาการหายใจหอบลึก อัตราการหายใจ 32 ครั้ง/นาที",
                 "challenge_question": "ในฐานะพยาบาลผู้รับผิดชอบ การปฏิบัติการพยาบาลที่ถูกต้องและต้องทำทันทีเป็น \"ลำดับแรก (Immediate Action)\" คืออะไร?",
                 "telemetry": {
                     "spo2": "85%",
