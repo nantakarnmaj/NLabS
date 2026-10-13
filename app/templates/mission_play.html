@@ -158,7 +158,7 @@
       {% set display_badge_desc = 'มีส่วนร่วมในการเลือกอุปกรณ์ให้ออกซิเจนและปรับอัตราการไหลอย่างปลอดภัย' %}
     {% elif '501' in mission.room_number|string %}
       {% set display_badge_name = 'ผู้พิชิตทางเดินหายใจ (Airway Explorer)' %}
-      {% set display_badge_desc = 'มีส่วนร่วมในการประเมินและดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ' %}
+      {% set display_badge_desc = 'มีส่วนร่วมในการประเมินและดูดเสมหะทางท่อหลอดลมคอแบบปลอดเชื้อ' %}
     {% else %}
       {% set display_badge_name = 'พร้อมรับมือภาวะวิกฤต (Respiratory Ready)' %}
       {% set display_badge_desc = 'บูรณาการทักษะการพยาบาลระบบหายใจช่วยชีวิตผู้ป่วยในภาวะวิกฤตฉุกเฉิน' %}
@@ -234,7 +234,7 @@
     data-is-review="{{ 'true' if is_review_mode else 'false' }}"
     data-room-number="{{ mission.room_number }}"
     data-badge-name="{% if badge %}{{ badge.name }}{% elif '503' in mission.room_number|string %}ยอดนักพ่นยา (Nebulizer Navigator){% elif '502' in mission.room_number|string %}ผู้พิทักษ์ออกซิเจน (Oxygen Guardian){% elif '501' in mission.room_number|string %}ผู้พิชิตทางเดินหายใจ (Airway Explorer){% elif '504' in mission.room_number|string %}พร้อมรับมือภาวะวิกฤต (Respiratory Ready){% else %}เหรียญรางวัลเกียรติยศประจำห้อง{% endif %}"
-    data-badge-desc="{% if badge %}{{ badge.description }}{% elif '503' in mission.room_number|string %}มีส่วนร่วมในการตรวจสอบยาขยายหลอดลม การประกอบชุดพ่นยา การสอนผู้ป่วย และการเฝ้าระวังผลข้างเคียง{% elif '502' in mission.room_number|string %}มีส่วนร่วมในการเลือกอุปกรณ์ให้ออกซิเจนและปรับอัตราการไหลอย่างปลอดภัย{% elif '501' in mission.room_number|string %}มีส่วนร่วมในการประเมินและดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ{% elif '504' in mission.room_number|string %}บูรณาการทักษะการพยาบาลระบบหายใจช่วยชีวิตผู้ป่วยในภาวะวิกฤตฉุกเฉิน{% else %}ตราสัญลักษณ์การมีส่วนร่วมในภารกิจ{% endif %}"
+    data-badge-desc="{% if badge %}{{ badge.description }}{% elif '503' in mission.room_number|string %}มีส่วนร่วมในการตรวจสอบยาขยายหลอดลม การประกอบชุดพ่นยา การสอนผู้ป่วย และการเฝ้าระวังผลข้างเคียง{% elif '502' in mission.room_number|string %}มีส่วนร่วมในการเลือกอุปกรณ์ให้ออกซิเจนและปรับอัตราการไหลอย่างปลอดภัย{% elif '501' in mission.room_number|string %}มีส่วนร่วมในการประเมินและดูดเสมหะทางท่อหลอดลมคอแบบปลอดเชื้อ{% elif '504' in mission.room_number|string %}บูรณาการทักษะการพยาบาลระบบหายใจช่วยชีวิตผู้ป่วยในภาวะวิกฤตฉุกเฉิน{% else %}ตราสัญลักษณ์การมีส่วนร่วมในภารกิจ{% endif %}"
     data-badge-icon="{% if badge %}{{ badge.icon }}{% elif '503' in mission.room_number|string %}nebulizer{% elif '502' in mission.room_number|string %}oxygen{% elif '501' in mission.room_number|string %}airway{% elif '504' in mission.room_number|string %}rescue{% else %}airway{% endif %}"
     data-badge-img="{% if (badge and badge.icon == 'oxygen') or '502' in mission.room_number|string %}{{ url_for('static', filename='images/badges/oxygen-guardian.svg') }}?v=20261012{% elif (badge and badge.icon == 'airway') or '501' in mission.room_number|string %}{{ url_for('static', filename='images/badges/airway-explorer.svg') }}?v=20261012{% elif (badge and badge.icon == 'nebulizer') or '503' in mission.room_number|string %}{{ url_for('static', filename='images/badges/nebulizer-navigator.svg') }}?v=20261012{% elif (badge and badge.icon == 'rescue') or '504' in mission.room_number|string %}{{ url_for('static', filename='images/badges/respiratory-ready.svg') }}?v=20261012{% else %}{{ url_for('static', filename='images/badges/airway-explorer.svg') }}?v=20261012{% endif %}"
     class="space-y-5"
@@ -779,7 +779,7 @@
       {% if is_review_mode %}
       <div class="space-y-4">
         <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
-          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดันลบ (Suction Vacuum Gauge)</span>
+          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดูดของเครื่องดูดเสมหะ (Suction Gauge)</span>
           {% set correct_pressure = current_activity.options | selectattr('is_correct', 'equalto', true) | first %}
           <div class="text-3xl sm:text-4xl font-black font-mono text-emerald-600">
             {{ correct_pressure.option_key if correct_pressure else '80-120' }} mmHg
@@ -801,11 +801,11 @@
       {% else %}
       <div class="space-y-4">
         <div class="p-5 rounded-2xl bg-[#F5FAFF] border border-[#DCEAF7] text-center space-y-2">
-          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดันลบ (Suction Vacuum Gauge)</span>
+          <span class="text-xs font-bold text-[#64748B] uppercase tracking-wider block">เกจวัดแรงดูดของเครื่องดูดเสมหะ (Suction Gauge)</span>
           <div class="text-3xl sm:text-4xl font-black font-mono text-[#1296DB]" id="pressure-display">
             {{ current_activity.options[0].option_key }} mmHg
           </div>
-          <p class="text-xs text-[#64748B]">เลือกการปรับตั้งค่าแรงดันที่ปลอดภัยสำหรับผู้ป่วยใส่ท่อช่วยหายใจ</p>
+          <p class="text-xs text-[#64748B]">เลือกการปรับตั้งค่าแรงดูดที่ปลอดภัยสำหรับผู้ใหญ่ (100–120 mmHg)</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">

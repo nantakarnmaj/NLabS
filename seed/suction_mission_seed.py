@@ -195,10 +195,10 @@ def seed_suction_mission() -> dict[str, int]:
                     "trigger_type": "on_selection",
                     "trigger_key": "routine_saline_bolus",
                     "feedback_type": "caution",
-                    "title": "ไม่แนะนำให้หยดน้ำเกลือเข้าท่อเจาะคอเป็นกิจวัตร (Routine Saline Lavage Discouraged)",
-                    "message": "แนวปฏิบัติปัจจุบันไม่แนะนำให้หยดน้ำเกลือลงในท่อเจาะคอเป็นกิจวัตร",
+                    "title": "ไม่แนะนำให้หยดน้ำเกลือเข้าท่อหลอดลมคอเป็นกิจวัตร (Routine Saline Lavage Discouraged)",
+                    "message": "แนวปฏิบัติปัจจุบันไม่แนะนำให้หยดน้ำเกลือลงในท่อหลอดลมคอเป็นกิจวัตร",
                     "clinical_rationale": "น้ำเกลือไม่ช่วยละลายเสมหะอย่างแท้จริง แต่จะชะล้างคราบจุลชีพ (biofilm) ลงสู่ปอดส่วนลึก เพิ่มความเสี่ยงปอดอักเสบ",
-                    "hint": "เน้นการให้ออกซิเจนล่วงหน้าและการจัดท่าผู้ป่วย หลีกเลี่ยงการหยดน้ำเกลือลงท่อเจาะคอ",
+                    "hint": "เน้นการให้ออกซิเจนล่วงหน้าและการจัดท่าผู้ป่วย หลีกเลี่ยงการหยดน้ำเกลือลงท่อหลอดลมคอ",
                 },
             ],
         },
@@ -538,7 +538,7 @@ def seed_suction_mission() -> dict[str, int]:
         badge = Badge(
             slug="airway-explorer",
             name="ผู้พิชิตทางเดินหายใจ (Airway Explorer)",
-            description="มีส่วนร่วมในการประเมินและดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน",
+            description="มีส่วนร่วมในการประเมินและดูดเสมหะทางท่อหลอดลมคอแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน",
             icon="airway",
             mission_id=mission.id,
         )
@@ -546,7 +546,7 @@ def seed_suction_mission() -> dict[str, int]:
         logger.info("Created Badge 'ผู้พิชิตทางเดินหายใจ (Airway Explorer)'")
     else:
         badge.name = "ผู้พิชิตทางเดินหายใจ (Airway Explorer)"
-        badge.description = "มีส่วนร่วมในการประเมินและดูดเสมหะท่อเจาะคอแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน"
+        badge.description = "มีส่วนร่วมในการประเมินและดูดเสมหะทางท่อหลอดลมคอแบบปลอดเชื้อ จัดการความปลอดภัย และฟื้นฟูออกซิเจนฉุกเฉิน"
         badge.icon = "airway"
         badge.mission_id = mission.id
 
