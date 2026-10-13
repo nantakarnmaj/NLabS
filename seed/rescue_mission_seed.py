@@ -474,12 +474,12 @@ def seed_rescue_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 9,
             "options": [
-                {"option_key": "continuous_pulse_ox_and_telemetry", "label": "ติดเครื่องวัดออกซิเจนปลายนิ้วและคลื่นไฟฟ้าหัวใจต่อเนื่อง พร้อมตรวจนับอัตราการหายใจอย่างใกล้ชิด", "is_correct": True},
-                {"option_key": "discontinue_all_monitoring", "label": "ถอดเครื่องมอนิเตอร์ออกทั้งหมดเพราะ SpO₂ แตะ 95% แล้วและพ้นวิกฤตแล้ว", "is_correct": False},
-                {"option_key": "maintain_upright_fowlers", "label": "จัดท่านั่งศีรษะสูง (High Fowler's position) ต่อไป และตรวจดูหน้ากากออกซิเจนให้ครอบกระชับพอดี", "is_correct": True},
                 {"option_key": "adjust_to_flat_supine", "label": "ปรับเตียงให้นอนราบ (Supine position) เพื่อให้คุณประเสริฐได้นอนหลับพักผ่อนอย่างเต็มที่หลังผ่านความเหนื่อยล้า", "is_correct": False},
-                {"option_key": "frequent_lung_auscultation", "label": "ฟังเสียงปอดทั้งสองข้างทุก 30–60 นาทีเพื่อประเมินความโล่งของทางเดินหายใจและลมเข้าปอด", "is_correct": True},
+                {"option_key": "continuous_pulse_ox_and_telemetry", "label": "ติดเครื่องวัดออกซิเจนปลายนิ้วและคลื่นไฟฟ้าหัวใจต่อเนื่อง พร้อมตรวจนับอัตราการหายใจอย่างใกล้ชิด", "is_correct": True},
+                {"option_key": "maintain_upright_fowlers", "label": "จัดท่านั่งศีรษะสูง (High Fowler's position) ต่อไป และตรวจดูหน้ากากออกซิเจนให้ครอบกระชับพอดี", "is_correct": True},
                 {"option_key": "immediate_oral_water_intake", "label": "รีบให้ดื่มน้ำทันที 1 แก้วใหญ่ เพื่อแก้คอแห้งหลังพ่นยาและช่วยละลายเสมหะ", "is_correct": False},
+                {"option_key": "frequent_lung_auscultation", "label": "ฟังเสียงปอดทั้งสองข้างทุก 30–60 นาทีเพื่อประเมินความโล่งของทางเดินหายใจและลมเข้าปอด", "is_correct": True},
+                {"option_key": "discontinue_all_monitoring", "label": "ถอดเครื่องมอนิเตอร์ออกทั้งหมดเพราะ SpO₂ แตะ 95% แล้วและพ้นวิกฤตแล้ว", "is_correct": False},
                 {"option_key": "psychological_reassurance_family", "label": "พูดคุยปลอบโยนให้กำลังใจคุณประเสริฐอย่างต่อเนื่อง และอธิบายแผนการรักษาให้ครอบครัวเข้าใจ", "is_correct": True},
             ],
             "feedback_rules": [
