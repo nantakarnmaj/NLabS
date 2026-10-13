@@ -52,7 +52,7 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "id": "sterile_water",
         "name_th": "น้ำกลั่นสเตอร์ไรด์",
         "name_en": "Sterile Water for Inhalation / Flush",
-        "image": "images/equipment/sterile_water.svg",
+        "image": "images/equipment/sterile_water.png",
         "description": "น้ำกลั่นปราศจากเชื้อ ปราศจากสารไพโรเจน สำหรับเติมกระบอกความชื้นและล้างสายดูดเสมหะ",
     },
     "pulse_oximeter": {
