@@ -51,7 +51,7 @@ INITIAL_ROOMS = [
         "slug": "respiratory-rescue",
         "title": "กู้ชีพฉุกเฉินระบบหายใจ (Respiratory Rescue)",
         "subtitle": "ภารกิจบูรณาการภาวะวิกฤต (Integrated Emergency Mission)",
-        "description": "รับมือและกู้ชีพผู้ป่วยวิกฤตที่มีภาวะทรุดลงเฉียบพลัน จัดลำดับความสำคัญ ดูดเสมหะ พ่นยา และรายงานแพทย์ด้วย SBAR",
+        "description": "รับมือและกู้ชีพผู้ป่วยวิกฤตที่มีภาวะทรุดลงเฉียบพลัน จัดลำดับความสำคัญ ดูดเสมหะ พ่นยา และรายงานข้อมูลสรุปต่อพยาบาลหัวหน้าทีม",
         "icon": "rescue",
         "availability": "locked",
         "display_order": 4,
