@@ -32,28 +32,30 @@
   <!-- ================= PROCEDURE BASKET SELECTOR TABS ================= -->
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
     {% for b_id, b_data in baskets.items() %}
+    {% set is_active = (b_id == active_basket_id) %}
     <a
       href="{{ url_for('equipment.station_index', basket=b_id) }}"
-      class="p-4 rounded-2xl border transition-all text-left flex flex-col justify-between group shadow-2xs {{ 'bg-gradient-to-br from-sky-500 to-blue-600 text-white border-blue-600 shadow-md ring-2 ring-sky-300' if b_id == active_basket_id else 'bg-white hover:bg-sky-50/60 border-[#DCEAF7] text-[#14213D]' }}"
+      class="p-4 rounded-2xl border-2 transition-all text-left flex flex-col justify-between group shadow-sm hover:shadow-md"
+      style="{% if is_active %}background-color: #0284c7 !important; color: #ffffff !important; border-color: #0369a1 !important; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;{% else %}background-color: #ffffff !important; color: #14213D !important; border-color: #DCEAF7 !important;{% endif %}"
     >
       <div class="flex items-start justify-between gap-2 mb-2">
         <div class="flex items-center gap-2">
           <span class="text-xl">
             {% if b_id == 'oxygen' %}🫁{% elif b_id == 'nebulization' %}💨{% else %}🔬{% endif %}
           </span>
-          <span class="font-mono font-bold text-xs uppercase px-2 py-0.5 rounded-md {{ 'bg-white/20 text-white' if b_id == active_basket_id else 'bg-sky-100 text-[#1296DB]' }}">
+          <span class="font-mono font-bold text-xs uppercase px-2 py-0.5 rounded-md" style="{% if is_active %}background-color: rgba(255,255,255,0.25) !important; color: #ffffff !important;{% else %}background-color: #E0F2FE !important; color: #0369A1 !important;{% endif %}">
             {{ b_data.room_name }}
           </span>
         </div>
-        <span class="text-xs font-bold px-2 py-0.5 rounded-full {{ 'bg-white/25 text-white' if b_id == active_basket_id else 'bg-slate-100 text-slate-600' }}">
+        <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="{% if is_active %}background-color: rgba(255,255,255,0.25) !important; color: #ffffff !important;{% else %}background-color: #F1F5F9 !important; color: #475569 !important;{% endif %}">
           {{ b_data.required_item_ids|length }} ชิ้น
         </span>
       </div>
       <div>
-        <h3 class="font-black text-sm sm:text-base leading-snug {{ 'text-white' if b_id == active_basket_id else 'text-[#14213D] group-hover:text-[#1296DB]' }}">
+        <h3 class="font-black text-sm sm:text-base leading-snug" style="{% if is_active %}color: #ffffff !important;{% else %}color: #14213D !important;{% endif %}">
           {{ b_data.title }}
         </h3>
-        <p class="text-xs mt-1 line-clamp-1 {{ 'text-sky-100' if b_id == active_basket_id else 'text-slate-500' }}">
+        <p class="text-xs mt-1 line-clamp-1" style="{% if is_active %}color: #E0F2FE !important;{% else %}color: #64748B !important;{% endif %}">
           {{ b_data.target_procedure }}
         </p>
       </div>
@@ -85,27 +87,36 @@
   </div>
 
   <!-- ================= MAIN GAMEPLAY TWO-COLUMN WORKBENCH ================= -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 items-start">
 
     <!-- LEFT COLUMN: SHELF & MATCHING AREA (7 Cols) -->
-    <div class="lg:col-span-7 space-y-5">
+    <div class="md:col-span-7 space-y-5">
 
       <!-- INSTRUCTION STEP BAR -->
-      <div class="bg-white p-4 rounded-2xl border border-[#DCEAF7] shadow-xs flex items-center justify-between">
+      <div class="bg-white p-4 rounded-2xl border border-[#DCEAF7] shadow-xs flex items-center justify-between gap-2">
         <div class="flex items-center gap-3">
-          <span class="w-8 h-8 rounded-full bg-sky-100 text-[#1296DB] font-black text-sm flex items-center justify-center">1</span>
+          <span class="w-8 h-8 rounded-full bg-sky-100 text-[#1296DB] font-black text-sm flex items-center justify-center shrink-0">1</span>
           <div>
             <h3 class="text-sm font-black text-[#14213D]">ขั้นที่ 1: แตะจับคู่รูปภาพกับชื่ออุปกรณ์</h3>
             <p class="text-xs text-slate-500" id="pairing-status-hint">แตะเลือก <strong>รูปภาพ</strong> ก่อน แล้วแตะ <strong>ชื่อที่ตรงกัน</strong></p>
           </div>
         </div>
-        <button
-          type="button"
-          id="btn-reset-pairs"
-          class="text-xs font-bold text-slate-500 hover:text-rose-600 px-3 py-1.5 rounded-lg hover:bg-rose-50 transition"
-        >
-          รีเซ็ตการจับคู่
-        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          <a
+            href="#procedure-basket-card"
+            class="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition shadow-2xs"
+          >
+            <span>🧺 ดูตะกร้า</span>
+            <span class="px-1.5 py-0.2 rounded-full bg-indigo-600 text-white text-2xs" id="mobile-basket-badge">0/{{ active_basket.total_required }}</span>
+          </a>
+          <button
+            type="button"
+            id="btn-reset-pairs"
+            class="text-xs font-bold text-slate-500 hover:text-rose-600 px-3 py-1.5 rounded-lg hover:bg-rose-50 transition"
+          >
+            รีเซ็ต
+          </button>
+        </div>
       </div>
 
       <!-- MATCHING WORKSPACE (PICTURES VS NAMES) -->
@@ -182,10 +193,10 @@
     </div>
 
     <!-- RIGHT COLUMN: PROCEDURE TRAY / BASKET (5 Cols) -->
-    <div class="lg:col-span-5 space-y-5 sticky top-20">
+    <div class="md:col-span-5 space-y-5 md:sticky md:top-20">
 
       <!-- BASKET CONTAINER CARD -->
-      <div class="bg-white rounded-[24px] border-2 border-indigo-200 shadow-md p-5 sm:p-6 space-y-4">
+      <div id="procedure-basket-card" class="bg-white rounded-[24px] border-2 border-indigo-200 shadow-md p-5 sm:p-6 space-y-4">
 
         <div class="flex items-center justify-between pb-3 border-b border-indigo-100">
           <div class="flex items-center gap-2">
@@ -513,10 +524,12 @@
   function updateBasketCounters() {
     const counter = document.getElementById('basket-counter');
     const pill = document.getElementById('tray-count-pill');
+    const mobileBadge = document.getElementById('mobile-basket-badge');
     const count = packedInBasketIds.size;
 
     if (counter) counter.textContent = `${count} / ${totalRequired}`;
     if (pill) pill.textContent = `${count} รายการ`;
+    if (mobileBadge) mobileBadge.textContent = `${count}/${totalRequired}`;
   }
 
   function updateStatusHint(msg) {
