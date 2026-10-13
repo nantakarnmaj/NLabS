@@ -336,21 +336,13 @@
 
     // Deselect previous picture
     document.querySelectorAll('.pic-card').forEach(card => {
-      card.style.borderColor = '#e2e8f0';
-      card.style.boxShadow = 'none';
-      card.style.transform = 'none';
-      const badge = card.querySelector('.pic-selected-badge');
-      if (badge) badge.classList.add('hidden');
+      card.classList.remove('is-selected');
     });
 
     selectedPictureId = itemId;
     const card = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
     if (card) {
-      card.style.borderColor = '#0284c7';
-      card.style.boxShadow = '0 0 0 4px rgba(2, 132, 199, 0.45), 0 4px 12px rgba(2, 132, 199, 0.2)';
-      card.style.transform = 'scale(1.02)';
-      const badge = card.querySelector('.pic-selected-badge');
-      if (badge) badge.classList.remove('hidden');
+      card.classList.add('is-selected');
     }
 
     const item = catalogData[itemId];
@@ -363,19 +355,13 @@
 
     // Deselect previous name card
     document.querySelectorAll('.name-card').forEach(card => {
-      card.style.borderColor = '#e2e8f0';
-      card.style.backgroundColor = '#ffffff';
-      card.style.boxShadow = 'none';
-      card.style.transform = 'none';
+      card.classList.remove('is-selected');
     });
 
     selectedNameId = itemId;
     const card = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
     if (card) {
-      card.style.borderColor = '#0284c7';
-      card.style.backgroundColor = '#f0f9ff';
-      card.style.boxShadow = '0 0 0 4px rgba(2, 132, 199, 0.45), 0 4px 12px rgba(2, 132, 199, 0.2)';
-      card.style.transform = 'scale(1.02)';
+      card.classList.add('is-selected');
     }
 
     const item = catalogData[itemId];
@@ -404,28 +390,15 @@
     // Mark picture card as paired
     const picCard = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
     if (picCard) {
-      picCard.style.borderColor = '#10b981';
-      picCard.style.boxShadow = 'none';
-      picCard.style.transform = 'none';
-      const selBadge = picCard.querySelector('.pic-selected-badge');
-      if (selBadge) selBadge.classList.add('hidden');
-      const pairedBadge = picCard.querySelector('.pic-paired-badge');
-      if (pairedBadge) pairedBadge.classList.remove('hidden');
-      picCard.style.pointerEvents = 'none';
-      picCard.classList.add('opacity-75');
+      picCard.classList.remove('is-selected');
+      picCard.classList.add('is-paired');
     }
 
     // Mark name card as paired
     const nameCard = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
     if (nameCard) {
-      nameCard.style.borderColor = '#10b981';
-      nameCard.style.backgroundColor = '#ecfdf5';
-      nameCard.style.boxShadow = 'none';
-      nameCard.style.transform = 'none';
-      nameCard.classList.add('opacity-75');
-      const pairedStatus = nameCard.querySelector('.name-paired-status');
-      if (pairedStatus) pairedStatus.classList.remove('hidden');
-      nameCard.style.pointerEvents = 'none';
+      nameCard.classList.remove('is-selected');
+      nameCard.classList.add('is-paired');
     }
 
     // Add to Staging Shelf (Ready to pack)
@@ -639,6 +612,34 @@
   }
   .animate-shake {
     animation: shake 0.5s ease-in-out;
+  }
+
+  /* Infallible selection highlight styles */
+  .pic-card.is-selected {
+    border-color: #0284c7 !important;
+    background-color: #f0f9ff !important;
+    box-shadow: 0 0 0 4px #38bdf8, 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+    transform: scale(1.02) !important;
+  }
+  .pic-card.is-selected .pic-selected-badge {
+    display: flex !important;
+  }
+
+  .name-card.is-selected {
+    border-color: #0284c7 !important;
+    background-color: #f0f9ff !important;
+    box-shadow: 0 0 0 4px #38bdf8, 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+    transform: scale(1.02) !important;
+  }
+
+  .pic-card.is-paired, .name-card.is-paired {
+    border-color: #10b981 !important;
+    background-color: #ecfdf5 !important;
+    pointer-events: none !important;
+    opacity: 0.8 !important;
+  }
+  .pic-card.is-paired .pic-paired-badge, .name-card.is-paired .name-paired-status {
+    display: flex !important;
   }
 </style>
 {% endblock %}
