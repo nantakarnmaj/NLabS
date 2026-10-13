@@ -390,6 +390,7 @@
                 src="{{ url_for('static', filename=img_path) }}"
                 alt="{{ current_activity.content_json.image_alt or current_activity.title }}"
                 class="w-full h-52 sm:h-60 md:h-68 object-cover object-center transition duration-500 hover:scale-105"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_prasert.jpg') }}'"
               >
               <div class="absolute bottom-2.5 left-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-xs text-white text-xs font-mono flex items-center justify-between">
                 <span class="{{ 'text-amber-300' if theme_color == 'amber' else 'text-red-400' }} font-bold flex items-center gap-1.5">
@@ -461,7 +462,45 @@
           </div>
         </div>
         {% elif current_activity.instruction %}
-        <p class="text-sm text-[#64748B] mt-1.5 leading-relaxed">{{ current_activity.instruction }}</p>
+        <!-- PROMINENT CLINICAL QUESTION / SCENARIO CARD -->
+        <div class="mt-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-sky-50 via-blue-50/50 to-slate-50 border-2 border-[#B9E0F7] shadow-xs flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <!-- Patient Avatar / Bedside Context -->
+          <div class="relative shrink-0 flex items-center justify-center">
+            {% if scenario and scenario.patient_name %}
+              {% if '501' in mission.room_number|string or 'สมชาย' in scenario.patient_name %}
+                <img src="{{ url_for('static', filename='images/patients/patient_somchai.jpg') }}?v=20261013a" alt="{{ scenario.patient_name }}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-sky-300 shadow-xs" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_somchai.png') }}?v=20261013a'">
+              {% elif '502' in mission.room_number|string or 'อนงค์' in scenario.patient_name %}
+                <img src="{{ url_for('static', filename='images/patients/patient_anong.jpg') }}?v=20261013a" alt="{{ scenario.patient_name }}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-sky-300 shadow-xs" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_anong.png') }}?v=20261013a'">
+              {% elif '503' in mission.room_number|string or 'มะลิ' in scenario.patient_name %}
+                <img src="{{ url_for('static', filename='images/patients/patient_mali.jpg') }}?v=20261013a" alt="{{ scenario.patient_name }}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-sky-300 shadow-xs" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_mali.png') }}?v=20261013a'">
+              {% elif '504' in mission.room_number|string or 'ประเสริฐ' in scenario.patient_name %}
+                <img src="{{ url_for('static', filename='images/patients/patient_prasert.jpg') }}?v=20261013a" alt="{{ scenario.patient_name }}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-sky-300 shadow-xs" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_prasert.png') }}?v=20261013a'">
+              {% else %}
+                <div class="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-2xl font-bold shadow-xs">🩺</div>
+              {% endif %}
+            {% else %}
+              <div class="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-2xl font-bold shadow-xs">🩺</div>
+            {% endif %}
+            <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[10px] text-white font-bold" title="ผู้ป่วยในความดูแล">●</span>
+          </div>
+
+          <!-- Question Content & Badge -->
+          <div class="flex-grow space-y-1.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#1296DB] text-white shadow-2xs font-mono">
+                <span>📋</span> ข้อคำถามทางคลินิก (Clinical Challenge)
+              </span>
+              {% if scenario and scenario.patient_name %}
+              <span class="text-xs font-bold text-sky-900 bg-sky-100/90 px-2.5 py-0.5 rounded-full border border-sky-200">
+                ผู้ป่วย: {{ scenario.patient_name.split('(')[0].strip() }}
+              </span>
+              {% endif %}
+            </div>
+            <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug sm:leading-relaxed">
+              {{ current_activity.instruction }}
+            </p>
+          </div>
+        </div>
         {% endif %}
       </div>
 
@@ -686,9 +725,11 @@
       <!-- Activity Type 4: Decision & Troubleshooting -->
       {% elif current_activity.activity_type in ['decision', 'troubleshooting'] %}
 
-      <div class="space-y-1 mb-3 pt-1">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">การตัดสินใจทางการพยาบาล (Clinical Decision Action):</span>
-        <p class="text-xs text-slate-500">เลือกการปฏิบัติการพยาบาลที่คุณตัดสินใจดำเนินการเป็นลำดับแรก</p>
+      <div class="mb-3 pt-1 flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
+          ⚡ การตัดสินใจทางการพยาบาล (Clinical Decision Action)
+        </span>
+        <span class="text-xs text-slate-500 hidden sm:inline">• เลือกการปฏิบัติการพยาบาลที่คุณตัดสินใจดำเนินการเป็นลำดับแรก</span>
       </div>
 
       {% if is_review_mode %}
