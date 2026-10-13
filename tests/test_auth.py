@@ -20,7 +20,7 @@ def test_login_page_renders_clean_form_without_role_tabs(client):
     assert "เข้าสู่ระบบ" in html
     assert "@nursingmu.org" in html
     assert "Microsoft 365" in html
-    assert "ทดลองใช้งานแบบไม่ระบุตัวตน (Guest Practice Mode)" in html
+    assert "ทดลองใช้งานแบบไม่ระบุตัวตน (Guest Practice Mode)" not in html
 
     # Role selection tabs must NOT be present
     assert "เลือกบทบาท (Role)" not in html
