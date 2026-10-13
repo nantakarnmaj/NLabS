@@ -63,7 +63,7 @@ def test_verify_basket_submission_with_missing_and_distractor(client):
         "/equipment-station/verify",
         data=json.dumps({
             "basket_id": "oxygen",
-            "packed_ids": ["nasal_cannula", "suction_catheter"],
+            "packed_ids": ["nasal_cannula", "suction_set"],
         }),
         content_type="application/json",
     )
@@ -73,6 +73,6 @@ def test_verify_basket_submission_with_missing_and_distractor(client):
     assert data["is_complete"] is False
     assert len(data["missing_items"]) > 0
     assert len(data["distractor_items"]) == 1
-    assert data["distractor_items"][0]["id"] == "suction_catheter"
+    assert data["distractor_items"][0]["id"] == "suction_set"
     assert "ยังขาดอุปกรณ์จำเป็น" in data["feedback"]
     assert "มีอุปกรณ์ที่ไม่จำเป็น" in data["feedback"]
