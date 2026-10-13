@@ -132,7 +132,7 @@
         'rhonchi': 'ฟังปอดได้ยินเสียง Rhonchi',
         'expiratory_wheezing': 'เสียงหวีด (Expiratory Wheezes)',
         'bilateral_wheezes_and_rhonchi': 'เสียงหวีด & เสมหะ (Wheezes & Rhonchi)',
-        'bilateral_basal_crackles': 'เสียงกรอบแกรบ (Basal Crackles)',
+        'bilateral_basal_crackles': 'เสียงกรอบแกรบ (Crepitation)',
         'clear': 'เสียงปอดโปร่งดี (Clear)',
         'clear_bilateral': 'เสียงปอดโปร่งดี (Clear)',
       };

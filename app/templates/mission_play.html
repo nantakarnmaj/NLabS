@@ -106,7 +106,7 @@
           {% if bs == 'coarse_rhonchi' or 'เดือด' in bs or 'rhonchi' in bs|lower or 'เสมหะมาก' in bs %}ฟังปอดได้ยินเสียง Rhonchi
           {% elif bs == 'expiratory_wheezing' %}เสียงหวีด (Expiratory Wheezes)
           {% elif bs == 'bilateral_wheezes_and_rhonchi' %}เสียงหวีด & เสมหะ (Wheezes & Rhonchi)
-          {% elif bs == 'bilateral_basal_crackles' %}เสียงกรอบแกรบ (Basal Crackles)
+          {% elif bs == 'bilateral_basal_crackles' %}เสียงกรอบแกรบ (Crepitation)
           {% elif 'clear' in bs|lower %}เสียงปอดโปร่งดี (Clear)
           {% else %}{{ bs|replace('_', ' ')|title }}
           {% endif %}
