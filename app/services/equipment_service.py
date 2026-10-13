@@ -45,7 +45,7 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "id": "humidifier_bottle",
         "name_th": "กระบอกน้ำให้ความชื้น",
         "name_en": "Humidifier Bottle",
-        "image": "images/equipment/ward_o2_meter.png",
+        "image": "images/equipment/humidifier_bottle.png",
         "description": "กระบอกบรรจุน้ำกลั่นสเตอร์ไรด์เพื่อเพิ่มความชื้นให้กับก๊าซออกซิเจน ป้องกันเยื่อบุทางเดินหายใจแห้ง",
     },
     "sterile_water": {
