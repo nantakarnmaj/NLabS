@@ -112,12 +112,12 @@ def seed_rescue_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 2,
             "options": [
-                {"option_key": "severe_hypoxemia_87", "label": "ภาวะพร่องออกซิเจนรุนแรง (SpO₂ Room air 87% ร่วมกับริมฝีปากเขียวคล้ำ)", "is_correct": True},
                 {"option_key": "tachypnea_and_retractions", "label": "หายใจเร็วมาก (30 ครั้ง/นาที) หายใจใช้กล้ามเนื้อช่วย และนั่งในท่า Tripod", "is_correct": True},
+                {"option_key": "clear_vesicular_breath_sounds", "label": "เสียงหายใจปกติ ทั่วทั้งสองข้างของปอด", "is_correct": False},
+                {"option_key": "severe_hypoxemia_87", "label": "ภาวะพร่องออกซิเจนรุนแรง (SpO₂ Room air 87% ร่วมกับริมฝีปากเขียวคล้ำ)", "is_correct": True},
+                {"option_key": "adequate_spontaneous_clearance", "label": "ผู้ป่วยสามารถไอขับเสมหะออกได้เองอย่างมีประสิทธิภาพและสุขสบาย", "is_correct": False},
                 {"option_key": "copious_secretions_weak_cough", "label": "เสมหะเหนียวข้นปริมาณมากในลำคอ ร่วมกับแรงไออ่อนแรงและเหนื่อยล้า", "is_correct": True},
                 {"option_key": "bilateral_wheezes_and_rhonchi", "label": "ฟังปอดได้ยินทั้งเสียงหวีด Wheezes และเสียง Rhonchi ทั้งสองข้าง", "is_correct": True},
-                {"option_key": "clear_vesicular_breath_sounds", "label": "เสียงหายใจปกติ ทั่วทั้งสองข้างของปอด", "is_correct": False},
-                {"option_key": "adequate_spontaneous_clearance", "label": "ผู้ป่วยสามารถไอขับเสมหะออกได้เองอย่างมีประสิทธิภาพและสุขสบาย", "is_correct": False},
             ],
             "feedback_rules": [
                 {
@@ -195,11 +195,11 @@ def seed_rescue_mission() -> dict[str, int]:
             "display_order": 4,
             "options": [
                 {"option_key": "pre_inflate_nrb_bag", "label": "เปิดออกซิเจนให้ถุงสำรอง (Reservoir bag) ของ Non-Rebreather พองตัวเต็มที่ก่อนครอบลงบนใบหน้าคุณประเสริฐ", "is_correct": True},
+                {"option_key": "set_nrb_flow_to_2_lpm", "label": "ตั้งอัตราการไหลของ Non-Rebreather Mask เพียง 2 L/min เพื่อป้องกันภาวะเป็นพิษจากออกซิเจน", "is_correct": False},
                 {"option_key": "flow_10_to_15_lpm", "label": "ตั้งอัตราการไหลที่เกจออกซิเจน 10–15 L/min เพื่อให้ถุงสำรองคงสภาพพองตัวอย่างน้อย 1/3 ถึง 1/2 ตลอดช่วงหายใจเข้า", "is_correct": True},
+                {"option_key": "suction_vacuum_250_mmhg", "label": "ปรับแรงดันดูดสุญญากาศไปที่สูงสุด 250 mmHg เพื่อให้เสมหะเหนียวออกเร็วขึ้น", "is_correct": False},
                 {"option_key": "suction_calibrated_100_120", "label": "พับสายดูดเสมหะเพื่อทดสอบและปรับตั้งแรงดันดูดสุญญากาศให้อยู่ในช่วง 100–120 mmHg อย่างเคร่งครัด", "is_correct": True},
                 {"option_key": "sterile_suction_technique", "label": "รักษาเทคนิคปลอดเชื้ออย่างเคร่งครัดโดยใช้สายดูดเสมหะและถุงมือปลอดเชื้อ", "is_correct": True},
-                {"option_key": "set_nrb_flow_to_2_lpm", "label": "ตั้งอัตราการไหลของ Non-Rebreather Mask เพียง 2 L/min เพื่อป้องกันภาวะเป็นพิษจากออกซิเจน", "is_correct": False},
-                {"option_key": "suction_vacuum_250_mmhg", "label": "ปรับแรงดันดูดสุญญากาศไปที่สูงสุด 250 mmHg เพื่อให้เสมหะเหนียวออกเร็วขึ้น", "is_correct": False},
             ],
             "feedback_rules": [
                 {
@@ -449,10 +449,10 @@ def seed_rescue_mission() -> dict[str, int]:
             "display_order": 9,
             "options": [
                 {"option_key": "continuous_pulse_ox_and_telemetry", "label": "ติดเครื่องวัดออกซิเจนปลายนิ้วและคลื่นไฟฟ้าหัวใจต่อเนื่อง พร้อมตรวจนับอัตราการหายใจอย่างใกล้ชิด", "is_correct": True},
+                {"option_key": "discontinue_all_monitoring", "label": "ถอดเครื่องมอนิเตอร์ออกทั้งหมดเพราะ SpO₂ แตะ 95% แล้วและพ้นวิกฤตแล้ว", "is_correct": False},
                 {"option_key": "maintain_upright_fowlers", "label": "จัดท่านั่งศีรษะสูง High Fowler's ต่อไป และตรวจดูขอบหน้ากาก BiPAP ว่าแนบสนิทไม่มีลมรั่ว", "is_correct": True},
                 {"option_key": "frequent_lung_auscultation", "label": "ฟังเสียงปอดทั้งสองข้างทุก 30–60 นาทีเพื่อประเมินความโล่งของทางเดินหายใจและลมเข้าปอด", "is_correct": True},
                 {"option_key": "psychological_reassurance_family", "label": "พูดคุยปลอบโยนให้กำลังใจคุณประเสริฐอย่างต่อเนื่อง และอธิบายแผนการรักษาให้ครอบครัวเข้าใจ", "is_correct": True},
-                {"option_key": "discontinue_all_monitoring", "label": "ถอดเครื่องมอนิเตอร์ออกทั้งหมดเพราะ SpO₂ แตะ 95% แล้วและพ้นวิกฤตแล้ว", "is_correct": False},
             ],
             "feedback_rules": [
                 {
@@ -543,7 +543,7 @@ def seed_rescue_mission() -> dict[str, int]:
             activity.activity_type = act_data["activity_type"]
 
         # Options
-        for opt_data in act_data.get("options", []):
+        for opt_idx, opt_data in enumerate(act_data.get("options", [])):
             opt = db.session.execute(
                 select(ActivityOption).where(
                     ActivityOption.activity_id == activity.id,
@@ -558,12 +558,14 @@ def seed_rescue_mission() -> dict[str, int]:
                     label=opt_data["label"],
                     description=opt_data.get("description"),
                     is_correct=opt_data["is_correct"],
+                    display_order=opt_idx + 1,
                 )
                 db.session.add(opt)
             else:
                 opt.label = opt_data["label"]
                 opt.description = opt_data.get("description")
                 opt.is_correct = opt_data["is_correct"]
+                opt.display_order = opt_idx + 1
 
         # Steps
         for step_data in act_data.get("steps", []):
