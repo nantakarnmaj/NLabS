@@ -88,7 +88,7 @@ def seed_rescue_mission() -> dict[str, int]:
             "content_json": {
                 "patient_name": "นายประเสริฐ (Mr. Prasert, 70 ปี)",
                 "context": (
-                    "คุณประเสริฐเป็นโรค COPD ระยะลุกลามและปอดอักเสบแทรกซ้อน นั่งโน้มตัวไปข้างหน้าในท่า Tripod ริมฝีปากเขียวคล้ำ "
+                    "คุณประเสริฐเป็นโรค COPD ระยะลุกลามและปอดอักเสบแทรกซ้อน นั่งโน้มตัวไปข้างหน้าใช้มือค้ำยัน ริมฝีปากเขียวคล้ำ "
                     "หายใจมีรอยบุ๋มซี่โครง ได้ยินเสียงเสมหะเดือดและเสียงหวีดชัดเจน ไอเบาแรงและหมดแรง มอนิเตอร์: SpO2 87% ในอากาศห้อง, "
                     "หายใจ 30 ครั้ง/นาที, ชีพจร 108 ครั้ง/นาที"
                 ),
@@ -112,7 +112,7 @@ def seed_rescue_mission() -> dict[str, int]:
             "content_json": {},
             "display_order": 2,
             "options": [
-                {"option_key": "tachypnea_and_retractions", "label": "หายใจเร็วมาก (30 ครั้ง/นาที) หายใจใช้กล้ามเนื้อช่วย และนั่งในท่า Tripod", "is_correct": True},
+                {"option_key": "tachypnea_and_retractions", "label": "หายใจเร็วมาก (30 ครั้ง/นาที) หายใจใช้กล้ามเนื้อช่วย และนั่งโน้มตัวไปข้างหน้าใช้มือค้ำยัน", "is_correct": True},
                 {"option_key": "clear_vesicular_breath_sounds", "label": "เสียงหายใจปกติ ทั่วทั้งสองข้างของปอด", "is_correct": False},
                 {"option_key": "severe_hypoxemia_87", "label": "ภาวะพร่องออกซิเจนรุนแรง (SpO₂ Room air 87% ร่วมกับริมฝีปากเขียวคล้ำ)", "is_correct": True},
                 {"option_key": "adequate_spontaneous_clearance", "label": "ผู้ป่วยสามารถไอขับเสมหะออกได้เองอย่างมีประสิทธิภาพและสุขสบาย", "is_correct": False},
