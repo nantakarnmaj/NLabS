@@ -94,7 +94,7 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "id": "stethoscope",
         "name_th": "หูฟังของแพทย์/พยาบาล (สเตทโทสโคป)",
         "name_en": "Stethoscope",
-        "image": "images/equipment/stethoscope.svg",
+        "image": "images/equipment/stethoscope.png",
         "description": "ใช้ฟังเสียงหายใจและเสียงปอด (Breath sounds) เพื่อประเมิน Wheezing หรือ Rhonchi ก่อนและหลังทำหัตถการ",
     },
     "suction_catheter": {
