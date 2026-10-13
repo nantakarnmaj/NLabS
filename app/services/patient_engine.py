@@ -58,6 +58,10 @@ def normalize_state(raw_state: dict) -> dict:
     state.setdefault("breath_sound", "clear")
     state.setdefault("consciousness", "alert")
 
+    # Sanitize legacy breath sound terminology
+    if isinstance(state.get("breath_sound"), str) and "เดือด" in state["breath_sound"]:
+        state["breath_sound"] = "coarse_rhonchi"
+
     # Clamp numeric values
     for var, (low, high) in BOUNDS.items():
         if var in state and isinstance(state[var], (int, float)):
