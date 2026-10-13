@@ -4,7 +4,7 @@
 
 {% block head %}
 <script src="{{ url_for('static', filename='js/sortable.min.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/game.js') }}?v=20261013_rhonchi_v3" defer></script>
+<script src="{{ url_for('static', filename='js/game.js') }}?v=20261013_sec_v4" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -114,7 +114,7 @@
         <div id="monitor-secretions" class="text-xs text-cyan-300 mt-0.5 truncate">
           เสมหะ:
           {% set sec = ps.secretions %}
-          {% if sec in ['copious', 'copious_thick'] %}มาก/เหนียว (Copious)
+          {% if sec in ['copious', 'copious_thick'] %}มาก/เหนียว
           {% elif sec == 'moderate' %}ปานกลาง (Moderate)
           {% elif sec in ['minimal', 'minimal/clear'] %}เล็กน้อย (Minimal)
           {% elif sec in ['none', 'clear'] %}ไม่มี (None)

@@ -35,6 +35,12 @@
         monitorBreathSound.textContent = 'เสมหะมาก (Rhonchi)';
       }
     }
+    if (monitorSecretions) {
+      const currentSec = monitorSecretions.textContent || '';
+      if (currentSec.includes('(Copious)')) {
+        monitorSecretions.textContent = currentSec.replace('(Copious)', '').trim();
+      }
+    }
   }
   enforceClinicalTerminology();
   document.addEventListener('DOMContentLoaded', enforceClinicalTerminology);
@@ -145,8 +151,8 @@
 
     if (monitorSecretions && vitals.secretions !== undefined) {
       const secMap = {
-        'copious': 'เสมหะ: มาก/เหนียว (Copious)',
-        'copious_thick': 'เสมหะ: มาก/เหนียว (Copious)',
+        'copious': 'เสมหะ: มาก/เหนียว',
+        'copious_thick': 'เสมหะ: มาก/เหนียว',
         'moderate': 'เสมหะ: ปานกลาง (Moderate)',
         'minimal': 'เสมหะ: เล็กน้อย (Minimal)',
         'minimal/clear': 'เสมหะ: เล็กน้อย (Minimal)',
