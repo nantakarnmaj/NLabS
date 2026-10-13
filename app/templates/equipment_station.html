@@ -336,7 +336,9 @@
 
     // Deselect previous picture
     document.querySelectorAll('.pic-card').forEach(card => {
-      card.classList.remove('ring-4', 'ring-sky-500', 'border-sky-500');
+      card.style.borderColor = '#e2e8f0';
+      card.style.boxShadow = 'none';
+      card.style.transform = 'none';
       const badge = card.querySelector('.pic-selected-badge');
       if (badge) badge.classList.add('hidden');
     });
@@ -344,11 +346,15 @@
     selectedPictureId = itemId;
     const card = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
     if (card) {
-      card.classList.add('ring-4', 'ring-sky-500', 'border-sky-500');
+      card.style.borderColor = '#0284c7';
+      card.style.boxShadow = '0 0 0 4px rgba(2, 132, 199, 0.45), 0 4px 12px rgba(2, 132, 199, 0.2)';
+      card.style.transform = 'scale(1.02)';
       const badge = card.querySelector('.pic-selected-badge');
       if (badge) badge.classList.remove('hidden');
     }
 
+    const item = catalogData[itemId];
+    updateStatusHint(`📸 คุณเลือกรูป: <strong>${item ? item.name_th : itemId}</strong> แล้ว → <span class="text-[#0284c7] font-bold">ต่อไปให้แตะที่ป้ายชื่อทางขวา</span>`);
     checkMatchAttempt();
   }
 
@@ -357,15 +363,25 @@
 
     // Deselect previous name card
     document.querySelectorAll('.name-card').forEach(card => {
-      card.classList.remove('ring-4', 'ring-sky-500', 'border-sky-500', 'bg-sky-50');
+      card.style.borderColor = '#e2e8f0';
+      card.style.backgroundColor = '#ffffff';
+      card.style.boxShadow = 'none';
+      card.style.transform = 'none';
     });
 
     selectedNameId = itemId;
     const card = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
     if (card) {
-      card.classList.add('ring-4', 'ring-sky-500', 'border-sky-500', 'bg-sky-50');
+      card.style.borderColor = '#0284c7';
+      card.style.backgroundColor = '#f0f9ff';
+      card.style.boxShadow = '0 0 0 4px rgba(2, 132, 199, 0.45), 0 4px 12px rgba(2, 132, 199, 0.2)';
+      card.style.transform = 'scale(1.02)';
     }
 
+    const item = catalogData[itemId];
+    if (!selectedPictureId) {
+      updateStatusHint(`🏷️ คุณเลือกชื่อ: <strong>${item ? item.name_th : itemId}</strong> แล้ว → <span class="text-[#0284c7] font-bold">ต่อไปให้แตะรูปภาพทางซ้าย</span>`);
+    }
     checkMatchAttempt();
   }
 
@@ -388,7 +404,9 @@
     // Mark picture card as paired
     const picCard = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
     if (picCard) {
-      picCard.classList.remove('ring-4', 'ring-sky-500', 'border-sky-500');
+      picCard.style.borderColor = '#10b981';
+      picCard.style.boxShadow = 'none';
+      picCard.style.transform = 'none';
       const selBadge = picCard.querySelector('.pic-selected-badge');
       if (selBadge) selBadge.classList.add('hidden');
       const pairedBadge = picCard.querySelector('.pic-paired-badge');
@@ -400,8 +418,11 @@
     // Mark name card as paired
     const nameCard = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
     if (nameCard) {
-      nameCard.classList.remove('ring-4', 'ring-sky-500', 'border-sky-500', 'bg-sky-50');
-      nameCard.classList.add('bg-emerald-50/80', 'border-emerald-300', 'opacity-75');
+      nameCard.style.borderColor = '#10b981';
+      nameCard.style.backgroundColor = '#ecfdf5';
+      nameCard.style.boxShadow = 'none';
+      nameCard.style.transform = 'none';
+      nameCard.classList.add('opacity-75');
       const pairedStatus = nameCard.querySelector('.name-paired-status');
       if (pairedStatus) pairedStatus.classList.remove('hidden');
       nameCard.style.pointerEvents = 'none';
@@ -422,13 +443,19 @@
       hint.innerHTML = `<span class="text-rose-600 font-bold">❌ ยังไม่ถูกต้อง</span> ลองสังเกตรูปร่างหรือชื่ออุปกรณ์ใหม่อีกครั้ง`;
     }
 
-    // Shake animation
+    // Shake and flash red
     const nameCard = document.querySelector(`.name-card[data-item-id="${selectedNameId}"]`);
     if (nameCard) {
-      nameCard.classList.add('animate-shake', 'border-rose-400');
+      nameCard.classList.add('animate-shake');
+      nameCard.style.borderColor = '#f43f5e';
+      nameCard.style.boxShadow = '0 0 0 4px rgba(244, 63, 94, 0.4)';
       setTimeout(() => {
-        nameCard.classList.remove('animate-shake', 'border-rose-400', 'ring-4', 'ring-sky-500', 'bg-sky-50');
-      }, 600);
+        nameCard.classList.remove('animate-shake');
+        nameCard.style.borderColor = '#e2e8f0';
+        nameCard.style.backgroundColor = '#ffffff';
+        nameCard.style.boxShadow = 'none';
+        nameCard.style.transform = 'none';
+      }, 700);
     }
 
     selectedNameId = null;
