@@ -314,9 +314,10 @@
             <!-- Patient Image Anchor (Fixed Uniform 3:2 Ratio) -->
             <div class="relative aspect-[3/2] w-full rounded-2xl overflow-hidden bg-slate-100 border border-[#DCEAF7] group-hover:border-emerald-200 transition shrink-0">
               <img
-                src="{{ url_for('static', filename='images/patients/patient_anong.png') }}?v=4"
+                src="{{ url_for('static', filename='images/patients/patient_anong.jpg') }}?v=20261013a"
                 alt="นางอนงค์ — ห้อง 502"
                 class="w-full h-full object-cover object-center group-hover:scale-102 transition duration-300"
+                onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_anong.png') }}?v=20261013a'"
                 loading="lazy"
               >
               <div class="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-xs sm:text-sm font-bold text-white">
@@ -487,9 +488,10 @@
         <!-- Left: Image & Badge -->
         <div class="lg:col-span-4 relative rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 aspect-[3/2] w-full shrink-0">
           <img
-            src="{{ url_for('static', filename='images/patients/patient_prasert.png') }}?v=4"
+            src="{{ url_for('static', filename='images/patients/patient_prasert.jpg') }}?v=20261013a"
             alt="นายประเสริฐ — ห้อง 504"
             class="w-full h-full object-cover object-center"
+            onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/patients/patient_prasert.png') }}?v=20261013a'"
             loading="lazy"
           >
           <div class="absolute top-2 left-2 px-3 py-1 rounded-md bg-amber-500 text-white font-black text-xs tracking-wide uppercase shadow-xs">
