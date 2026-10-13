@@ -159,10 +159,12 @@ def microsoft_login():
     if not user:
         # Extract display name from email prefix
         prefix = email_to_use.split("@")[0].replace(".", " ").title()
+        student_id_val = email_to_use.split("@")[0] if role == UserRole.STUDENT.value else None
         user = User(
             email=email_to_use,
             name=f"{prefix} ({name_mapping[role]})",
             role=role,
+            student_id=student_id_val,
             department="คณะพยาบาลศาสตร์ (Faculty of Nursing)",
             m365_oid=f"m365_sim_{abs(hash(email_to_use))}",
             last_login_at=datetime.now(timezone.utc),
@@ -170,6 +172,8 @@ def microsoft_login():
         db.session.add(user)
     else:
         user.role = role  # Align role with active portal switch
+        if not user.student_id and role == UserRole.STUDENT.value:
+            user.student_id = email_to_use.split("@")[0]
         user.last_login_at = datetime.now(timezone.utc)
 
     db.session.commit()
@@ -181,7 +185,10 @@ def microsoft_login():
     session["user_role"] = user.role
 
     # Also initialize or link StudentSession for seamless gameplay progress
-    _, raw_token, _ = get_or_create_session()
+    session_obj, raw_token, _ = get_or_create_session()
+    if session_obj:
+        session_obj.nickname = user.student_id or user.name
+        db.session.commit()
     
     flash(
         f"เข้าสู่ระบบสำเร็จผ่าน Microsoft 365 ในฐานะ {user.get_role_display_th()} ({user.email})",
@@ -286,15 +293,20 @@ def standard_login():
 
     if not user:
         clean_name = username.split("@")[0].replace(".", " ").title()
+        student_id_val = username.split("@")[0] if role == UserRole.STUDENT.value else None
         user = User(
             email=email_to_use,
             name=f"{clean_name} ({name_mapping.get(role, 'ผู้ใช้งาน')})",
             role=role,
+            student_id=student_id_val,
             department="คณะพยาบาลศาสตร์ (Faculty of Nursing)",
             last_login_at=datetime.now(timezone.utc),
         )
         db.session.add(user)
     else:
+        user.role = role
+        if not user.student_id and role == UserRole.STUDENT.value:
+            user.student_id = username.split("@")[0]
         user.last_login_at = datetime.now(timezone.utc)
 
     db.session.commit()
@@ -304,7 +316,11 @@ def standard_login():
     session["user_name"] = user.name
     session["user_role"] = user.role
 
-    _, raw_token, _ = get_or_create_session()
+    session_obj, raw_token, _ = get_or_create_session()
+    if session_obj:
+        session_obj.nickname = user.student_id or user.name
+        db.session.commit()
+
     flash(f"เข้าสู่ระบบสำเร็จในฐานะ {user.get_role_display_th()} ({user.email})", "success")
 
     # Administrators go directly to Admin Portal; students/faculty go to Ward
