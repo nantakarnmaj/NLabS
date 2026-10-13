@@ -173,6 +173,39 @@
     </div>
   </section>
 
+  <!-- ================= EQUIPMENT PREPARATION STATION BANNER ================= -->
+  <section class="bg-gradient-to-r from-teal-500 via-emerald-600 to-sky-600 rounded-[24px] p-5 sm:p-6 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden" aria-label="ห้องเตรียมอุปกรณ์หัตถการ">
+    <div class="space-y-1.5 z-10">
+      <div class="flex items-center gap-2">
+        <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-xs text-xs font-mono font-bold tracking-wider uppercase">
+          🧺 CLINICAL SKILLS STATION
+        </span>
+        <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-900 text-xs font-black">
+          ใหม่!
+        </span>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+        ห้องเตรียมอุปกรณ์: จับคู่รูปภาพและจัดตะกร้าหัตถการ
+      </h2>
+      <p class="text-xs sm:text-sm text-teal-100 max-w-2xl leading-relaxed">
+        ทบทวนทักษะการเลือกอุปกรณ์ให้ตรงกับหัตถการ (ให้ออกซิเจน • พ่นยา • ดูดเสมหะ) แตะจับคู่รูปอุปกรณ์จริงกับชื่อภาษาไทย-อังกฤษ แล้วหยิบจัดใส่ตะกร้าหัตถการ
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3 shrink-0 z-10">
+      <a
+        href="{{ url_for('equipment.station_index') }}"
+        class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-teal-50 active:scale-95 text-teal-800 font-black text-sm sm:text-base shadow-lg transition-all"
+      >
+        <span>เข้าสู่ห้องเตรียมอุปกรณ์ 🧺</span>
+        <span class="text-teal-600 font-bold">→</span>
+      </a>
+    </div>
+
+    <!-- Decorative background circle -->
+    <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+  </section>
+
   <!-- ================= FOUR CLINICAL MISSION CARDS (Section C) ================= -->
   <section aria-labelledby="ward-rooms-heading" class="space-y-6">
     <h2 id="ward-rooms-heading" class="sr-only">ห้องผู้ป่วยในหอ (Respiratory Ward Rooms)</h2>

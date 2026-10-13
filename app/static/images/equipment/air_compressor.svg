@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="compGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Plate -->
+  <rect width="200" height="200" rx="24" fill="#F0F9FF"/>
+  <!-- Compressor Box Body -->
+  <rect x="35" y="55" width="130" height="100" rx="16" fill="url(#bodyGrad)" stroke="#CBD5E1" stroke-width="4"/>
+  <!-- Handle -->
+  <path d="M70 55 V40 Q70 32 80 32 H120 Q130 32 130 40 V55" fill="none" stroke="#64748B" stroke-width="6" stroke-linecap="round"/>
+  <!-- Front Panel -->
+  <rect x="48" y="70" width="104" height="70" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <!-- Power Switch -->
+  <rect x="60" y="85" width="22" height="14" rx="3" fill="#EF4444"/>
+  <circle cx="71" cy="92" r="3" fill="#FFFFFF"/>
+  <!-- Air Outlet Nozzle -->
+  <circle cx="125" cy="92" r="10" fill="url(#compGrad)"/>
+  <circle cx="125" cy="92" r="5" fill="#0369A1"/>
+  <!-- Tubing coming out -->
+  <path d="M125 97 Q135 125 155 120 T170 145" fill="none" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/>
+  <!-- Ventilation Slots -->
+  <line x1="60" y1="120" x2="105" y2="120" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="128" x2="105" y2="128" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+  <!-- Rubber Feet -->
+  <rect x="48" y="153" width="16" height="6" rx="2" fill="#475569"/>
+  <rect x="136" y="153" width="16" height="6" rx="2" fill="#475569"/>
+  <!-- Label Badge -->
+  <rect x="60" y="103" width="45" height="10" rx="3" fill="#E0F2FE"/>
+  <text x="82" y="110" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#0284C7" text-anchor="middle">AIR PUMP</text>
+</svg>

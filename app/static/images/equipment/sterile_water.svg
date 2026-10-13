@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bottleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="40%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#F0F9FF"/>
+      <stop offset="100%" stop-color="#BAE6FD"/>
+    </linearGradient>
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="#F0F9FF"/>
+  <!-- Bottle Cap -->
+  <rect x="75" y="25" width="50" height="20" rx="4" fill="#0284C7" stroke="#0369A1" stroke-width="2"/>
+  <line x1="85" y1="28" x2="85" y2="42" stroke="#38BDF8" stroke-width="2"/>
+  <line x1="95" y1="28" x2="95" y2="42" stroke="#38BDF8" stroke-width="2"/>
+  <line x1="105" y1="28" x2="105" y2="42" stroke="#38BDF8" stroke-width="2"/>
+  <line x1="115" y1="28" x2="115" y2="42" stroke="#38BDF8" stroke-width="2"/>
+  <!-- Bottle Shoulder and Body -->
+  <path d="M78 45 L55 75 L55 170 Q55 180 70 180 L130 180 Q145 180 145 170 L145 75 L122 45 Z" 
+        fill="url(#bottleGrad)" stroke="#64748B" stroke-width="3"/>
+  <!-- Water Fill -->
+  <path d="M58 95 L58 168 Q58 177 70 177 L130 177 Q142 177 142 168 L142 95 Q100 102 58 95 Z" 
+        fill="url(#waterGrad)"/>
+  <!-- Bottle Label -->
+  <rect x="62" y="80" width="76" height="50" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.5"/>
+  <rect x="62" y="80" width="76" height="12" fill="#0284C7"/>
+  <text x="100" y="89" font-family="Arial, sans-serif" font-size="7" font-weight="bold" fill="#FFFFFF" text-anchor="middle">STERILE WATER</text>
+  <text x="100" y="103" font-family="Arial, sans-serif" font-size="6.5" font-weight="bold" fill="#0F172A" text-anchor="middle">น้ำกลั่นสเตอร์ไรด์</text>
+  <text x="100" y="115" font-family="Arial, sans-serif" font-size="6" font-weight="normal" fill="#64748B" text-anchor="middle">FOR INHALATION / FLUSH</text>
+  <text x="100" y="125" font-family="Arial, sans-serif" font-size="6" font-weight="black" fill="#10B981" text-anchor="middle">500 mL • PYROGEN FREE</text>
+</svg>

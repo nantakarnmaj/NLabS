@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="vialPlastic" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="30%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#F1F5F9"/>
+      <stop offset="100%" stop-color="#CBD5E1"/>
+    </linearGradient>
+    <linearGradient id="liquidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BAE6FD" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="#F0FDF4"/>
+  <!-- Ampoule / Nebule Twist-off tab -->
+  <g transform="translate(10, 0)">
+    <!-- Twist Top -->
+    <ellipse cx="90" cy="35" rx="18" ry="8" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2.5"/>
+    <rect x="85" y="42" width="10" height="12" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
+    <!-- Ampoule Neck -->
+    <path d="M82 54 L75 70 L75 155 Q75 165 90 165 Q105 165 105 155 L105 70 L98 54 Z" 
+          fill="url(#vialPlastic)" stroke="#64748B" stroke-width="3"/>
+    <!-- Liquid Contents -->
+    <path d="M78 100 L78 153 Q78 162 90 162 Q102 162 102 153 L102 100 Q90 103 78 100 Z" 
+          fill="url(#liquidGrad)"/>
+    <!-- Liquid Surface Line -->
+    <ellipse cx="90" cy="100" rx="12" ry="3" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+    <!-- Graduated measurement markings -->
+    <line x1="96" y1="115" x2="102" y2="115" stroke="#475569" stroke-width="2"/>
+    <line x1="94" y1="125" x2="102" y2="125" stroke="#475569" stroke-width="2"/>
+    <line x1="96" y1="135" x2="102" y2="135" stroke="#475569" stroke-width="2"/>
+    <line x1="92" y1="145" x2="102" y2="145" stroke="#475569" stroke-width="2.5"/>
+    <!-- Label Stripe -->
+    <rect x="76" y="75" width="28" height="18" fill="#FEF08A" stroke="#EAB308" stroke-width="1.5"/>
+    <text x="90" y="84" font-family="Arial, sans-serif" font-size="5.5" font-weight="black" fill="#854D0E" text-anchor="middle">VENTOLIN</text>
+    <text x="90" y="90" font-family="Arial, sans-serif" font-size="4.5" font-weight="bold" fill="#A16207" text-anchor="middle">2.5mg / 2.5ml</text>
+  </g>
+</svg>

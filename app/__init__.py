@@ -81,6 +81,8 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
     app.register_blueprint(api_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
+    from app.routes.equipment import equipment_bp
+    app.register_blueprint(equipment_bp)
 
     # Context processors
     @app.context_processor

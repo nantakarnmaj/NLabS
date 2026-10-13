@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="50%" stop-color="#94A3B8"/>
+      <stop offset="100%" stop-color="#64748B"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="#F8FAFC"/>
+  <!-- Binaural Earpieces -->
+  <circle cx="65" cy="30" r="5" fill="#1E293B"/>
+  <circle cx="135" cy="30" r="5" fill="#1E293B"/>
+  <!-- Metal Binaural Tubes -->
+  <path d="M65 35 Q75 75 100 85" fill="none" stroke="url(#metal)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M135 35 Q125 75 100 85" fill="none" stroke="url(#metal)" stroke-width="6" stroke-linecap="round"/>
+  <!-- Spring brace -->
+  <path d="M78 60 Q100 65 122 60" fill="none" stroke="url(#metal)" stroke-width="3"/>
+  <!-- Flexible Tubing Loop (Navy Blue) -->
+  <path d="M100 85 C100 120 70 120 70 145 C70 170 130 175 130 145 C130 125 100 125 100 100" 
+        fill="none" stroke="#0284C7" stroke-width="8" stroke-linecap="round"/>
+  <!-- Chestpiece stem and head -->
+  <g transform="translate(140, 120)">
+    <circle cx="0" cy="0" r="22" fill="#0F172A" stroke="url(#metal)" stroke-width="4"/>
+    <circle cx="0" cy="0" r="16" fill="url(#metal)"/>
+    <circle cx="0" cy="0" r="13" fill="#E2E8F0"/>
+    <circle cx="0" cy="0" r="4" fill="#64748B"/>
+  </g>
+</svg>
