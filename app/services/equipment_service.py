@@ -71,10 +71,10 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
     },
     "nebulizer_mask": {
         "id": "nebulizer_mask",
-        "name_th": "หน้ากากพ่นยาละอองฝอย",
-        "name_en": "Aerosol / Nebulizer Mask",
-        "image": "images/equipment/ward_nebulizer_mask.png",
-        "description": "หน้ากากต่อกับกระเปาะพ่นยา มีช่องเปิดด้านข้างเพื่อให้ผู้ป่วยหายใจและระบายไอพ่น",
+        "name_th": "หน้ากากพ่นยาพร้อมสายออกซิเจน",
+        "name_en": "Nebulizer Mask with Tubing",
+        "image": "images/equipment/nebulizer_mask.jpg",
+        "description": "หน้ากากพ่นยาละอองฝอยพร้อมสายออกซิเจน (Tubing) สำหรับต่อกับกระเปาะพ่นยาและ Oxygen Flowmeter",
     },
     "air_compressor": {
         "id": "air_compressor",
