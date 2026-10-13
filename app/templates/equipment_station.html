@@ -87,10 +87,10 @@
   </div>
 
   <!-- ================= MAIN GAMEPLAY TWO-COLUMN WORKBENCH ================= -->
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 items-start">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
 
-    <!-- LEFT COLUMN: SHELF & MATCHING AREA (7 Cols) -->
-    <div class="md:col-span-7 space-y-5">
+    <!-- LEFT COLUMN: SHELF & MATCHING AREA (7 Cols on large screen, full on tablet/split) -->
+    <div class="lg:col-span-7 space-y-5">
 
       <!-- INSTRUCTION STEP BAR -->
       <div class="bg-white p-4 rounded-2xl border border-[#DCEAF7] shadow-xs flex items-center justify-between gap-2">
@@ -104,7 +104,7 @@
         <div class="flex items-center gap-2 shrink-0">
           <a
             href="#procedure-basket-card"
-            class="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition shadow-2xs"
+            class="lg:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition shadow-2xs"
           >
             <span>🧺 ดูตะกร้า</span>
             <span class="px-1.5 py-0.2 rounded-full bg-indigo-600 text-white text-2xs" id="mobile-basket-badge">0/{{ active_basket.total_required }}</span>
@@ -120,7 +120,7 @@
       </div>
 
       <!-- MATCHING WORKSPACE (PICTURES VS NAMES) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-3 sm:gap-4">
 
         <!-- COLUMN A: PICTURE CARDS -->
         <div class="space-y-3">
@@ -192,8 +192,8 @@
 
     </div>
 
-    <!-- RIGHT COLUMN: PROCEDURE TRAY / BASKET (5 Cols) -->
-    <div class="md:col-span-5 space-y-5 md:sticky md:top-20">
+    <!-- RIGHT COLUMN: PROCEDURE TRAY / BASKET (5 Cols on large screen) -->
+    <div class="lg:col-span-5 space-y-5 lg:sticky lg:top-20">
 
       <!-- BASKET CONTAINER CARD -->
       <div id="procedure-basket-card" class="bg-white rounded-[24px] border-2 border-indigo-200 shadow-md p-5 sm:p-6 space-y-4">
