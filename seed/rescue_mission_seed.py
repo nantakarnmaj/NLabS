@@ -83,7 +83,7 @@ def seed_rescue_mission() -> dict[str, int]:
         # Activity 1: Intro / Emergency Briefing
         {
             "activity_type": "intro",
-            "title": "ภาพรวมแรกและสรุปสถานการณ์ฉุกเฉิน (First Look & Emergency Briefing)",
+            "title": "สถานการณ์ฉุกเฉิน",
             "instruction": "ตรวจดูสัญญาณชีพบอร์ดมอนิเตอร์ข้างเตียง อาการทางคลินิก และสัญญาณเตือนภาวะการหายใจล้มเหลวเฉียบพลันของคุณประเสริฐ",
             "content_json": {
                 "patient_name": "นายประเสริฐ (Mr. Prasert, 70 ปี)",

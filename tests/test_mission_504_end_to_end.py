@@ -164,7 +164,7 @@ def test_room_504_prerequisites_and_full_rescue_playthrough(client, app):
     assert res_504.status_code == 200
     html_504 = res_504.get_data(as_text=True)
     assert "Mr. Prasert" in html_504
-    assert "First Look" in html_504
+    assert "สถานการณ์ฉุกเฉิน" in html_504
     assert "Acute Respiratory Distress" in html_504
 
     with app.app_context():
