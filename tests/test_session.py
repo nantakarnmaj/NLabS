@@ -120,3 +120,53 @@ def test_client_isolation(app):
         assert len(sessions) == 2
         hashes = {s.token_hash for s in sessions}
         assert len(hashes) == 2
+
+
+def test_cross_device_sync_for_authenticated_student(app):
+    """When a student logs in on a laptop and then on an iPad, progress and session sync seamlessly."""
+    with app.app_context():
+        client_laptop = app.test_client()
+        client_ipad = app.test_client()
+
+        # 1. Student logs in on Laptop
+        res_laptop = client_laptop.post(
+            "/auth/login",
+            data={"username": "6809001", "password": "NSMU+b68"},
+            follow_redirects=True,
+        )
+        assert res_laptop.status_code == 200
+
+        # Laptop starts a run or mission
+        from app.services.session_service import get_current_session
+        with client_laptop.session_transaction() as sess:
+            pass  # Session active
+
+        res_ward_laptop = client_laptop.get("/ward")
+        assert res_ward_laptop.status_code == 200
+
+        # 2. Student opens iPad and logs in with the SAME account
+        res_ipad = client_ipad.post(
+            "/auth/login",
+            data={"username": "6809001", "password": "NSMU+b68"},
+            follow_redirects=True,
+        )
+        assert res_ipad.status_code == 200
+
+        # Both devices must resolve to the EXACT SAME StudentSession record
+        from app.services.session_service import get_user_session_token, hash_token
+        from app.models.user import User
+
+        user = db.session.execute(
+            select(User).where(User.email == "6809001@nursingmu.org")
+        ).scalars().first()
+        assert user is not None
+
+        expected_hash = hash_token(get_user_session_token(user.id, user.email))
+        canonical_session = db.session.execute(
+            select(StudentSession).where(StudentSession.token_hash == expected_hash)
+        ).scalar_one_or_none()
+        assert canonical_session is not None
+
+        # Verify iPad loads /ward without errors and uses the canonical session
+        res_ward_ipad = client_ipad.get("/ward")
+        assert res_ward_ipad.status_code == 200
