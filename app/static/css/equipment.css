@@ -80,3 +80,20 @@
 .pic-card.is-paired .pic-selected-badge, .name-card.is-paired .name-selected-status {
   display: none !important;
 }
+
+/* Picture Card Image Container (Compact & Balanced Sizing) */
+.pic-card-img-container {
+  height: 115px;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .pic-card-img-container {
+    height: 130px;
+  }
+}
+.pic-card-img-container img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
