@@ -87,3 +87,25 @@ def test_seed_idempotency_and_preservation_of_edits_and_learner_data(app):
         # Verify learner session and progress are intact
         assert db.session.get(StudentSession, session.id) is not None
         assert db.session.get(MissionProgress, progress.id) is not None
+
+
+def test_suction_mission_seed_has_no_verbal_report_phrase(app):
+    """Verify suction mission seed does not contain the phrase (รายงานด้วยวาจา)."""
+    from seed.suction_mission_seed import seed_suction_mission
+    from app.models.activity import Activity, ActivityOption
+
+    with app.app_context():
+        seed_suction_mission()
+
+        # Check options
+        options = db.session.execute(select(ActivityOption)).scalars().all()
+        for opt in options:
+            assert "รายงานด้วยวาจา" not in opt.label, f"Option label contains phrase: {opt.label}"
+
+        # Check activities
+        activities = db.session.execute(select(Activity)).scalars().all()
+        for act in activities:
+            assert "รายงานด้วยวาจา" not in act.instruction, f"Activity instruction contains phrase: {act.instruction}"
+            summary = act.content_json.get("summary", "") if act.content_json else ""
+            assert "รายงานด้วยวาจา" not in summary, f"Activity summary contains phrase: {summary}"
+

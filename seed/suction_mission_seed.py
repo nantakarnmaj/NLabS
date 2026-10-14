@@ -179,7 +179,7 @@ def seed_suction_mission() -> dict[str, int]:
             "instruction": "ยืนยันการจัดท่า การป้องกันการแพร่กระจายเชื้อ และการเตรียมผู้ป่วยก่อนทำหัตถการตามแบบประเมิน",
             "options": [
                 {"option_key": "pre_oxygenate", "label": "ให้ออกซิเจนความเข้มข้นสูง (Hyperoxygenate 100% O2) 30–60 วินาทีก่อนทำหัตถการ", "is_correct": True, "display_order": 1},
-                {"option_key": "semi_fowler", "label": "จัดท่าศีรษะสูง 30 องศา (รายงานด้วยวาจา)", "is_correct": True, "display_order": 2},
+                {"option_key": "semi_fowler", "label": "จัดท่าศีรษะสูง 30 องศา", "is_correct": True, "display_order": 2},
                 {"option_key": "monitor_vitals", "label": "ล้างมือถูกวิธี ไม่ใส่นาฬิกา สวม Mask ถูกต้อง และประเมินค่า Oxygen Saturation จาก Pulse Oximeter", "is_correct": True, "display_order": 3},
                 {"option_key": "routine_saline_bolus", "label": "หยดน้ำเกลือปลอดเชื้อ 5 มล. เข้าท่อหลอดลมคอก่อนดูดเสมหะเป็นประจำ", "is_correct": False, "display_order": 4},
             ],
@@ -334,10 +334,10 @@ def seed_suction_mission() -> dict[str, int]:
             "title": "การดูแลหลังดูดเสมหะและการประเมินผล (Aftercare, Evaluation & Documentation)",
             "instruction": "เลือกการพยาบาลหลังดูดเสมหะตามหลักป้องกันการแพร่กระจายเชื้อและการประเมินผลตามแบบประเมิน",
             "options": [
-                {"option_key": "re_auscultate", "label": "การประเมินผล (รายงานด้วยวาจา): ประเมินว่าผู้ป่วยหายใจสะดวก ไม่กระสับกระส่าย เสียงเสมหะลดลง และฟังเสียงปอดซ้ำ", "is_correct": True, "display_order": 1},
+                {"option_key": "re_auscultate", "label": "การประเมินผล: ประเมินว่าผู้ป่วยหายใจสะดวก ไม่กระสับกระส่าย เสียงเสมหะลดลง และฟังเสียงปอดซ้ำ", "is_correct": True, "display_order": 1},
                 {"option_key": "flush_tubing", "label": "ดูดน้ำล้างสายไม่แพร่กระจายเชื้อ ปิดเครื่องดูดเสมหะและปลดสายดูดเสมหะออก เช็ดเหนือข้อต่อ 1 นิ้วลงมาที่ปลาย tip ด้วยแอลกอฮอล์ 70%", "is_correct": True, "display_order": 2},
                 {"option_key": "restore_fio2", "label": "ถอดถุงมือและทิ้งสายดูดเสมหะถูกต้อง ล้างมือถูกวิธี ถอด Mask ทิ้งถูกวิธี และปรับอัตราการไหลของออกซิเจนคืนค่าเดิม", "is_correct": True, "display_order": 3},
-                {"option_key": "document_care", "label": "การบันทึก (รายงานด้วยวาจา): บันทึกสภาวะของผู้ป่วยและลักษณะการหายใจ ลักษณะของเสมหะ (สี กลิ่น ปริมาณ) และค่า Oxygen Saturation จาก Pulse Oximetry", "is_correct": True, "display_order": 4},
+                {"option_key": "document_care", "label": "การบันทึก: บันทึกสภาวะของผู้ป่วยและลักษณะการหายใจ ลักษณะของเสมหะ (สี กลิ่น ปริมาณ) และค่า Oxygen Saturation จาก Pulse Oximetry", "is_correct": True, "display_order": 4},
                 {"option_key": "leave_100_percent", "label": "เปิดออกซิเจน 100% FiO2 ค้างไว้ตลอดเวลา", "is_correct": False, "display_order": 5},
             ],
             "feedback": [
@@ -345,7 +345,7 @@ def seed_suction_mission() -> dict[str, int]:
                     "trigger_type": "on_success",
                     "title": "การดูแลหลังหัตถการครบถ้วนตามแบบประเมิน (Rubric Criteria Fully Met)",
                     "message": "ดูดน้ำล้างสาย เช็ดข้อต่อด้วยแอลกอฮอล์ 70% ทิ้งขยะและถอดอุปกรณ์ถูกต้อง พร้อมประเมินผลและบันทึกทางการพยาบาลครบถ้วน",
-                    "clinical_rationale": "หลังดูดเสมหะต้องใช้หลักป้องกันการแพร่กระจายเชื้อ เช็ดข้อต่อ ล้างมือ ถอด Mask และรายงานการประเมินผลและการบันทึกด้วยวาจา",
+                    "clinical_rationale": "หลังดูดเสมหะต้องใช้หลักป้องกันการแพร่กระจายเชื้อ เช็ดข้อต่อ ล้างมือ ถอด Mask และประเมินผลรวมถึงบันทึกทางการพยาบาลให้ครบถ้วน",
                     "patient_effect_json": {
                         "breath_sound_set": "clear",
                         "secretions_set": "minimal",
@@ -371,11 +371,11 @@ def seed_suction_mission() -> dict[str, int]:
             "display_order": 9,
             "activity_type": "outcome",
             "title": "ผลลัพธ์และการบันทึกทางการพยาบาล (Patient Outcome & Documentation)",
-            "instruction": "ทบทวนการประเมินผลและการบันทึกทางการพยาบาล (รายงานด้วยวาจา) ตามเกณฑ์แบบประเมินทักษะ",
+            "instruction": "ทบทวนการประเมินผลและการบันทึกทางการพยาบาลตามเกณฑ์แบบประเมินทักษะ",
             "content_json": {
                 "before": {"spo2": 91, "rr": 26, "hr": 96, "breath_sound": "เสียงเสมหะ Rhonchi", "secretions": "มีอาการเหนื่อย หายใจเสียงครืดคราด เสมหะมาก"},
                 "after": {"spo2": 97, "rr": 18, "hr": 78, "breath_sound": "เสียงปอดโล่งชัดเจนทั้งสองข้าง (Clear)", "secretions": "หายใจสะดวก ไม่กระสับกระส่าย เสียงเสมหะลดลง"},
-                "summary": "การประเมินผลและการบันทึกทางการพยาบาล (รายงานด้วยวาจา):\n1. สภาวะของผู้ป่วยและลักษณะการหายใจ: ผู้ป่วยรู้สึกตัวดี หายใจสะดวก ไม่กระสับกระส่าย อัตราการหายใจ 18 ครั้ง/นาที เสียงเสมหะลดลง ปอดโล่งทั้งสองข้าง\n2. ลักษณะของเสมหะ: เสมหะสีขาวขุ่น เหนียวเล็กน้อย ไม่มีกลิ่น ปริมาณปานกลาง\n3. ค่า Oxygen Saturation จาก Pulse Oximetry: เพิ่มขึ้นจาก 91% เป็น 97% หลังทำหัตถการ",
+                "summary": "การประเมินผลและการบันทึกทางการพยาบาล:\n1. สภาวะของผู้ป่วยและลักษณะการหายใจ: ผู้ป่วยรู้สึกตัวดี หายใจสะดวก ไม่กระสับกระส่าย อัตราการหายใจ 18 ครั้ง/นาที เสียงเสมหะลดลง ปอดโล่งทั้งสองข้าง\n2. ลักษณะของเสมหะ: เสมหะสีขาวขุ่น เหนียวเล็กน้อย ไม่มีกลิ่น ปริมาณปานกลาง\n3. ค่า Oxygen Saturation จาก Pulse Oximetry: เพิ่มขึ้นจาก 91% เป็น 97% หลังทำหัตถการ",
             },
             "feedback": [
                 {

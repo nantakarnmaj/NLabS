@@ -84,6 +84,21 @@ def create_app(config_override: dict[str, Any] | type[Config] | None = None) -> 
     from app.routes.equipment import equipment_bp
     app.register_blueprint(equipment_bp)
 
+    # Auto-sync mission content if outdated seed text is detected in database
+    if not app.config.get("TESTING"):
+        with app.app_context():
+            try:
+                from sqlalchemy import select
+                from app.models.activity import ActivityOption
+                has_old_phrase = db.session.execute(
+                    select(ActivityOption.id).where(ActivityOption.label.like("%รายงานด้วยวาจา%"))
+                ).first()
+                if has_old_phrase:
+                    from seed.suction_mission_seed import seed_suction_mission
+                    seed_suction_mission()
+            except Exception as e:
+                app.logger.warning("Auto-sync suction seed skipped: %s", e)
+
     # Context processors
     @app.context_processor
     def inject_auth_context():
