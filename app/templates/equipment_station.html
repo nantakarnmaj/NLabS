@@ -3,8 +3,7 @@
 {% block title %}ห้องเตรียมอุปกรณ์หัตถการ — BreathQuest{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/equipment.css') }}?v=20261014_csp_v1">
-<script src="{{ url_for('static', filename='js/equipment.js') }}?v=20261014_csp_v1" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/equipment.css') }}?v=20261014_csp_v3">
 {% endblock %}
 
 {% block content %}
@@ -49,27 +48,26 @@
     {% set is_active = (b_id == active_basket_id) %}
     <a
       href="{{ url_for('equipment.station_index', basket=b_id) }}"
-      class="p-4 rounded-2xl border-2 transition-all text-left flex flex-col justify-between group shadow-sm hover:shadow-md"
-      style="{% if is_active %}background-color: #0284c7 !important; color: #ffffff !important; border-color: #0369a1 !important; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;{% else %}background-color: #ffffff !important; color: #14213D !important; border-color: #DCEAF7 !important;{% endif %}"
+      class="p-4 rounded-2xl border-2 transition-all text-left flex flex-col justify-between group shadow-sm hover:shadow-md {% if is_active %}basket-tab-active{% else %}basket-tab-inactive hover:border-sky-300{% endif %}"
     >
       <div class="flex items-start justify-between gap-2 mb-2">
         <div class="flex items-center gap-2">
           <span class="text-xl">
             {% if b_id == 'suction' %}🔬{% elif b_id == 'oxygen' %}🫁{% else %}💨{% endif %}
           </span>
-          <span class="font-mono font-bold text-xs uppercase px-2 py-0.5 rounded-md" style="{% if is_active %}background-color: rgba(255,255,255,0.25) !important; color: #ffffff !important;{% else %}background-color: #E0F2FE !important; color: #0369A1 !important;{% endif %}">
+          <span class="font-mono font-bold text-xs uppercase px-2 py-0.5 rounded-md {% if is_active %}bg-white/25 text-white{% else %}bg-sky-100 text-sky-800{% endif %}">
             {{ b_data.room_name }}
           </span>
         </div>
-        <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="{% if is_active %}background-color: rgba(255,255,255,0.25) !important; color: #ffffff !important;{% else %}background-color: #F1F5F9 !important; color: #475569 !important;{% endif %}">
+        <span class="text-xs font-bold px-2 py-0.5 rounded-full {% if is_active %}bg-white/25 text-white{% else %}bg-slate-100 text-slate-700{% endif %}">
           {{ b_data.required_item_ids|length }} ชิ้น
         </span>
       </div>
       <div>
-        <h3 class="font-black text-sm sm:text-base leading-snug" style="{% if is_active %}color: #ffffff !important;{% else %}color: #14213D !important;{% endif %}">
+        <h3 class="font-black text-sm sm:text-base leading-snug {% if is_active %}text-white{% else %}text-[#14213D]{% endif %}">
           {{ b_data.title }}
         </h3>
-        <p class="text-xs mt-1 line-clamp-1" style="{% if is_active %}color: #E0F2FE !important;{% else %}color: #64748B !important;{% endif %}">
+        <p class="text-xs mt-1 line-clamp-1 {% if is_active %}text-sky-100{% else %}text-slate-500{% endif %}">
           {{ b_data.target_procedure }}
         </p>
       </div>
@@ -342,3 +340,8 @@
   </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/equipment.js') }}?v=20261014_csp_v3"></script>
+{% endblock %}
+

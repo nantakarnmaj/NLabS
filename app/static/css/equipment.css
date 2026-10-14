@@ -11,6 +11,21 @@
 .pic-card, .name-card {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Basket tabs */
+.basket-tab-active {
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0369a1 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+}
+.basket-tab-inactive {
+  background-color: #ffffff !important;
+  color: #14213D !important;
+  border-color: #DCEAF7 !important;
 }
 
 /* Infallible selection highlight styles */
@@ -18,9 +33,9 @@
 .pic-card[data-selected="true"] {
   border-color: #0284c7 !important;
   background-color: #f0f9ff !important;
-  box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
-  transform: translateY(-2px) !important;
-  z-index: 10;
+  box-shadow: 0 0 0 4px #0284c7, 0 8px 24px rgba(2, 132, 199, 0.4) !important;
+  transform: translateY(-2px) scale(1.01) !important;
+  z-index: 10 !important;
 }
 .pic-card.is-selected .pic-selected-badge,
 .pic-card[data-selected="true"] .pic-selected-badge {
@@ -31,13 +46,20 @@
 .name-card[data-selected="true"] {
   border-color: #0284c7 !important;
   background-color: #f0f9ff !important;
-  box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
-  transform: translateY(-2px) !important;
-  z-index: 10;
+  box-shadow: 0 0 0 4px #0284c7, 0 8px 24px rgba(2, 132, 199, 0.4) !important;
+  transform: translateY(-2px) scale(1.01) !important;
+  z-index: 10 !important;
 }
 .name-card.is-selected .name-selected-status,
 .name-card[data-selected="true"] .name-selected-status {
   display: inline-flex !important;
+}
+
+/* Mismatch State */
+.name-card.is-mismatch {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.45) !important;
+  background-color: #fff1f2 !important;
 }
 
 /* Paired State */
