@@ -50,10 +50,10 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
     },
     "sterile_water": {
         "id": "sterile_water",
-        "name_th": "น้ำกลั่นสเตอร์ไรด์",
-        "name_en": "Sterile Water for Inhalation / Flush",
+        "name_th": "Sterile Water (น้ำกลั่นสเตอร์ไรด์)",
+        "name_en": "Sterile Water",
         "image": "images/equipment/sterile_water.png",
-        "description": "น้ำกลั่นปราศจากเชื้อ ปราศจากสารไพโรเจน สำหรับเติมกระบอกความชื้นและล้างสายดูดเสมหะ",
+        "description": "เติมลงในกระบอกน้ำให้ความชื้น (Humidifier Bottle)",
     },
     "pulse_oximeter": {
         "id": "pulse_oximeter",
@@ -125,6 +125,20 @@ EQUIPMENT_CATALOG: dict[str, dict[str, Any]] = {
         "image": "images/equipment/gauze_pads.svg",
         "description": "ผ้าก๊อซปลอดเชื้อสำหรับเช็ดปลายสายดูดเสมหะ และทำความสะอาดรอบช่องเปิดหลอดลมคอ",
     },
+    "sterile_cotton": {
+        "id": "sterile_cotton",
+        "name_th": "สำลีปราศจากเชื้อ",
+        "name_en": "Sterile Cotton",
+        "image": "images/equipment/sterile_cotton.jpg",
+        "description": "สำลีปราศจากเชื้อ สำหรับเช็ดปลายสายและรอบท่อ",
+    },
+    "alcohol_70": {
+        "id": "alcohol_70",
+        "name_th": "แอลกอฮอล์",
+        "name_en": "Alcohol 70%",
+        "image": "images/equipment/alcohol_70.jpg",
+        "description": "แอลกอฮอล์ สำหรับเช็ดปลายสายและรอบท่อ",
+    },
 }
 
 # Procedure Basket Configurations (Ordered by Room: 501 -> 502 -> 503)
@@ -139,8 +153,8 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
         "target_procedure": "การดูดเสมหะทางท่อหลอดลมคอผ่าน Wall Suction (Tracheostomy Tube Suctioning)",
         "required_item_ids": [
             "suction_set",
-            "sterile_water",
-            "gauze_pads",
+            "sterile_cotton",
+            "alcohol_70",
             "pulse_oximeter",
             "stethoscope",
         ],
@@ -150,7 +164,7 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
             "nasal_cannula",
             "nebulizer_chamber",
         ],
-        "clinical_tips": "การดูดเสมหะผ่าน Wall Suction มีเครื่องและขวดรองรับเสมหะข้างเตียงแล้ว ถุงมือสเตอร์ไรด์บรรจุใน Suction Set แล้ว สิ่งที่ต้องจัดใส่ตะกร้าคือ ชุดดูดเสมหะ (Suction Set), น้ำกลั่นสเตอร์ไรด์ล้างสาย, ผ้าก๊อซ, Pulse Oximeter และ Stethoscope เพื่อประเมินเสียงปอดและ SpO2",
+        "clinical_tips": "การดูดเสมหะทางท่อหลอดลมคอผ่าน Wall Suction มีเครื่องและขวดรองรับเสมหะข้างเตียงแล้ว ถุงมือสเตอร์ไรด์บรรจุใน Suction Set แล้ว สิ่งที่ต้องจัดใส่ตะกร้าคือ ชุดสายดูดเสมหะพร้อมถุงมือปลอดเชื้อ (Suction Set), สำลีปราศจากเชื้อ (Sterile Cotton), แอลกอฮอล์ สำหรับเช็ดปลายสายและรอบท่อ, เครื่องวัด SpO2 และ หูฟังของแพทย์/พยาบาล (Stethoscope)",
     },
     "oxygen": {
         "id": "oxygen",
@@ -172,7 +186,7 @@ PROCEDURE_BASKETS: dict[str, dict[str, Any]] = {
             "medication_vial",
             "air_compressor",
         ],
-        "clinical_tips": "การให้ออกซิเจนทางจมูก ต้องมีกระบอกน้ำให้ความชื้นบรรจุน้ำกลั่นสเตอร์ไรด์ และเครื่องวัด SpO2 เพื่อติดตามผลเสมอ ไม่ใช้ชุดดูดเสมหะหรือยาพ่นในหัตถการนี้",
+        "clinical_tips": "การให้ออกซิเจนทางจมูก (Nasal Cannula) ต้องมีสายให้ออกซิเจนทางจมูก, เกจปรับอัตราไหลของออกซิเจน (Flowmeter), กระบอกน้ำให้ความชื้น (Humidifier Bottle), Sterile Water เติมลงในกระบอกน้ำให้ความชื้น และเครื่องวัด SpO2 เพื่อติดตามผลเสมอ",
     },
     "nebulization": {
         "id": "nebulization",

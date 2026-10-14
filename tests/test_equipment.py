@@ -78,6 +78,31 @@ def test_verify_basket_submission_with_missing_and_distractor(client):
     assert "มีอุปกรณ์ที่ไม่จำเป็น" in data["feedback"]
 
 
+def test_verify_suction_basket_submission_success(client):
+    """POST /equipment-station/verify with new suction items returns 100% complete."""
+    suction_cfg = PROCEDURE_BASKETS["suction"]
+    assert set(suction_cfg["required_item_ids"]) == {
+        "suction_set", "sterile_cotton", "alcohol_70", "pulse_oximeter", "stethoscope"
+    }
+
+    res = client.post(
+        "/equipment-station/verify",
+        data=json.dumps({
+            "basket_id": "suction",
+            "packed_ids": suction_cfg["required_item_ids"],
+        }),
+        content_type="application/json",
+    )
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data["success"] is True
+    assert data["is_complete"] is True
+    assert data["score_percent"] == 100
+    assert len(data["missing_items"]) == 0
+    assert len(data["distractor_items"]) == 0
+
+
+
 def test_equipment_station_csp_compliance(client):
     """Ensure equipment station uses external assets and contains no inline scripts or onclicks."""
     res = client.get("/equipment-station")
