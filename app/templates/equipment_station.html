@@ -137,10 +137,11 @@
               type="button"
               class="pic-card group w-full text-left p-2.5 sm:p-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 hover:ring-2 hover:ring-sky-200 hover:shadow-md transition-all cursor-pointer shadow-xs select-none relative focus:outline-none"
               data-item-id="{{ item.id }}"
+              onclick="selectPictureCard('{{ item.id }}')"
             >
               <div class="pointer-events-none select-none relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
                 <img
-                  src="{{ url_for('static', filename=item.image) }}?v=20261014b"
+                  src="{{ url_for('static', filename=item.image) }}?v=20261014c"
                   alt="{{ item.name_th }}"
                   class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-200 pointer-events-none select-none"
                   draggable="false"
@@ -179,6 +180,7 @@
               type="button"
               class="name-card group w-full text-left p-3 sm:p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 hover:ring-2 hover:ring-sky-200 hover:shadow-md transition-all cursor-pointer shadow-xs select-none flex flex-col justify-center min-h-[96px] focus:outline-none relative"
               data-item-id="{{ item.id }}"
+              onclick="selectNameCard('{{ item.id }}')"
             >
               <div class="font-bold text-sm text-[#14213D] leading-snug pointer-events-none select-none">
                 {{ item.name_th }}
@@ -340,52 +342,80 @@
   const pairedItemIds = new Set();
   const packedInBasketIds = new Set();
 
-  // ===== Card Click Handler (works for both click and touch) =====
-  function handleCardTap(card) {
-    const itemId = card.dataset.itemId;
-    const isPic = card.classList.contains('pic-card');
+  let lastTapTimestamp = 0;
 
-    console.log('[BQ] tap', isPic ? 'pic' : 'name', itemId);
+  function selectPictureCard(itemId) {
+    const now = Date.now();
+    if (now - lastTapTimestamp < 120) return;
+    lastTapTimestamp = now;
+
+    console.log('[BQ] selectPictureCard', itemId);
 
     if (pairedItemIds.has(itemId)) {
       toggleBasketPacking(itemId);
       return;
     }
 
-    if (isPic) {
-      // Toggle off if same card
-      if (selectedPictureId === itemId) {
-        selectedPictureId = null;
-        applySelectionStyle();
-        updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
-        return;
-      }
-      selectedPictureId = itemId;
+    if (selectedPictureId === itemId) {
+      selectedPictureId = null;
       applySelectionStyle();
+      updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
+      return;
+    }
 
-      if (selectedNameId) {
-        checkMatchAttempt();
-      } else {
-        const nm = catalogData[itemId] ? catalogData[itemId].name_th : itemId;
-        updateStatusHint(`📸 เลือกรูป: <strong class="text-sky-700">${nm}</strong> แล้ว 👉 <span class="text-[#0284c7] font-bold">แตะชื่ออุปกรณ์ทางขวา</span>ที่ตรงกัน`);
-      }
+    selectedPictureId = itemId;
+    applySelectionStyle();
+
+    if (selectedNameId) {
+      checkMatchAttempt();
     } else {
-      // name card
-      if (selectedNameId === itemId) {
-        selectedNameId = null;
-        applySelectionStyle();
-        updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
-        return;
-      }
-      selectedNameId = itemId;
-      applySelectionStyle();
+      const nm = catalogData[itemId] ? catalogData[itemId].name_th : itemId;
+      updateStatusHint(`📸 เลือกรูป: <strong class="text-sky-700">${nm}</strong> แล้ว 👉 <span class="text-[#0284c7] font-bold">แตะชื่ออุปกรณ์ทางขวา</span>ที่ตรงกัน`);
+    }
+  }
 
-      if (selectedPictureId) {
-        checkMatchAttempt();
-      } else {
-        const nm = catalogData[itemId] ? catalogData[itemId].name_th : itemId;
-        updateStatusHint(`🏷️ เลือกชื่อ: <strong class="text-sky-700">${nm}</strong> แล้ว 👉 <span class="text-[#0284c7] font-bold">แตะรูปถ่ายทางซ้าย</span>ที่ตรงกัน`);
-      }
+  function selectNameCard(itemId) {
+    const now = Date.now();
+    if (now - lastTapTimestamp < 120) return;
+    lastTapTimestamp = now;
+
+    console.log('[BQ] selectNameCard', itemId);
+
+    if (pairedItemIds.has(itemId)) {
+      toggleBasketPacking(itemId);
+      return;
+    }
+
+    if (selectedNameId === itemId) {
+      selectedNameId = null;
+      applySelectionStyle();
+      updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
+      return;
+    }
+
+    selectedNameId = itemId;
+    applySelectionStyle();
+
+    if (selectedPictureId) {
+      checkMatchAttempt();
+    } else {
+      const nm = catalogData[itemId] ? catalogData[itemId].name_th : itemId;
+      updateStatusHint(`🏷️ เลือกชื่อ: <strong class="text-sky-700">${nm}</strong> แล้ว 👉 <span class="text-[#0284c7] font-bold">แตะรูปถ่ายทางซ้าย</span>ที่ตรงกัน`);
+    }
+  }
+
+  function clearSelection(type) {
+    if (type === 'picture' || !type) selectedPictureId = null;
+    if (type === 'name' || !type) selectedNameId = null;
+    applySelectionStyle();
+  }
+
+  function handleCardTap(card) {
+    const itemId = card.getAttribute('data-item-id') || card.dataset.itemId;
+    if (card.classList.contains('pic-card')) {
+      selectPictureCard(itemId);
+    } else {
+      selectNameCard(itemId);
     }
   }
 
@@ -670,57 +700,17 @@
     document.getElementById('feedback-modal').classList.add('hidden');
   }
 
-  // ===== Attach Events via addEventListener (after DOM ready) =====
-  document.addEventListener('DOMContentLoaded', () => {
-    // Attach to all pic-cards and name-cards using event delegation on containers
-    const picContainer = document.getElementById('picture-cards-container');
-    const nameContainer = document.getElementById('name-cards-container');
+  // Reset button
+  const resetBtn = document.getElementById('btn-reset-pairs');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('ต้องการรีเซ็ตการจับคู่ของตะกร้านี้ทั้งหมดหรือไม่?')) {
+        window.location.reload();
+      }
+    });
+  }
 
-    function attachCardListeners(container, cardClass) {
-      if (!container) return;
-
-      // Use touchend for mobile (fires before click, prevents double-fire)
-      let touchMoved = false;
-
-      container.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
-      container.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
-
-      container.addEventListener('touchend', (e) => {
-        if (touchMoved) return; // user was scrolling, not tapping
-        const card = e.target.closest(cardClass);
-        if (!card) return;
-        e.preventDefault(); // prevent ghost click
-        handleCardTap(card);
-      });
-
-      // Click for laptop/desktop (also fires on mobile if touchend didn't preventDefault correctly, so guard with flag)
-      let lastTouchTime = 0;
-      container.addEventListener('click', (e) => {
-        const now = Date.now();
-        if (now - lastTouchTime < 500) return; // suppress ghost click after touch
-        const card = e.target.closest(cardClass);
-        if (!card) return;
-        handleCardTap(card);
-      });
-
-      container.addEventListener('touchend', () => { lastTouchTime = Date.now(); }, { passive: true });
-    }
-
-    attachCardListeners(picContainer, '.pic-card');
-    attachCardListeners(nameContainer, '.name-card');
-
-    // Reset button
-    const resetBtn = document.getElementById('btn-reset-pairs');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        if (confirm('ต้องการรีเซ็ตการจับคู่ของตะกร้านี้ทั้งหมดหรือไม่?')) {
-          window.location.reload();
-        }
-      });
-    }
-
-    console.log('[BQ] Equipment matching ready. catalogData keys:', Object.keys(catalogData).length);
-  });
+  console.log('[BQ] Equipment matching ready. catalogData keys:', Object.keys(catalogData).length);
 </script>
 
 
