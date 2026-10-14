@@ -2,7 +2,21 @@
 
 {% block title %}ห้องเตรียมอุปกรณ์หัตถการ — BreathQuest{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/equipment.css') }}?v=20261014_csp_v1">
+<script src="{{ url_for('static', filename='js/equipment.js') }}?v=20261014_csp_v1" defer></script>
+{% endblock %}
+
 {% block content %}
+<script id="equipment-data" type="application/json">
+  {
+    "activeBasketId": {{ active_basket_id|tojson }},
+    "catalog": {{ catalog|tojson }},
+    "totalRequired": {{ active_basket.total_required }},
+    "verifyUrl": {{ url_for('equipment.verify_basket')|tojson }}
+  }
+</script>
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
   <!-- ================= TOP BANNER & NAVIGATION ================= -->
@@ -137,7 +151,6 @@
               type="button"
               class="pic-card group w-full text-left p-2.5 sm:p-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 hover:ring-2 hover:ring-sky-200 hover:shadow-md transition-all cursor-pointer shadow-xs select-none relative focus:outline-none"
               data-item-id="{{ item.id }}"
-              onclick="selectPictureCard('{{ item.id }}')"
             >
               <div class="pointer-events-none select-none relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
                 <img
@@ -180,7 +193,6 @@
               type="button"
               class="name-card group w-full text-left p-3 sm:p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-sky-400 hover:ring-2 hover:ring-sky-200 hover:shadow-md transition-all cursor-pointer shadow-xs select-none flex flex-col justify-center min-h-[96px] focus:outline-none relative"
               data-item-id="{{ item.id }}"
-              onclick="selectNameCard('{{ item.id }}')"
             >
               <div class="font-bold text-sm text-[#14213D] leading-snug pointer-events-none select-none">
                 {{ item.name_th }}
@@ -261,7 +273,6 @@
           <button
             type="button"
             id="btn-verify-basket"
-            onclick="submitBasketVerification()"
             class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-98 text-white font-black text-base shadow-md hover:shadow-lg transition flex items-center justify-center gap-2"
           >
             <span>🩺 ตรวจสอบความถูกต้องของตะกร้าหัตถการ</span>
@@ -313,7 +324,7 @@
     <div class="flex flex-col sm:flex-row items-center justify-end gap-2 pt-2">
       <button
         type="button"
-        onclick="closeFeedbackModal()"
+        id="btn-close-modal"
         class="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition"
       >
         ปรับแต่งตะกร้าอีกครั้ง
@@ -330,450 +341,4 @@
     </div>
   </div>
 </div>
-
-<script>
-  // ===== State =====
-  const activeBasketId = "{{ active_basket_id }}";
-  const catalogData = {{ catalog|tojson }};
-  const totalRequired = {{ active_basket.total_required }};
-
-  let selectedPictureId = null;
-  let selectedNameId = null;
-  const pairedItemIds = new Set();
-  const packedInBasketIds = new Set();
-
-  let lastTapTimestamp = 0;
-
-  function selectPictureCard(itemId) {
-    const now = Date.now();
-    if (now - lastTapTimestamp < 120) return;
-    lastTapTimestamp = now;
-
-    console.log('[BQ] selectPictureCard', itemId);
-
-    if (pairedItemIds.has(itemId)) {
-      toggleBasketPacking(itemId);
-      return;
-    }
-
-    if (selectedPictureId === itemId) {
-      selectedPictureId = null;
-      applySelectionStyle();
-      updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
-      return;
-    }
-
-    selectedPictureId = itemId;
-    applySelectionStyle();
-
-    if (selectedNameId) {
-      checkMatchAttempt();
-    } else {
-      const nm = catalogData[itemId] ? catalogData[itemId].name_th : itemId;
-      updateStatusHint(`📸 เลือกรูป: <strong class="text-sky-700">${nm}</strong> แล้ว 👉 <span class="text-[#0284c7] font-bold">แตะชื่ออุปกรณ์ทางขวา</span>ที่ตรงกัน`);
-    }
-  }
-
-  function selectNameCard(itemId) {
-    const now = Date.now();
-    if (now - lastTapTimestamp < 120) return;
-    lastTapTimestamp = now;
-
-    console.log('[BQ] selectNameCard', itemId);
-
-    if (pairedItemIds.has(itemId)) {
-      toggleBasketPacking(itemId);
-      return;
-    }
-
-    if (selectedNameId === itemId) {
-      selectedNameId = null;
-      applySelectionStyle();
-      updateStatusHint('แตะเลือก <strong>รูปถ่ายอุปกรณ์</strong> หรือ <strong>ชื่ออุปกรณ์</strong> เพื่อเริ่มจับคู่');
-      return;
-    }
-
-    selectedNameId = itemId;
-    applySelectionStyle();
-
-    if (selectedPictureId) {
-      checkMatchAttempt();
-    } else {
-      const nm = catalogData[itemId] ? catalogData[itemId].name_th : itemId;
-      updateStatusHint(`🏷️ เลือกชื่อ: <strong class="text-sky-700">${nm}</strong> แล้ว 👉 <span class="text-[#0284c7] font-bold">แตะรูปถ่ายทางซ้าย</span>ที่ตรงกัน`);
-    }
-  }
-
-  function clearSelection(type) {
-    if (type === 'picture' || !type) selectedPictureId = null;
-    if (type === 'name' || !type) selectedNameId = null;
-    applySelectionStyle();
-  }
-
-  function handleCardTap(card) {
-    const itemId = card.getAttribute('data-item-id') || card.dataset.itemId;
-    if (card.classList.contains('pic-card')) {
-      selectPictureCard(itemId);
-    } else {
-      selectNameCard(itemId);
-    }
-  }
-
-  // ===== Apply selection visual to all cards =====
-  function applySelectionStyle() {
-    document.querySelectorAll('.pic-card').forEach(c => {
-      const id = c.dataset.itemId;
-      const sel = (id === selectedPictureId);
-      c.classList.toggle('is-selected', sel);
-      if (sel) c.setAttribute('data-selected', 'true');
-      else c.removeAttribute('data-selected');
-
-      // badge visibility
-      const badge = c.querySelector('.pic-selected-badge');
-      if (badge) badge.classList.toggle('hidden', !sel);
-    });
-
-    document.querySelectorAll('.name-card').forEach(c => {
-      const id = c.dataset.itemId;
-      const sel = (id === selectedNameId);
-      c.classList.toggle('is-selected', sel);
-      if (sel) c.setAttribute('data-selected', 'true');
-      else c.removeAttribute('data-selected');
-
-      const status = c.querySelector('.name-selected-status');
-      if (status) status.classList.toggle('hidden', !sel);
-    });
-  }
-
-  // ===== Matching =====
-  function checkMatchAttempt() {
-    if (!selectedPictureId || !selectedNameId) return;
-    console.log('[BQ] check match:', selectedPictureId, '===', selectedNameId, '?', selectedPictureId === selectedNameId);
-
-    if (selectedPictureId === selectedNameId) {
-      handleSuccessfulMatch(selectedPictureId);
-    } else {
-      handleFailedMatch();
-    }
-  }
-
-  function handleSuccessfulMatch(itemId) {
-    const item = catalogData[itemId];
-    console.log('[BQ] SUCCESS match:', itemId);
-
-    pairedItemIds.add(itemId);
-
-    const picCard = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
-    if (picCard) {
-      picCard.classList.remove('is-selected');
-      picCard.removeAttribute('data-selected');
-      picCard.classList.add('is-paired');
-      const selBadge = picCard.querySelector('.pic-selected-badge');
-      if (selBadge) selBadge.classList.add('hidden');
-      const pairBadge = picCard.querySelector('.pic-paired-badge');
-      if (pairBadge) pairBadge.classList.remove('hidden');
-    }
-
-    const nameCard = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
-    if (nameCard) {
-      nameCard.classList.remove('is-selected');
-      nameCard.removeAttribute('data-selected');
-      nameCard.classList.add('is-paired');
-      const selStatus = nameCard.querySelector('.name-selected-status');
-      if (selStatus) selStatus.classList.add('hidden');
-      const pairStatus = nameCard.querySelector('.name-paired-status');
-      if (pairStatus) pairStatus.classList.remove('hidden');
-    }
-
-    selectedPictureId = null;
-    selectedNameId = null;
-    applySelectionStyle();
-
-    packItemIntoBasket(itemId);
-    updatePairedCardBadges(itemId);
-    updateRemainingCounters();
-    updateStatusHint(`🎉 <strong class="text-emerald-700">ยอดเยี่ยม! จับคู่ ${item ? item.name_th : itemId} ถูกต้อง!</strong> บรรจุใส่ตะกร้าหัตถการเรียบร้อยแล้ว 🧺`);
-  }
-
-  function handleFailedMatch() {
-    const wrongPicId = selectedPictureId;
-    const wrongNameId = selectedNameId;
-    const picItem = catalogData[wrongPicId];
-    console.log('[BQ] MISMATCH pic:', wrongPicId, 'name:', wrongNameId);
-
-    updateStatusHint(`❌ <span class="text-rose-600 font-bold">ยังไม่ตรงกัน:</span> กำลังเลือกรูป <strong>${picItem ? picItem.name_th : ''}</strong> (กรอบฟ้า) 👉 แตะชื่ออุปกรณ์ที่ตรงกันอีกครั้ง`);
-
-    const nameCard = document.querySelector(`.name-card[data-item-id="${wrongNameId}"]`);
-    if (nameCard) {
-      nameCard.classList.add('animate-shake');
-      nameCard.style.cssText += 'border-color:#f43f5e!important;box-shadow:0 0 0 4px rgba(244,63,94,.45)!important;';
-    }
-
-    setTimeout(() => {
-      if (nameCard) {
-        nameCard.classList.remove('animate-shake', 'is-selected');
-        nameCard.removeAttribute('data-selected');
-        nameCard.style.borderColor = '';
-        nameCard.style.boxShadow = '';
-        const ns = nameCard.querySelector('.name-selected-status');
-        if (ns) ns.classList.add('hidden');
-      }
-      // Picture card stays selected!
-      selectedNameId = null;
-    }, 700);
-  }
-
-  // ===== Basket Toggle =====
-  function toggleBasketPacking(itemId) {
-    const item = catalogData[itemId];
-    const nm = item ? item.name_th : itemId;
-    if (packedInBasketIds.has(itemId)) {
-      removeFromBasket(itemId);
-      updateStatusHint(`🧺 นำ <strong>${nm}</strong> ออกจากตะกร้าแล้ว`);
-    } else {
-      packItemIntoBasket(itemId);
-      updateStatusHint(`🧺 นำ <strong>${nm}</strong> ใส่ตะกร้าเรียบร้อย!`);
-    }
-    updatePairedCardBadges(itemId);
-  }
-
-  function updatePairedCardBadges(itemId) {
-    const isPacked = packedInBasketIds.has(itemId);
-    const picCard = document.querySelector(`.pic-card[data-item-id="${itemId}"]`);
-    const nameCard = document.querySelector(`.name-card[data-item-id="${itemId}"]`);
-    if (picCard) {
-      const badge = picCard.querySelector('.pic-paired-badge');
-      if (badge) badge.innerHTML = `
-        <span class="text-2xl">${isPacked ? '✓' : '📦'}</span>
-        <span class="text-xs font-black">จับคู่ถูกต้อง!</span>
-        <span class="text-3xs ${isPacked ? 'bg-white text-emerald-800' : 'bg-amber-100 text-amber-900'} font-bold px-2 py-0.5 rounded-full shadow-2xs">
-          ${isPacked ? '🧺 บรรจุในตะกร้าแล้ว' : '📦 อยู่นอกตะกร้า (แตะใส่)'}
-        </span>`;
-    }
-    if (nameCard) {
-      const status = nameCard.querySelector('.name-paired-status');
-      if (status) status.innerHTML = `<span>✓ จับคู่สำเร็จ (${isPacked ? 'อยู่ในตะกร้า 🧺' : 'อยู่นอกตะกร้า 📦'})</span>`;
-    }
-  }
-
-  function packItemIntoBasket(itemId) {
-    if (packedInBasketIds.has(itemId)) return;
-    packedInBasketIds.add(itemId);
-    const item = catalogData[itemId];
-
-    const stagedChip = document.getElementById(`staged-${itemId}`);
-    if (stagedChip) stagedChip.remove();
-
-    const shelf = document.getElementById('staging-shelf');
-    if (shelf && shelf.querySelectorAll('[id^="staged-"]').length === 0) {
-      const em = document.getElementById('staging-empty-msg');
-      if (em) em.classList.remove('hidden');
-    }
-
-    const basket = document.getElementById('procedure-basket');
-    const placeholder = document.getElementById('basket-empty-placeholder');
-    if (placeholder) placeholder.classList.add('hidden');
-
-    const row = document.createElement('div');
-    row.id = `basket-item-${item.id}`;
-    row.className = 'p-3 rounded-xl bg-white border border-indigo-200 shadow-2xs flex items-center justify-between gap-3';
-    row.innerHTML = `
-      <div class="flex items-center gap-3 min-w-0">
-        <img src="/static/${item.image}?v=20261014b" class="w-10 h-10 object-contain rounded-lg bg-slate-50 border border-slate-200 shrink-0 p-1" alt="${item.name_th}">
-        <div class="min-w-0">
-          <div class="text-xs font-black text-slate-900 truncate">${item.name_th}</div>
-          <div class="text-2xs font-mono text-indigo-600 truncate">${item.name_en}</div>
-        </div>
-      </div>
-      <button type="button" onclick="removeFromBasket('${item.id}')"
-        class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 flex items-center justify-center text-xs font-bold transition shrink-0"
-        title="หยิบออกจากตะกร้า">✕</button>`;
-    basket.appendChild(row);
-    updateBasketCounters();
-  }
-
-  function removeFromBasket(itemId) {
-    packedInBasketIds.delete(itemId);
-    const item = catalogData[itemId];
-    const row = document.getElementById(`basket-item-${itemId}`);
-    if (row) row.remove();
-
-    const basket = document.getElementById('procedure-basket');
-    if (basket && basket.querySelectorAll('[id^="basket-item-"]').length === 0) {
-      const ph = document.getElementById('basket-empty-placeholder');
-      if (ph) ph.classList.remove('hidden');
-    }
-
-    // Put back to staging shelf
-    addToStagingShelf(item);
-    updateBasketCounters();
-    updatePairedCardBadges(itemId);
-  }
-
-  function addToStagingShelf(item) {
-    const shelf = document.getElementById('staging-shelf');
-    const em = document.getElementById('staging-empty-msg');
-    if (em) em.classList.add('hidden');
-
-    const chip = document.createElement('div');
-    chip.id = `staged-${item.id}`;
-    chip.className = 'inline-flex items-center gap-2 p-2 rounded-xl bg-white border border-emerald-300 shadow-2xs';
-    chip.innerHTML = `
-      <img src="/static/${item.image}?v=20261014b" class="w-7 h-7 object-contain rounded-md bg-slate-50 border border-slate-100" alt="${item.name_th}">
-      <span class="text-xs font-bold text-slate-800">${item.name_th}</span>
-      <button type="button" onclick="packItemIntoBasket('${item.id}')"
-        class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-2xs transition"
-        title="หยิบใส่ตะกร้าหัตถการ">หยิบใส่ตะกร้า 🧺</button>`;
-    shelf.appendChild(chip);
-  }
-
-  function updateRemainingCounters() {
-    const total = document.querySelectorAll('.pic-card').length;
-    const remaining = total - pairedItemIds.size;
-    const pl = document.getElementById('pic-remaining-label');
-    const nl = document.getElementById('name-remaining-label');
-    if (pl) pl.textContent = `เหลือ ${remaining} ภาพ`;
-    if (nl) nl.textContent = `เหลือ ${remaining} รายการ`;
-  }
-
-  function updateBasketCounters() {
-    const count = packedInBasketIds.size;
-    const counter = document.getElementById('basket-counter');
-    const pill = document.getElementById('tray-count-pill');
-    const badge = document.getElementById('mobile-basket-badge');
-    if (counter) counter.textContent = `${count} / ${totalRequired}`;
-    if (pill) pill.textContent = `${count} รายการ`;
-    if (badge) badge.textContent = `${count}/${totalRequired}`;
-  }
-
-  function updateStatusHint(msg) {
-    const hint = document.getElementById('pairing-status-hint');
-    if (hint) hint.innerHTML = msg;
-  }
-
-  // ===== Verification =====
-  async function submitBasketVerification() {
-    if (packedInBasketIds.size === 0) {
-      alert('กรุณาจับคู่และหยิบอุปกรณ์ใส่ตะกร้าอย่างน้อย 1 ชิ้น ก่อนตรวจความถูกต้องครับ');
-      return;
-    }
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    try {
-      const res = await fetch("{{ url_for('equipment.verify_basket') }}", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
-        body: JSON.stringify({ basket_id: activeBasketId, packed_ids: Array.from(packedInBasketIds) }),
-      });
-      displayFeedbackModal(await res.json());
-    } catch (err) {
-      console.error('Verification failed:', err);
-      alert('เกิดข้อผิดพลาดในการตรวจสอบ โปรดลองอีกครั้ง');
-    }
-  }
-
-  function displayFeedbackModal(result) {
-    const modal = document.getElementById('feedback-modal');
-    const iconC = document.getElementById('modal-icon-container');
-    const title = document.getElementById('modal-title');
-    const subtitle = document.getElementById('modal-subtitle');
-    const box = document.getElementById('modal-feedback-box');
-
-    if (result.is_complete) {
-      iconC.className = 'w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shrink-0';
-      iconC.textContent = '🏆';
-      title.textContent = 'จัดตะกร้าหัตถการถูกต้องสมบูรณ์!';
-      subtitle.textContent = 'ความแม่นยำทางคลินิก 100% (First-Class Readiness)';
-      box.className = 'p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm leading-relaxed space-y-2';
-      box.innerHTML = `<div class="font-bold flex items-center gap-2"><span>✓</span><span>${result.feedback}</span></div>`;
-    } else {
-      iconC.className = 'w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl shrink-0';
-      iconC.textContent = '⚠️';
-      title.textContent = 'ยังจัดอุปกรณ์ไม่ครบถ้วน / มีสิ่งแปลกปลอม';
-      subtitle.textContent = `คะแนนความพร้อม: ${result.score_percent}% (ใส่อุปกรณ์จำเป็น ${result.correct_count}/${result.total_required})`;
-      box.className = 'p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 text-sm leading-relaxed space-y-2';
-      box.innerHTML = `<div>${result.feedback}</div>`;
-    }
-    modal.classList.remove('hidden');
-  }
-
-  function closeFeedbackModal() {
-    document.getElementById('feedback-modal').classList.add('hidden');
-  }
-
-  // Reset button
-  const resetBtn = document.getElementById('btn-reset-pairs');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      if (confirm('ต้องการรีเซ็ตการจับคู่ของตะกร้านี้ทั้งหมดหรือไม่?')) {
-        window.location.reload();
-      }
-    });
-  }
-
-  console.log('[BQ] Equipment matching ready. catalogData keys:', Object.keys(catalogData).length);
-</script>
-
-
-<style>
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
-  }
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
-  }
-
-  /* Touch and interaction optimizations */
-  .pic-card, .name-card {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Infallible selection highlight styles */
-  .pic-card.is-selected,
-  .pic-card[data-selected="true"] {
-    border-color: #0284c7 !important;
-    background-color: #f0f9ff !important;
-    box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
-    transform: translateY(-2px) !important;
-    z-index: 10;
-  }
-  .pic-card.is-selected .pic-selected-badge,
-  .pic-card[data-selected="true"] .pic-selected-badge {
-    display: flex !important;
-  }
-
-  .name-card.is-selected,
-  .name-card[data-selected="true"] {
-    border-color: #0284c7 !important;
-    background-color: #f0f9ff !important;
-    box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
-    transform: translateY(-2px) !important;
-    z-index: 10;
-  }
-  .name-card.is-selected .name-selected-status,
-  .name-card[data-selected="true"] .name-selected-status {
-    display: inline-flex !important;
-  }
-
-  /* Paired State */
-  .pic-card.is-paired, .name-card.is-paired {
-    border-color: #10b981 !important;
-    background-color: #ecfdf5 !important;
-    cursor: pointer !important;
-    opacity: 1 !important;
-    box-shadow: 0 0 0 3px #10b981 !important;
-    transform: none !important;
-  }
-  .pic-card.is-paired:hover, .name-card.is-paired:hover {
-    box-shadow: 0 0 0 4px #059669, 0 6px 16px rgba(16, 185, 129, 0.3) !important;
-  }
-  .pic-card.is-paired .pic-paired-badge, .name-card.is-paired .name-paired-status {
-    display: flex !important;
-  }
-  .pic-card.is-paired .pic-selected-badge, .name-card.is-paired .name-selected-status {
-    display: none !important;
-  }
-</style>
 {% endblock %}

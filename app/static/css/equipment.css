@@ -1,0 +1,60 @@
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Touch and interaction optimizations */
+.pic-card, .name-card {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Infallible selection highlight styles */
+.pic-card.is-selected,
+.pic-card[data-selected="true"] {
+  border-color: #0284c7 !important;
+  background-color: #f0f9ff !important;
+  box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
+  transform: translateY(-2px) !important;
+  z-index: 10;
+}
+.pic-card.is-selected .pic-selected-badge,
+.pic-card[data-selected="true"] .pic-selected-badge {
+  display: flex !important;
+}
+
+.name-card.is-selected,
+.name-card[data-selected="true"] {
+  border-color: #0284c7 !important;
+  background-color: #f0f9ff !important;
+  box-shadow: 0 0 0 4px #0284c7, 0 8px 20px rgba(2, 132, 199, 0.35) !important;
+  transform: translateY(-2px) !important;
+  z-index: 10;
+}
+.name-card.is-selected .name-selected-status,
+.name-card[data-selected="true"] .name-selected-status {
+  display: inline-flex !important;
+}
+
+/* Paired State */
+.pic-card.is-paired, .name-card.is-paired {
+  border-color: #10b981 !important;
+  background-color: #ecfdf5 !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  box-shadow: 0 0 0 3px #10b981 !important;
+  transform: none !important;
+}
+.pic-card.is-paired:hover, .name-card.is-paired:hover {
+  box-shadow: 0 0 0 4px #059669, 0 6px 16px rgba(16, 185, 129, 0.3) !important;
+}
+.pic-card.is-paired .pic-paired-badge, .name-card.is-paired .name-paired-status {
+  display: flex !important;
+}
+.pic-card.is-paired .pic-selected-badge, .name-card.is-paired .name-selected-status {
+  display: none !important;
+}

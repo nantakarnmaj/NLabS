@@ -76,3 +76,27 @@ def test_verify_basket_submission_with_missing_and_distractor(client):
     assert data["distractor_items"][0]["id"] == "suction_set"
     assert "ยังขาดอุปกรณ์จำเป็น" in data["feedback"]
     assert "มีอุปกรณ์ที่ไม่จำเป็น" in data["feedback"]
+
+
+def test_equipment_station_csp_compliance(client):
+    """Ensure equipment station uses external assets and contains no inline scripts or onclicks."""
+    res = client.get("/equipment-station")
+    assert res.status_code == 200
+    html = res.get_data(as_text=True)
+
+    # Assets are linked externally
+    assert "equipment.css" in html
+    assert "equipment.js" in html
+
+    # Strict CSP compliance
+    assert "onclick=" not in html
+    assert "<style" not in html
+
+    # Any <script> tag must be json data container only, not executable inline script
+    import re
+    script_tags = re.findall(r"<script(.*?)>", html, re.IGNORECASE)
+    for tag in script_tags:
+        is_src = "src=" in tag
+        is_json = 'type="application/json"' in tag
+        assert is_src or is_json, f"Forbidden inline script tag detected: <script{tag}>"
+
